@@ -1,0 +1,21 @@
+{
+    "name": "com.meta.xr.depthapi.editor",
+    "rootNamespace": "",
+    "references": [
+        "Oculus.VR.Editor",
+        "Unity.XR.Oculus",
+        "Oculus.VR",
+        "depthapi"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

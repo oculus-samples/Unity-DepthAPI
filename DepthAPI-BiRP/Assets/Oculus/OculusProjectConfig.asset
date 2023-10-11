@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d394ae2a81edd4cbc3c51917e766e3, type: 3}
+  m_Name: OculusProjectConfig
+  m_EditorClassIdentifier: 
+  targetDeviceTypes: 02000000
+  allowOptional3DofHeadTracking: 0
+  handTrackingSupport: 1
+  handTrackingFrequency: 0
+  handTrackingVersion: 0
+  multimodalHandsControllersSupport: 0
+  anchorSupport: 1
+  sharedAnchorSupport: 0
+  renderModelSupport: 0
+  trackedKeyboardSupport: 0
+  bodyTrackingSupport: 0
+  faceTrackingSupport: 0
+  eyeTrackingSupport: 0
+  virtualKeyboardSupport: 0
+  sceneSupport: 2
+  disableBackups: 1
+  enableNSCConfig: 1
+  securityXmlPath: 
+  skipUnneededShaders: 0
+  focusAware: 1
+  requiresSystemKeyboard: 0
+  experimentalFeaturesEnabled: 1
+  insightPassthroughEnabled: 0
+  _insightPassthroughSupport: 2
+  _processorFavor: 0
+  systemSplashScreen: {fileID: 0}
+  systemSplashScreenType: 0
+  ovrPluginMd5Win64: bdcfac18d8d347a3ef350a0d4dcc043a
+  ovrPluginMd5Android: 628c4d05c4cc9fbe7514ac94bb0c4d55

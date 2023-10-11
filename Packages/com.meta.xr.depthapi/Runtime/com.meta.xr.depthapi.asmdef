@@ -1,0 +1,17 @@
+{
+    "name": "depthapi",
+    "rootNamespace": "depthapi",
+    "references": [
+        "Oculus.VR",
+        "Unity.XR.Oculus"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
