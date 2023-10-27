@@ -4,7 +4,7 @@ Depth API is a new feature that exposes to applications real-time, per-eye, per-
 This repository shows how Depth API can be used to implement dynamic occlusions.
 This technique is essential for rendering believable visual interactions between virtual and physical content in your apps. This enables a more coherent sense of reality for your users.
 
-You can learn more about Depth API [here](https://developer.oculus.com).
+You can learn more about Depth API [here](https://developer.oculus.com/experimental/scene-depth-unity/).
 
 This is an [experimental feature](https://developer.oculus.com/experimental/experimental-overview).
 Make sure to run this command to enable Depth API on your Quest 3:
