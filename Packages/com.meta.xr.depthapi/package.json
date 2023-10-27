@@ -6,7 +6,6 @@
   "unity": "2022.3",
   "unityRelease": "1f1",
   "dependencies": {
-    "com.unity.xr.oculus": "4.2.0-exp-env-depth.1",
-    "com.meta.xr.sdk.utilities": "57.0.0-preview"
+    "com.unity.xr.oculus": "4.2.0-exp-env-depth.1"
   }
 }

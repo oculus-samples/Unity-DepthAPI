@@ -5,8 +5,7 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.xr.oculus": "4.2.0-exp-env-depth.1",
-        "com.meta.xr.sdk.utilities": "57.0.0-preview"
+        "com.unity.xr.oculus": "4.2.0-exp-env-depth.1"
       }
     },
     "com.meta.xr.sdk.sharedassets": {
