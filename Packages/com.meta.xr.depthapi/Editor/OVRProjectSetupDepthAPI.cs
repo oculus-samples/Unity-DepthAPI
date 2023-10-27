@@ -20,7 +20,9 @@
 
 using UnityEditor;
 using UnityEngine.Rendering;
+#if USING_XR_SDK_OCULUS
 using Unity.XR.Oculus;
+#endif
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using Meta.XR.Depth;
@@ -30,6 +32,7 @@ internal static class OVRProjectSetupDepthAPI
 {
     private static readonly string minimumUnityVersion = "2022.2.16f";
     private const OVRProjectSetup.TaskGroup GROUP = OVRProjectSetup.TaskGroup.Rendering;
+#if USING_XR_SDK_OCULUS
     private static OculusSettings OculusSettings
     {
         get
@@ -39,6 +42,7 @@ internal static class OVRProjectSetupDepthAPI
             return settings;
         }
     }
+#endif
     static OVRProjectSetupDepthAPI()
     {
         //=== Per Project Setup Support
@@ -59,13 +63,14 @@ internal static class OVRProjectSetupDepthAPI
             },
             fixMessage: "Set Vulkan as Default Graphics API"
         );
-
+#if USING_XR_SDK_OCULUS
         //Multiview option
         OVRProjectSetup.AddTask(
             level: OVRProjectSetup.TaskLevel.Required,
             group: GROUP,
             isDone: buildTargetGroup =>
             {
+                if (OculusSettings == null) return true;
                 return OculusSettings.m_StereoRenderingModeAndroid == OculusSettings.StereoRenderingModeAndroid.Multiview;
             },
             message: "DepthAPI requires Stereo Rendering Mode to be set to Multiview.",
@@ -75,7 +80,7 @@ internal static class OVRProjectSetupDepthAPI
             },
             fixMessage: "Set Stereo Rendering Mode to Multiview"
         );
-
+#endif
         //Scene requirement support
         OVRProjectSetup.AddTask(
             level: OVRProjectSetup.TaskLevel.Required,
