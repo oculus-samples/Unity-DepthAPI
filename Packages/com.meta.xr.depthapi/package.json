@@ -2,7 +2,7 @@
   "name": "com.meta.xr.depthapi",
   "displayName": "Depth API",
   "description": "This project gives useful tools to use with Depth API",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "unity": "2022.3",
   "unityRelease": "1f1",
   "dependencies": {
