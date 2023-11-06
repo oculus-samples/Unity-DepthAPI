@@ -32,11 +32,19 @@ namespace Meta.XR.Depth
     {
         public static readonly string DepthTexturePropertyName = "_EnvironmentDepthTexture";
         public static readonly string ReprojectionMatricesPropertyName = "_EnvironmentDepthReprojectionMatrices";
+        public static readonly string Reprojection3DOFMatricesPropertyName = "_EnvironmentDepth3DOFReprojectionMatrices";
         public static readonly string ZBufferParamsPropertyName = "_EnvironmentDepthZBufferParams";
 
         public static readonly int DepthTextureID = Shader.PropertyToID(DepthTexturePropertyName);
         public static readonly int ReprojectionMatricesID = Shader.PropertyToID(ReprojectionMatricesPropertyName);
+        public static readonly int Reprojection3DOFMatricesID = Shader.PropertyToID(Reprojection3DOFMatricesPropertyName);
         public static readonly int ZBufferParamsID = Shader.PropertyToID(ZBufferParamsPropertyName);
+
+        // Required for per object occlusion shaders
+        public bool enable6DoFCalculations = true;
+
+        // Required for screenspace shaders
+        public bool enable3DoFCalculations = false;
 
         private bool _shouldEnableDepthRendering;
         private bool _depthRenderingEnabled;
@@ -79,7 +87,7 @@ namespace Meta.XR.Depth
             }
 
             uint id = 0;
-            if (Utils.GetEnvironmentDepthTextureId(ref id))
+            if (Utils.GetEnvironmentDepthTextureId(ref id) && _xrDisplay != null && _xrDisplay.running)
             {
                 var rt = _xrDisplay.GetRenderTexture(id);
                 Shader.SetGlobalTexture(DepthTextureID, rt);
@@ -108,21 +116,37 @@ namespace Meta.XR.Depth
 #endif
 
             var leftEyeData = Utils.GetEnvironmentDepthFrameDesc(0);
-            reprojectionMatrices[0] = EnvironmentDepthUtils.CalculateReprojection(leftEyeData, leftEyeFrustrum.Fov);
-
             var rightEyeData = Utils.GetEnvironmentDepthFrameDesc(1);
-            reprojectionMatrices[1] = EnvironmentDepthUtils.CalculateReprojection(rightEyeData, rightEyeFrustrum.Fov);
 
             // Assume NearZ and FarZ are the same for left and right eyes
             float depthNearZ = leftEyeData.nearZ;
             float depthFarZ = leftEyeData.farZ;
 
+            // Calculate Environment Depth Camera parameters
             Vector4 depthZBufferParams = EnvironmentDepthUtils.ComputeNdcToLinearDepthParameters(depthNearZ, depthFarZ);
-
-            Shader.SetGlobalMatrixArray(ReprojectionMatricesID,
-                reprojectionMatrices);
             Shader.SetGlobalVector(ZBufferParamsID,
                 depthZBufferParams);
+
+            if (enable6DoFCalculations)
+            {
+                // Calculate 6DOF reprojection matrices
+                reprojectionMatrices[0] = EnvironmentDepthUtils.CalculateReprojection(leftEyeData, leftEyeFrustrum.Fov);
+                reprojectionMatrices[1] =
+                    EnvironmentDepthUtils.CalculateReprojection(rightEyeData, rightEyeFrustrum.Fov);
+
+                Shader.SetGlobalMatrixArray(ReprojectionMatricesID,
+                    reprojectionMatrices);
+            }
+
+            if (enable3DoFCalculations)
+            {
+                // Calculate 3DOF reprojection matrices
+                reprojectionMatrices[0] = EnvironmentDepthUtils.Calculate3DOFReprojection(leftEyeData, leftEyeFrustrum.Fov);
+                reprojectionMatrices[1] = EnvironmentDepthUtils.Calculate3DOFReprojection(rightEyeData, rightEyeFrustrum.Fov);
+
+                Shader.SetGlobalMatrixArray(Reprojection3DOFMatricesID,
+                    reprojectionMatrices);
+            }
         }
     }
 }
