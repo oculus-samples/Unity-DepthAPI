@@ -14,8 +14,11 @@
 
 #include "AutoLight.cginc"
 
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
 #include "../EnvironmentOcclusionBiRP.cginc"
+float _EnvironmentDepthBias;
+
+#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+#define UNITY_REQUIRE_FRAG_WORLDPOS 1
 #endif
 
 //-------------------------------------------------------------------------------------
@@ -375,10 +378,6 @@ struct VertexOutputForwardBase
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
     UNITY_VERTEX_OUTPUT_STEREO
-
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float4 posNDC : TEXCOORD9;
-#endif
 };
 
 VertexOutputForwardBase vertForwardBase (VertexInput v)
@@ -430,12 +429,6 @@ VertexOutputForwardBase vertForwardBase (VertexInput v)
         o.tangentToWorldAndPackedData[2].w = viewDirForParallax.z;
     #endif
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-        float4 ndc = o.pos * 0.5f;
-        o.posNDC.xy = float2(ndc.x, ndc.y * _ProjectionParams.x) + ndc.w;
-        o.posNDC.zw = o.pos.zw;
-    #endif
-
     UNITY_TRANSFER_FOG_COMBINED_WITH_EYE_VEC(o,o.pos);
     return o;
 }
@@ -462,16 +455,7 @@ half4 fragForwardBaseInternal (VertexOutputForwardBase i)
     UNITY_APPLY_FOG(_unity_fogCoord, c.rgb);
     half4 finalColor = OutputForward (c, s.alpha);
 
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float2 uv = i.posNDC.xy / i.posNDC.w;
-    float occlusionValue = CalculateEnvironmentDepthOcclusion(uv, i.pos.z);
-
-    if (occlusionValue < 0.01) {
-      discard;
-    }
-
-    finalColor  *= occlusionValue;
-#endif
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY(i, finalColor, _EnvironmentDepthBias);
 
     return finalColor;
 }
@@ -496,6 +480,10 @@ struct VertexOutputForwardAdd
     // next ones would not fit into SM2.0 limits, but they are always for SM3.0+
 #if defined(_PARALLAXMAP)
     half3 viewDirForParallax            : TEXCOORD8;
+#endif
+
+#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+    float4 posNDC : TEXCOORD9;
 #endif
 
     UNITY_VERTEX_OUTPUT_STEREO
@@ -543,6 +531,12 @@ VertexOutputForwardAdd vertForwardAdd (VertexInput v)
         o.viewDirForParallax = mul (rotation, ObjSpaceViewDir(v.vertex));
     #endif
 
+    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+      float4 ndc = o.pos * 0.5f;
+      o.posNDC.xy = float2(ndc.x, ndc.y * _ProjectionParams.x) + ndc.w;
+      o.posNDC.zw = o.pos.zw;
+    #endif
+
     UNITY_TRANSFER_FOG_COMBINED_WITH_EYE_VEC(o, o.pos);
     return o;
 }
@@ -563,7 +557,12 @@ half4 fragForwardAddInternal (VertexOutputForwardAdd i)
 
     UNITY_EXTRACT_FOG_FROM_EYE_VEC(i);
     UNITY_APPLY_FOG_COLOR(_unity_fogCoord, c.rgb, half4(0,0,0,0)); // fog towards black in additive pass
-    return OutputForward (c, s.alpha);
+
+    half4 finalColor = OutputForward (c, s.alpha);
+
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY(i, finalColor, _EnvironmentDepthBias);
+
+    return finalColor;
 }
 
 half4 fragForwardAdd (VertexOutputForwardAdd i) : SV_Target     // backward compatibility (this used to be the fragment entry function)

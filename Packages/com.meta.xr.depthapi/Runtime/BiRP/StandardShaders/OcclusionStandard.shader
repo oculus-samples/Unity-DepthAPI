@@ -45,6 +45,8 @@ Shader "Meta/Depth/BiRP/Occlusion Standard"
         [HideInInspector] _SrcBlend ("__src", Float) = 1.0
         [HideInInspector] _DstBlend ("__dst", Float) = 0.0
         [HideInInspector] _ZWrite ("__zw", Float) = 1.0
+
+        _EnvironmentDepthBias ("Environment Depth Bias", Float) = 0.0
     }
 
     CGINCLUDE
@@ -130,7 +132,8 @@ Shader "Meta/Depth/BiRP/Occlusion Standard"
 
             #pragma vertex vertAdd
             #pragma fragment fragAdd
-            #include "UnityStandardCoreForward.cginc"
+            #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
+            #include "OcclusionUnityStandardCoreForward.cginc"
 
             ENDCG
         }

@@ -37,13 +37,16 @@ Shader "Meta/Depth/BiRP/ExampleUnlitShader"
 
             struct Varyings
             {
-                float2 uv : TEXCOORD0;
                 float4 positionCS : SV_POSITION;
-                float4 positionNDC : TEXCOORD1;
+
+                // 3. This macro adds required data field to the varyings struct
+                //    The number has to be filled with the recent TEXCOORD number + 1
+                //    Or 0 as in this case, if there are no other TEXCOORD fields
+                META_DEPTH_VERTEX_OUTPUT(0)
 
                 UNITY_VERTEX_INPUT_INSTANCE_ID
-                // 3. Fragment shader needs stereo information to understand what eye
-                // is currently rendered to get depth from the correct texture
+                // 4. The fragment shader needs to understand to which eye it's currently
+                //    rendering, in order to get depth from the correct texture.
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -56,17 +59,15 @@ Shader "Meta/Depth/BiRP/ExampleUnlitShader"
                 Varyings output;
 
                 output.positionCS = UnityObjectToClipPos(input.vertex);;
-                output.uv = input.uv;
 
-                // 4. Screen position is required in normalized display coordinates form to query the depth
-                float4 ndc = output.positionCS * 0.5f;
-                output.positionNDC.xy = float2(ndc.x, ndc.y * _ProjectionParams.x) + ndc.w;
-                output.positionNDC.zw = output.positionCS.zw;
+                // 5. World position is required to calculate the occlusions.
+                //    This macro will calculate and set world position value in the output Varyings structure.
+                META_DEPTH_INITIALIZE_VERTEX_OUTPUT(output, input.vertex);
 
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, output);
 
-                // 5. Passes stereo information to frag shader
+                // 6. Passes stereo information to frag shader
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
                 return output;
@@ -75,25 +76,18 @@ Shader "Meta/Depth/BiRP/ExampleUnlitShader"
             half4 frag(Varyings input) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
-                // 6. Initializes global stereo constant for the frag shader
+                // 7. Initializes global stereo constant for the frag shader
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
                 half4 finalColor = _BaseColor;
 
-                // 7. Calculate UV
-                float2 uv = input.positionNDC.xy / input.positionNDC.w;
-
-                // 8. Calculate occlusion value:
-                    // 0 - completely occluded
-                    // 1 - completely visible
-                    // 0-1 - soft occlusion if enabled
-                float occlusionValue = CalculateEnvironmentDepthOcclusion(uv, input.positionCS.z);
-                if (occlusionValue < 0.01) {
-                  discard;
-                }
-
-                // 9. premultiply alpha and color with occlusions
-                finalColor *= occlusionValue;
+                // 8. A third macro required to enable occlusions.
+                //    It requires previous macros to be there as well as the naming behind the macro is strict.
+                //    It will enable soft or hard occlusions depending on the current keyword set.
+                //    finalColor value will be multiplied by the occlusion visibility value.
+                //    Occlusion visibility value is 0 if virtual object is completely covered by environment and vice versa.
+                //    Fully occluded pixels will be discarded
+                META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY(input, finalColor, 0);
 
                 return finalColor;
             }

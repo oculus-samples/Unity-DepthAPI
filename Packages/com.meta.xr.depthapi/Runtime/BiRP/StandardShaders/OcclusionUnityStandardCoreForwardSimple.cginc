@@ -5,8 +5,10 @@
 
 #include "UnityStandardCore.cginc"
 
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
 #include "../EnvironmentOcclusionBiRP.cginc"
+float _EnvironmentDepthBias;
+#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+#define UNITY_REQUIRE_FRAG_WORLDPOS 1
 #endif
 
 //  Does not support: _PARALLAXMAP, DIRLIGHTMAP_COMBINED
@@ -242,16 +244,7 @@ half4 fragForwardBaseSimpleInternal (VertexOutputBaseSimple i)
 
     half4 finalColor = OutputForward (half4(c, 1), s.alpha);
 
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float2 uv = i.posNDC.xy / i.posNDC.w;
-    float occlusionValue = CalculateEnvironmentDepthOcclusion(uv, i.pos.z);
-
-    if (occlusionValue < 0.01) {
-      discard;
-    }
-
-    finalColor  *= occlusionValue;
-#endif
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY(i, finalColor, _EnvironmentDepthBias);
 
     return finalColor ;
 }

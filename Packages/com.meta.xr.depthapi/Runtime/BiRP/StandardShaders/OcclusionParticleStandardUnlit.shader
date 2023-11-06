@@ -41,6 +41,8 @@ Shader "Meta/Depth/BiRP/Occlusion Particles Standard Unlit"
         [HideInInspector] _CameraFadeParams ("__camerafadeparams", Vector) = (0,0,0,0)
         [HideInInspector] _ColorAddSubDiff ("__coloraddsubdiff", Vector) = (0,0,0,0)
         [HideInInspector] _DistortionStrengthScaled ("__distortionstrengthscaled", Float) = 0.0
+
+        _EnvironmentDepthBias ("Environment Depth Bias", Float) = 0.0
     }
 
     Category

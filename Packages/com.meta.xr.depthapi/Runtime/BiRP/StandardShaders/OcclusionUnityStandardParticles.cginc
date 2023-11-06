@@ -15,9 +15,8 @@
 #include "UnityPBSLighting.cginc"
 #include "UnityStandardParticleInstancing.cginc"
 
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
 #include "../EnvironmentOcclusionBiRP.cginc"
-#endif
+float _EnvironmentDepthBias;
 
 // Particles surface shader has a lot of variants in it, but some of those do not affect
 // code generation (i.e. don't have inpact on which Input/SurfaceOutput things are read or written into).
@@ -69,12 +68,14 @@ struct Input
     #if defined(_FLIPBOOK_BLENDING)
     float3 texcoord2AndBlend;
     #endif
-    #if defined(SOFTPARTICLES_ON) || defined(_FADING_ON) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+    #if defined(SOFTPARTICLES_ON) || defined(_FADING_ON)
     float4 projectedPosition;
     #endif
     #if _DISTORTION_ON
     float4 grabPassPosition;
     #endif
+
+    META_DEPTH_VERTEX_OUTPUT(5)
 };
 
 // Non-surface shader v2f structure
@@ -87,12 +88,15 @@ struct VertexOutput
     #if defined(_FLIPBOOK_BLENDING)
     float3 texcoord2AndBlend : TEXCOORD2;
     #endif
-    #if defined(SOFTPARTICLES_ON) || defined(_FADING_ON) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+    #if defined(SOFTPARTICLES_ON) || defined(_FADING_ON)
     float4 projectedPosition : TEXCOORD3;
     #endif
     #if _DISTORTION_ON
     float4 grabPassPosition : TEXCOORD4;
     #endif
+
+    META_DEPTH_VERTEX_OUTPUT(5)
+
     UNITY_VERTEX_OUTPUT_STEREO
 
 };
@@ -210,7 +214,7 @@ half3 HSVtoRGB(half3 arg1)
 #endif
 
 // Fading vertex function
-#if defined(SOFTPARTICLES_ON) || defined(_FADING_ON) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+#if defined(SOFTPARTICLES_ON) || defined(_FADING_ON)
 #define vertFading(o) \
     o.projectedPosition = ComputeScreenPos (clipPosition); \
     COMPUTE_EYEDEPTH(o.projectedPosition.z);
@@ -352,14 +356,14 @@ void surf (Input IN, inout SurfaceOutputStandard o)
     #endif
 
     #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float occlusion = CalculateEnvironmentDepthOcclusion(IN.projectedPosition.xy / IN.projectedPosition.w, IN.projectedPosition.z);
+    float occlusionValue = META_DEPTH_GET_OCCLUSION_VALUE_WORLDPOS(IN.posWorld, _EnvironmentDepthBias);
 
-    if (occlusion < 0.01) {
+    if (occlusionValue < 0.01) {
       discard;
     }
 
-    o.Alpha *= occlusion;
-    o.Albedo *= occlusion;
+    o.Alpha *= occlusionValue;
+    o.Albedo *= occlusionValue;
     #endif
 }
 
@@ -377,6 +381,8 @@ void vertParticleUnlit (appdata_particles v, out VertexOutput o)
     vertTexcoord(v, o);
     vertFading(o);
     vertDistortion(o);
+
+    META_DEPTH_INITIALIZE_VERTEX_OUTPUT(o, v.vertex);
 
     UNITY_TRANSFER_FOG(o, o.vertex);
 }
@@ -436,15 +442,7 @@ half4 fragParticleUnlit(VertexOutput IN) : SV_Target
     UNITY_APPLY_FOG(IN.fogCoord, result);                                   // opaque - normal fog
     #endif
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float occlusion = CalculateEnvironmentDepthOcclusion(IN.projectedPosition.xy / IN.projectedPosition.w, IN.vertex.z);
-
-    if (occlusion < 0.01) {
-      discard;
-    }
-
-    result *= occlusion;
-    #endif
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY(IN, result, _EnvironmentDepthBias);
 
     return result;
 }

@@ -1,22 +1,21 @@
+#ifndef META_DEPTH_ENVIRONMENT_OCCLUSION_BIRP_INCLUDED
+#define META_DEPTH_ENVIRONMENT_OCCLUSION_BIRP_INCLUDED
+
 uniform UNITY_DECLARE_TEX2DARRAY(_EnvironmentDepthTexture);
 
-float SampleEnvironmentDepth(float2 reprojectedUV) {
+#include "UnityCG.cginc"
+
+float SampleEnvironmentDepth(const float2 reprojectedUV) {
   return UNITY_SAMPLE_TEX2DARRAY(_EnvironmentDepthTexture,
            float3(reprojectedUV, (float)unity_StereoEyeIndex)).r;
 }
 
+#define META_DEPTH_CONVERT_OBJECT_TO_WORLD(objectPos) mul(unity_ObjectToWorld, objectPos).xyz;
+
+float3 DepthConvertDepthToLinear(float zspace) {
+  return LinearEyeDepth(zspace);
+}
+
 #include "Packages/com.meta.xr.depthapi/Runtime/Core/Shaders/EnvironmentOcclusion.cginc"
 
-float CalculateEnvironmentDepthOcclusion(float2 uv, float sceneDepth) {
-  #if !(defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION))
-    return 1.0f;
-  #endif
-
-  #if defined(HARD_OCCLUSION)
-    return 1.0f - CalculateEnvironmentDepthHardOcclusion_Internal(uv, LinearEyeDepth(sceneDepth));
-  #elif defined(SOFT_OCCLUSION)
-    return 1.0f - CalculateEnvironmentDepthSoftOcclusion_Internal(uv, LinearEyeDepth(sceneDepth));
-  #endif
-
-  return 1.0f;
-}
+#endif
