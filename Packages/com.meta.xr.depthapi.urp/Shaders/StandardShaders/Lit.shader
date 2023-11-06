@@ -71,6 +71,8 @@ Shader "Meta/Depth/URP/Occlusion Lit"
         [HideInInspector][NoScaleOffset]unity_Lightmaps("unity_Lightmaps", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_LightmapsInd("unity_LightmapsInd", 2DArray) = "" {}
         [HideInInspector][NoScaleOffset]unity_ShadowMasks("unity_ShadowMasks", 2DArray) = "" {}
+
+        _EnvironmentDepthBias ("Environment Depth Bias", Float) = 0.0
     }
 
     SubShader

@@ -7,8 +7,11 @@
 #endif
 
 #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    #include "../EnvironmentOcclusionURP.hlsl"
+#define REQUIRES_WORLD_SPACE_POS_INTERPOLATOR 1
 #endif
+
+#include "../EnvironmentOcclusionURP.hlsl"
+float _EnvironmentDepthBias;
 
 // GLES2 has limited amount of interpolators
 #if defined(_PARALLAXMAP) && !defined(SHADER_API_GLES)
@@ -64,10 +67,6 @@ struct Varyings
 #ifdef DYNAMICLIGHTMAP_ON
     float2  dynamicLightmapUV : TEXCOORD9; // Dynamic lightmap UVs
 #endif
-
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float4 positionNDC : TEXCOORD10;
-    #endif
 
     float4 positionCS               : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -198,10 +197,6 @@ Varyings LitPassVertex(Attributes input)
     output.shadowCoord = GetShadowCoord(vertexInput);
 #endif
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    output.positionNDC = vertexInput.positionNDC;
-    #endif
-
     output.positionCS = vertexInput.positionCS;
 
     return output;
@@ -248,15 +243,7 @@ void LitPassFragment(
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float occlusion = CalculateEnvironmentDepthOcclusion(input.positionNDC.xy / input.positionNDC.w, input.positionCS.z);
-
-    if (occlusion < 0.01) {
-      discard;
-    }
-
-    color *= occlusion;
-    #endif
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(input.positionWS, color, _EnvironmentDepthBias);
 
     outColor = color;
 

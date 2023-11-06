@@ -8,9 +8,8 @@
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"
 #endif
 
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    #include "../EnvironmentOcclusionURP.hlsl"
-#endif
+#include "../EnvironmentOcclusionURP.hlsl"
+float _EnvironmentDepthBias;
 
 struct Attributes
 {
@@ -31,14 +30,13 @@ struct Varyings
     float fogCoord : TEXCOORD1;
     float4 positionCS : SV_POSITION;
 
-    #if defined(DEBUG_DISPLAY)
+    #if defined(DEBUG_DISPLAY) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
     float3 positionWS : TEXCOORD2;
-    float3 normalWS : TEXCOORD3;
-    float3 viewDirWS : TEXCOORD4;
     #endif
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float4 positionNDC : TEXCOORD5;
+    #if defined(DEBUG_DISPLAY)
+    float3 normalWS : TEXCOORD3;
+    float3 viewDirWS : TEXCOORD4;
     #endif
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -49,12 +47,16 @@ void InitializeInputData(Varyings input, out InputData inputData)
 {
     inputData = (InputData)0;
 
-    #if defined(DEBUG_DISPLAY)
+    #if defined(DEBUG_DISPLAY) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
     inputData.positionWS = input.positionWS;
+    #else
+    inputData.positionWS = float3(0, 0, 0);
+    #endif
+
+    #if defined(DEBUG_DISPLAY)
     inputData.normalWS = input.normalWS;
     inputData.viewDirectionWS = input.viewDirWS;
     #else
-    inputData.positionWS = float3(0, 0, 0);
     inputData.normalWS = half3(0, 0, 1);
     inputData.viewDirectionWS = half3(0, 0, 1);
     #endif
@@ -84,6 +86,10 @@ Varyings UnlitPassVertex(Attributes input)
     output.fogCoord = ComputeFogFactor(vertexInput.positionCS.z);
     #endif
 
+    #if defined(DEBUG_DISPLAY) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+    output.positionWS = vertexInput.positionWS;
+    #endif
+
     #if defined(DEBUG_DISPLAY)
     // normalWS and tangentWS already normalize.
     // this is required to avoid skewing the direction during interpolation
@@ -92,13 +98,8 @@ Varyings UnlitPassVertex(Attributes input)
     half3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
 
     // already normalized from normal transform to WS.
-    output.positionWS = vertexInput.positionWS;
     output.normalWS = normalInput.normalWS;
     output.viewDirWS = viewDirWS;
-    #endif
-
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    output.positionNDC = vertexInput.positionNDC;
     #endif
 
     return output;
@@ -157,15 +158,10 @@ void UnlitPassFragment(
     finalColor.rgb = MixFog(finalColor.rgb, fogFactor);
     finalColor.a = OutputAlpha(finalColor.a, IsSurfaceTypeTransparent(_Surface));
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float occlusion = CalculateEnvironmentDepthOcclusion(input.positionNDC.xy / input.positionNDC.w, input.positionCS.z);
+ #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS_NAME(input, positionWS, finalColor, _EnvironmentDepthBias);
+#endif
 
-    if (occlusion < 0.01) {
-      discard;
-    }
-
-    finalColor *= occlusion;
-    #endif
 
     outColor = finalColor;
 

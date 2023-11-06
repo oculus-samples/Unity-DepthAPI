@@ -15,16 +15,12 @@ float SampleEnvironmentDepth(const float2 reprojectedUV) {
   return SAMPLE_TEXTURE2D_X(_EnvironmentDepthTexture, sampler_EnvironmentDepthTexture, reprojectedUV).r;
 }
 
-#include "Packages/com.meta.xr.depthapi/Runtime/Core/Shaders/EnvironmentOcclusion.cginc"
+#define META_DEPTH_CONVERT_OBJECT_TO_WORLD(objectPos) TransformObjectToWorld(objectPos).xyz
 
-float CalculateEnvironmentDepthOcclusion(float2 uv, float sceneDepth) {
-  #if defined(HARD_OCCLUSION)
-    return 1.0f - CalculateEnvironmentDepthHardOcclusion_Internal(uv, LinearEyeDepth(sceneDepth, _ZBufferParams));
-  #elif defined(SOFT_OCCLUSION)
-    return 1.0f - CalculateEnvironmentDepthSoftOcclusion_Internal(uv, LinearEyeDepth(sceneDepth, _ZBufferParams));
-  #endif
-
-  return 1.0f;
+float DepthConvertDepthToLinear(float zspace) {
+  return LinearEyeDepth(zspace, _ZBufferParams);
 }
+
+#include "Packages/com.meta.xr.depthapi/Runtime/Core/Shaders/EnvironmentOcclusion.cginc"
 
 #endif

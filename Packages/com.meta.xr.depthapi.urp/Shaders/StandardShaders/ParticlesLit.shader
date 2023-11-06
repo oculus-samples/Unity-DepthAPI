@@ -64,6 +64,8 @@ Shader "Meta/Depth/URP/Occlusion Particles Lit"
         [HideInInspector] _Glossiness("gloss", Float) = 0
         [HideInInspector] _Mode("mode", Float) = 0
         [HideInInspector] _Color("color", Color) = (1,1,1,1)
+
+        _EnvironmentDepthBias ("Environment Depth Bias", Float) = 0.0
     }
 
     HLSLINCLUDE

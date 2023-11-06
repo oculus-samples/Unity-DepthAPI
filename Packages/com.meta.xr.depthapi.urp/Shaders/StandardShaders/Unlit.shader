@@ -26,6 +26,8 @@ Shader "Meta/Depth/URP/Occlusion Unlit"
         [HideInInspector] _MainTex("BaseMap", 2D) = "white" {}
         [HideInInspector] _Color("Base Color", Color) = (0.5, 0.5, 0.5, 1)
         [HideInInspector] _SampleGI("SampleGI", float) = 0.0 // needed from bakedlit
+
+        _EnvironmentDepthBias ("Environment Depth Bias", Float) = 0.0
     }
 
     SubShader

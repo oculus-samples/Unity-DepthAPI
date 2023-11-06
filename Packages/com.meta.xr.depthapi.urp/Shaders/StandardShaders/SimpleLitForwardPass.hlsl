@@ -6,9 +6,8 @@
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"
 #endif
 
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    #include "../EnvironmentOcclusionURP.hlsl"
-#endif
+#include "../EnvironmentOcclusionURP.hlsl"
+float _EnvironmentDepthBias;
 
 struct Attributes
 {
@@ -50,10 +49,6 @@ struct Varyings
 #ifdef DYNAMICLIGHTMAP_ON
     float2  dynamicLightmapUV : TEXCOORD8; // Dynamic lightmap UVs
 #endif
-
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float4 positionNDC : TEXCOORD9;
-    #endif
 
     float4 positionCS                  : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -169,10 +164,6 @@ Varyings LitPassVertexSimple(Attributes input)
         output.shadowCoord = GetShadowCoord(vertexInput);
     #endif
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    output.positionNDC = vertexInput.positionNDC;
-    #endif
-
     return output;
 }
 
@@ -207,16 +198,7 @@ void LitPassFragmentSimple(
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
-
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float occlusion = CalculateEnvironmentDepthOcclusion(input.positionNDC.xy / input.positionNDC.w, input.positionCS.z);
-
-    if (occlusion < 0.01) {
-      discard;
-    }
-
-    color *= occlusion;
-    #endif
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(input.positionWS, color, _EnvironmentDepthBias);
 
     outColor = color;
 

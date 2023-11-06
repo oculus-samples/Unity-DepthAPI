@@ -9,6 +9,7 @@ Shader "Depth/Unlit"
     {
         Tags { "RenderType" = "Opaque" }
 
+        // 0. It's important to have One OneMinusSrcAlpha so it blends properly against transparent background (passthrough)
         Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
 
         Pass
@@ -18,9 +19,12 @@ Shader "Depth/Unlit"
             #pragma vertex vert
             #pragma fragment frag
 
+            // 1. Keywords are used to enable different occlusions
             #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            // 2. Include the file with utility functions
             #include "Packages/com.meta.xr.depthapi.urp/Shaders/EnvironmentOcclusionURP.hlsl"
 
             struct Attributes
@@ -33,10 +37,15 @@ Shader "Depth/Unlit"
             struct Varyings
             {
                 float4 positionCS : SV_POSITION;
-                float4 positionNDC : TEXCOORD1;
+
+                // 3. This macro adds required data field to the varyings struct
+                //    The number has to be filled with the recent TEXCOORD number + 1
+                //    Or 0 as in this case, if there are no other TEXCOORD fields
+                META_DEPTH_VERTEX_OUTPUT(0)
 
                 UNITY_VERTEX_INPUT_INSTANCE_ID
-                // Very important to support stereo rendering
+                // 4. The fragment shader needs to understand to which eye it's currently
+                //    rendering, in order to get depth from the correct texture.
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -46,20 +55,19 @@ Shader "Depth/Unlit"
 
             Varyings vert(Attributes input)
             {
-                UNITY_SETUP_INSTANCE_ID(input);
-
                 Varyings output;
+
+                UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, output);
-                // Stereo rendering support
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
                 output.positionCS = TransformObjectToHClip(input.vertex.xyz);
 
-                // Calculate normalized display coordinates
-                float4 ndc = output.positionCS * 0.5f;
-                // pass them to frag stage
-                output.positionNDC.xy = float2(ndc.x, ndc.y * _ProjectionParams.x) + ndc.w;
-                output.positionNDC.zw = output.positionCS.zw;
+                // 5. World position is required to calculate the occlusions.
+                //    This macro will calculate and set world position value in the output Varyings structure.
+                META_DEPTH_INITIALIZE_VERTEX_OUTPUT(output, input.vertex);
+
+                // 6. Passes stereo information to frag shader
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
                 return output;
             }
@@ -67,27 +75,18 @@ Shader "Depth/Unlit"
             half4 frag(Varyings input) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
-                // Stereo rendering support
+                // 7. Initializes global stereo constant for the frag shader
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
                 half4 finalColor = _BaseColor;
 
-                // Calculate screen space UV
-                float2 uv = input.positionNDC.xy / input.positionNDC.w;
-                // Calculate occlusion value where
-                // 1 - not occluded
-                // 0 - fully occluded
-                // 0-1 - gradient if soft occlusions enabled
-                float occlusionValue = CalculateEnvironmentDepthOcclusion(uv, input.positionCS.z);
-
-                // Reject non visible fragments so they don't render to depth
-                if (occlusionValue < 0.05)
-                {
-                    discard;
-                }
-
-                // multiply color and alpha
-                finalColor *= occlusionValue;
+                // 8. A third macro required to enable occlusions.
+                //    It requires previous macros to be there as well as the naming behind the macro is strict.
+                //    It will enable soft or hard occlusions depending on the current keyword set.
+                //    finalColor value will be multiplied by the occlusion visibility value.
+                //    Occlusion visibility value is 0 if virtual object is completely covered by environment and vice versa.
+                //    Fully occluded pixels will be discarded
+                META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY(input, finalColor, 0);
 
                 return finalColor ;
             }

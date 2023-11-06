@@ -4,9 +4,8 @@
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/LODCrossFade.hlsl"
 #endif
 
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    #include "../EnvironmentOcclusionURP.hlsl"
-#endif
+#include "../EnvironmentOcclusionURP.hlsl"
+float _EnvironmentDepthBias;
 
 struct Attributes
 {
@@ -30,8 +29,11 @@ struct Varyings
     half4 tangentWS : TEXCOORD3;
     #endif
 
-    #if defined(DEBUG_DISPLAY)
+    #if defined(DEBUG_DISPLAY) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
     float3 positionWS : TEXCOORD4;
+    #endif
+
+    #if defined(DEBUG_DISPLAY)
     float3 viewDirWS : TEXCOORD5;
     #endif
 
@@ -47,11 +49,15 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 {
     inputData = (InputData)0;
 
-    #if defined(DEBUG_DISPLAY)
+    #if defined(DEBUG_DISPLAY) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
     inputData.positionWS = input.positionWS;
-    inputData.viewDirectionWS = input.viewDirWS;
     #else
     inputData.positionWS = float3(0, 0, 0);
+    #endif
+
+    #if defined(DEBUG_DISPLAY)
+    inputData.viewDirectionWS = input.viewDirWS;
+    #else
     inputData.viewDirectionWS = half3(0, 0, 1);
     #endif
 
@@ -110,8 +116,11 @@ Varyings BakedLitForwardPassVertex(Attributes input)
     OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
     OUTPUT_SH(output.normalWS, output.vertexSH);
 
-    #if defined(DEBUG_DISPLAY)
+    #if defined(DEBUG_DISPLAY) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
     output.positionWS = vertexInput.positionWS;
+    #endif
+
+    #if defined(DEBUG_DISPLAY)
     output.viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
     #endif
 
@@ -162,15 +171,9 @@ void BakedLitForwardPassFragment(
 
     finalColor.a = OutputAlpha(finalColor.a, _Surface);
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float occlusion = CalculateEnvironmentDepthOcclusion(input.positionNDC.xy / input.positionNDC.w, input.positionCS.z);
-
-    if (occlusion < 0.01) {
-      discard;
-    }
-
-    finalColor *= occlusion;
-    #endif
+#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS_NAME(input, positionWS, finalColor, _EnvironmentDepthBias);
+#endif
 
     outColor = finalColor;
 

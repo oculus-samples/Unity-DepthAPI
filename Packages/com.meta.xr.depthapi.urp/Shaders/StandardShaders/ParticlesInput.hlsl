@@ -44,7 +44,7 @@ struct VaryingsParticle
             half3 viewDirWS        : TEXCOORD3;
         #endif
 
-        #if defined(_SOFTPARTICLES_ON) || defined(_FADING_ON) || defined(_DISTORTION_ON) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+        #if defined(_SOFTPARTICLES_ON) || defined(_FADING_ON) || defined(_DISTORTION_ON)
             float4 projectedPosition: TEXCOORD6;
         #endif
 

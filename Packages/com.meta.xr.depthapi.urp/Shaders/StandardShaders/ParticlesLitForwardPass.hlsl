@@ -4,9 +4,8 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Particles.hlsl"
 
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    #include "../EnvironmentOcclusionURP.hlsl"
-#endif
+#include "../EnvironmentOcclusionURP.hlsl"
+float _EnvironmentDepthBias;
 
 void InitializeInputData(VaryingsParticle input, half3 normalTS, out InputData inputData)
 {
@@ -96,7 +95,7 @@ VaryingsParticle ParticlesLitVertex(AttributesParticle input)
     GetParticleTexcoords(output.texcoord, input.texcoords.xy);
 #endif
 
-#if defined(_SOFTPARTICLES_ON) || defined(_FADING_ON) || defined(_DISTORTION_ON) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+#if defined(_SOFTPARTICLES_ON) || defined(_FADING_ON) || defined(_DISTORTION_ON)
     output.projectedPosition = vertexInput.positionNDC;
 #endif
 
@@ -126,10 +125,7 @@ half4 ParticlesLitFragment(VaryingsParticle input) : SV_Target
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float occlusion = CalculateEnvironmentDepthOcclusion(input.projectedPosition.xy / input.projectedPosition.w, input.clipPos.z);
-    color *= occlusion;
-    #endif
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(input.positionWS, color, _EnvironmentDepthBias);
 
     return color;
 }

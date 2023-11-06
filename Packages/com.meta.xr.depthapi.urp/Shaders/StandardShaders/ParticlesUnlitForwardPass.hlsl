@@ -4,9 +4,8 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Unlit.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Particles.hlsl"
 
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    #include "../EnvironmentOcclusionURP.hlsl"
-#endif
+#include "../EnvironmentOcclusionURP.hlsl"
+float _EnvironmentDepthBias;
 
 void InitializeInputData(VaryingsParticle input, SurfaceData surfaceData, out InputData inputData)
 {
@@ -118,7 +117,7 @@ VaryingsParticle vertParticleUnlit(AttributesParticle input)
     GetParticleTexcoords(output.texcoord, input.texcoords.xy);
 #endif
 
-#if defined(_SOFTPARTICLES_ON) || defined(_FADING_ON) || defined(_DISTORTION_ON) || defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
+#if defined(_SOFTPARTICLES_ON) || defined(_FADING_ON) || defined(_DISTORTION_ON)
     output.projectedPosition = vertexInput.positionNDC;
 #endif
 
@@ -150,10 +149,7 @@ half4 fragParticleUnlit(VaryingsParticle input) : SV_Target
     finalColor.rgb = MixFog(finalColor.rgb, inputData.fogCoord);
     finalColor.a = OutputAlpha(finalColor.a, IsSurfaceTypeTransparent(_Surface));
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float occlusion = CalculateEnvironmentDepthOcclusion(input.projectedPosition.xy / input.projectedPosition.w, input.clipPos.z);
-    finalColor *= occlusion;
-    #endif
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS_NAME(input, positionWS, finalColor, _EnvironmentDepthBias);
 
     return finalColor;
 }
