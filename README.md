@@ -174,9 +174,9 @@ The **EnvironmentDepthOcclusion** object we added in the previous steps has a co
 
 ![alt_text](Media/EnablingOcclusions.png "image_tooltip")
 
-### 7. Using Environment depth bias to combat z fighting
+### 7. Using Environment depth bias to solve z-fighting in occlusion shaders
 
-There is a utility script called OcclusionDepthBias.cs that lets you easily change the EnvironmentDepthBias variable on any game object by simply calling its public DepthBiasAdjust() function.
+Provided BiRP and URP occlusion shaders have a property that controls environment depth bias. As provided shaders reuse Unity's material editors, the property can only be changed through scripts. The package provides a utility script 'OcclusionDepthBias.cs' that lets you easily change the EnvironmentDepthBias property on any game object by simply calling its public DepthBiasAdjust() function.
 ![alt_text](Media/OcclusionDepthBias.png "image_tooltip")
 
 Alternativelly, you may set the value of "_EnvironmentDepthBias" from any material that has an occlusion shader on it.
@@ -202,34 +202,33 @@ For URP:
 // DepthAPI Environment Occlusion
 #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
 ```
-#### Step 2. Add positionNDC to your **vertex** output struct
+#### Step 2. If the struct already contains world coordinates - skip this step, otherwise, use a special macro to declare the field:
 ```ShaderLab
 struct v2f
 {
    float4 vertex : SV_POSITION;
-   float4 positionNDC : TEXCOORD0;
+
+
+   float4 someOtherVarying : TEXCOORD0;
+
+
+   META_DEPTH_VERTEX_OUTPUT(1) // the number should stand for the previous TEXCOORD# + 1
+
 
    UNITY_VERTEX_INPUT_INSTANCE_ID
    UNITY_VERTEX_OUTPUT_STEREO // required for stereo
 };
 ```
-#### Step 3. Calculate NDC in vertex shader:
-Vertex shaders need to calculate positionNDC (NDC stands for Normalized Device Coordinates).
-Example:
+#### Step 3. If the struct already contains world coordinates - skip this step. If not, use a special macro:
 ```Shaderlab
 v2f vert (appdata v) {
    v2f o;
 
    UNITY_SETUP_INSTANCE_ID(v);
    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o); // required to support stereo
-   // o.vertex might have a different name in your vert shader
-   // adjust according to the name you use for clip space coordinate
-   o.vertex = UnityObjectToClipPos(v.vertex);
-   // assuming you've already had a functional vert shader,
-   // this is the only bit you need to add:
-   float4 ndc = o.vertex * 0.5f;
-   o.positionNDC.xy = float2(ndc.x, ndc.y * _ProjectionParams.x) + ndc.w;
-   o.positionNDC.zw = o.vertex.zw;
+
+   // v.vertex (object space coordinate) might have a different name in your vert shader
+   META_DEPTH_INITIALIZE_VERTEX_OUTPUT(o, v.vertex);
 
    return o;
 }
@@ -242,26 +241,17 @@ half4 frag(v2f i) {
    // this is something your shader will return without occlusions
    half4 fragmentShaderResult = someColor;
 
-   // calculate UV for the depth texture lookup for occlusions
-   float2 uv = i.positionNDC.xy / i.positionNDC.w;
+   // Third field is for environment depth bias. 0.0 means the occlusion will be calculated with depths as they are.
+   META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY(i, fragmentShaderResult, 0.0);
 
-   // pass UV and the current depth of the texel
-   float occlusionValue = CalculateEnvironmentDepthOcclusion(uv, i.vertex.z);
-
-   // consider early rejection to not write to depth if it's an opaque shader
-   if (occlusionValue < 0.01) {
-       discard;
-   }
-
-   // premultiply color and alpha by occlusion value
-   // when it's 1 - color is not affected - virtual covers real
-   // when it's 0 - texel is invisible - virtual is under real
-   // when it's in between - texel is semi transparent
-   fragmentShaderResult *= occlusionValue;
-
-   return result;
+   return fragmentShaderResult;
 }
 ```
+If you already have a world position varyings being passed to your fragment shader, you can use this macro:
+```Shaderlab
+META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(yourWorldPosition, fragmentShaderResult, 0.0);
+```
+
 ### 9.Testing
 Build the app and install it on a Quest 3. Notice the objects with occluded shaders will have occlusions.
 
