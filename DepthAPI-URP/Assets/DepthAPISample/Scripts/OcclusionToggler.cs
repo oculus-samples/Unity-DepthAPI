@@ -53,7 +53,8 @@ namespace DepthAPISample
 
             _occlusionController.EnableOcclusionType(newType);
 
-            _currentOcclusionsModeText.text = $"Occlusion mode: \n{newType.ToString()}";
+            if (_currentOcclusionsModeText)
+                _currentOcclusionsModeText.text = $"Occlusion mode: \n{newType.ToString()}";
         }
     }
 }

@@ -384,6 +384,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 940ca5991157c5b418edaf5e5226df05, type: 3}
+--- !u!114 &470313522 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 121279618062894758, guid: 940ca5991157c5b418edaf5e5226df05,
+    type: 3}
+  m_PrefabInstance: {fileID: 470313521}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b13589911d00d49bb8395c49568d3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &499622300
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -722,6 +734,52 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1 &849712535
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 849712537}
+  - component: {fileID: 849712536}
+  m_Layer: 0
+  m_Name: OcclusionToggler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &849712536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849712535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c9afd718a2e5b4bb2275fda8493f82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _occlusionController: {fileID: 470313522}
+  _currentOcclusionsModeText: {fileID: 0}
+--- !u!4 &849712537
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849712535}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.71343976, y: 0.92490023, z: 0.78705704}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &898835718
 GameObject:
   m_ObjectHideFlags: 0
@@ -2039,17 +2097,20 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Press <b>Y </b>to Toggle Walls visibility.
 
-    Press <b>Right Index Trigger
-    </b> to place posters on the wall.
+    Press <b>A </b>to Toggle
+    Walls visibility.
+
+    Press <b>Right Index Trigger </b> to place posters on
+    the wall.
 
     Press <b>B </b>to clear placed posters.
 
-    Use
-    <b>Right thumb stick up and down</b> to adjust highlighted poster Depth Bias
-    value.
+    Use <b>Right thumb
+    stick up and down</b> to adjust highlighted poster Depth Bias value.
 
 
-    Press <b>Start</b> to change scenes.'
+    Press
+    <b>Start</b> to change scenes.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2076,8 +2137,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 7
-  m_fontSizeBase: 7
+  m_fontSize: 6.8
+  m_fontSizeBase: 6.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2289,3 +2350,4 @@ SceneRoots:
   - {fileID: 903486869}
   - {fileID: 1531187236}
   - {fileID: 7115512418399905222}
+  - {fileID: 849712537}
