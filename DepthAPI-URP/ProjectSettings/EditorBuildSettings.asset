@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/DepthAPISample/Scenes/PerObjectOcclusion.unity
     guid: ec181c541f842fb42aa2f91b455a14c1
   - enabled: 1
-    path: Assets/DepthAPISample/Scenes/URPSceneAPIPlacement.unity
+    path: Assets/DepthAPISample/Scenes/SceneAPIPlacement.unity
     guid: b35206816de80c64f89d3f882957a0a8
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 7dc924bb27a54ae49b2b998c2868fcdc,
