@@ -68,6 +68,13 @@ In this scene, we show a particular setup where each object has different behavi
 
 <img src="./Media/occlusionPerObject.gif" alt="Occlusion Mode Per Object" width="1000" height="1000" />
 
+#### SceneAPIPlacement
+This example covers the solution for z-fighting between virtual objects and environment depth when they are placed close to real surfaces. The scene utilizes Scene API to enable the precise placement of virtual posters on detected walls. This is a worst case scenario for z-fighting and the best example to show how it's mitigated.
+Supplied shaders contain a float _EnvironmentDepthBias property that can be changed from the code and the SceneAPIPlacement scene showcases how to use it.
+Depth API measurements have an inherent error that also scales with distance. The environment depth bias formula is implemented accordingly. This means that the value that is supplied to _EnvironmentDepthBias stands for virtual depth offset by 1 unit distance away from the camera. Offset is calculated towards the camera; a higher value means the virtual object will be brought closer to the camera. _EnvironmentDepthBias is scaling linearly with metric distance. We recommend using the value of 0.06 but the value might depend on the type of content that is placed.
+
+<img src="./Media/SceneAPIPlacement.gif" alt="SceneAPIPlacement" width="1000" height="1000" />
+
 # Using the `com.meta.xr.depthapi` package
 
 ## Getting started with Depth API
@@ -167,7 +174,18 @@ The **EnvironmentDepthOcclusion** object we added in the previous steps has a co
 
 ![alt_text](Media/EnablingOcclusions.png "image_tooltip")
 
-### 7. Implementing Occlusion in custom shaders
+### 7. Using Environment depth bias to combat z fighting
+
+There is a utility script called OcclusionDepthBias.cs that lets you easily change the EnvironmentDepthBias variable on any game object by simply calling its public DepthBiasAdjust() function.
+![alt_text](Media/OcclusionDepthBias.png "image_tooltip")
+
+Alternativelly, you may set the value of "_EnvironmentDepthBias" from any material that has an occlusion shader on it.
+
+```C#
+material.SetFloat("_EnvironmentDepthBias", DepthBiasValue);
+```
+
+### 8. Implementing Occlusion in custom shaders
 
 If you have your own custom shaders you can convert them to occluded versions by applying some small changes to them.
 
@@ -244,7 +262,7 @@ half4 frag(v2f i) {
    return result;
 }
 ```
-### 8.Testing
+### 9.Testing
 Build the app and install it on a Quest 3. Notice the objects with occluded shaders will have occlusions.
 
 ![alt_text](Media/DepthAPICube.gif)
