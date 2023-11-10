@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4680726322372557741}
   - component: {fileID: 1984627947357687064}
   m_Layer: 0
-  m_Name: Graffiti
+  m_Name: Rays
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
