@@ -484,13 +484,9 @@ MonoBehaviour:
   overlayType: 1
   compositionDepth: 0
   hidden: 0
-  depthTestEnabled: 0
   overridePerLayerColorScaleAndOffset: 0
   colorScale: {x: 1, y: 1, z: 1, w: 1}
   colorOffset: {x: 0, y: 0, z: 0, w: 0}
-  overrideBlendFactors: 0
-  srcBlendFactor: 2
-  dstBlendFactor: 3
   colorMapEditorType_: 0
   colorMapEditorGradient:
     serializedVersion: 2
@@ -1516,6 +1512,17 @@ PrefabInstance:
       propertyPath: _centerEyeCamera
       value: 
       objectReference: {fileID: 1600812351}
+    - target: {fileID: 6566605701239145465, guid: d31586f29fb48e343b89e3be30764f5e,
+        type: 3}
+      propertyPath: m_text
+      value: 'Press <b><color=#3FDB3E>A</color> </b>to Toggle Occlusions.
+
+        Grab
+        and move objects using controllers.
+
+        Press <b><color=#3FDB3E>Start</color></b>
+        to change scenes.'
+      objectReference: {fileID: 0}
     - target: {fileID: 7115512417481702597, guid: d31586f29fb48e343b89e3be30764f5e,
         type: 3}
       propertyPath: m_LocalPosition.x

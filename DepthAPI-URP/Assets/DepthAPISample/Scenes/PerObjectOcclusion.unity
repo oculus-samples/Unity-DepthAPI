@@ -557,13 +557,9 @@ MonoBehaviour:
   overlayType: 1
   compositionDepth: 0
   hidden: 0
-  depthTestEnabled: 0
   overridePerLayerColorScaleAndOffset: 0
   colorScale: {x: 1, y: 1, z: 1, w: 1}
   colorOffset: {x: 0, y: 0, z: 0, w: 0}
-  overrideBlendFactors: 0
-  srcBlendFactor: 2
-  dstBlendFactor: 3
   colorMapEditorType_: 0
   colorMapEditorGradient:
     serializedVersion: 2
@@ -944,12 +940,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 499622301}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1110949603 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400002, guid: 126d619cf4daa52469682f85c1378b4a,
-    type: 3}
-  m_PrefabInstance: {fileID: 499622300}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1114040580 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 126d619cf4daa52469682f85c1378b4a,
@@ -1330,11 +1320,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: UiPressStart
       objectReference: {fileID: 0}
-    - target: {fileID: 7787223154400020423, guid: e5c8d8433146f724dbcc5ed4645009a5,
+    - target: {fileID: 8088504367367267694, guid: e5c8d8433146f724dbcc5ed4645009a5,
         type: 3}
-      propertyPath: _centerEyeCamera
-      value: 
-      objectReference: {fileID: 1110949603}
+      propertyPath: m_text
+      value: '
+
+        Press <b><color=#3FDB3E>Start</color></b> to change scenes.'
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

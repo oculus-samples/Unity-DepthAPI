@@ -969,6 +969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wallsMaterial: {fileID: 2100000, guid: 5998d4128d0cec14f9df9c9c63eb8e7d, type: 2}
   _wallsVisibilityToggleButton: 512
+  _alphaValueWhenVisible: 0.5
 --- !u!114 &903486867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1742,8 +1743,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -39.95, y: -34.4}
-  m_SizeDelta: {x: 112.42, y: 101.3}
+  m_AnchoredPosition: {x: -39.95, y: -38.94}
+  m_SizeDelta: {x: 112.42, y: 110.38}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2892559686330141681
 GameObject:
@@ -1824,8 +1825,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -40.39, y: -34.79}
-  m_SizeDelta: {x: 118.94, y: 107.18}
+  m_AnchoredPosition: {x: -40.39, y: -38.69}
+  m_SizeDelta: {x: 118.94, y: 114.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &4064190671384253291
 PrefabInstance:
@@ -2095,22 +2096,26 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Press <b>Y </b>to Toggle Walls visibility.
+  m_text: 'Press <b><color=#3FDB3E>Y</color></b> to toggle toggle walls overlay visibility.
 
-    Press <b>A </b>to Toggle
-    Walls visibility.
+    Press
+    <b><color=#3FDB3E>A</color></b> to toggle Occlusions.
 
-    Press <b>Right Index Trigger </b> to place posters on
-    the wall.
+    Press <b><color=#3FDB3E>Right
+    Index Trigger</color></b> to place a poster on the wall.
 
-    Press <b>B </b>to clear placed posters.
+    Press <b><color=#3FDB3E>B</color></b>
+    to clear placed posters.
 
-    Use <b>Right thumb
-    stick up and down</b> to adjust highlighted poster Depth Bias value.
+    Use <b><color=#3FDB3E>Right thumb stick down</color></b>
+    to move the poster on top of the passthrough content
+
+    Use <b><color=#3FDB3E>Right
+    thumb stick up</color></b> to move the poster behind the passthrough content
 
 
     Press
-    <b>Start</b> to change scenes.'
+    <b><color=#3FDB3E>Start</color></b> to change scenes.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2137,8 +2142,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6.8
-  m_fontSizeBase: 6.8
+  m_fontSize: 6
+  m_fontSizeBase: 6
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2259,8 +2264,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.39, y: 0.41}
-  m_SizeDelta: {x: 99.83, y: 88.71}
+  m_AnchoredPosition: {x: -1.39, y: 0.24}
+  m_SizeDelta: {x: 99.83, y: 102.33}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7875695722290017405
 GameObject:
