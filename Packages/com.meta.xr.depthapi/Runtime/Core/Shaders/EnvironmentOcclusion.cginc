@@ -93,7 +93,7 @@ float CalculateEnvironmentDepthOcclusionLinearWithBias(float2 uv, float sceneLin
 {
   const float2 uvDepthSpace = ReprojectScreenspace3DOF(uv);
 
-  float sceneDepthWithBias = sceneLinearDepth + bias * UNITY_NEAR_CLIP_VALUE;
+  float sceneDepthWithBias = sceneLinearDepth - bias * sceneLinearDepth * UNITY_NEAR_CLIP_VALUE;
 
   #if defined(HARD_OCCLUSION)
     return CalculateEnvironmentDepthHardOcclusion_Internal(uvDepthSpace, sceneDepthWithBias);
@@ -112,7 +112,7 @@ float CalculateEnvironmentDepthOcclusionInEnvDepthSpaceWithBias(float3 worldCoor
   const float2 uvCoords = (depthSpace.xy / depthSpace.w + 1.0f) * 0.5f;
 
   float linearSceneDepth = (1.0f / ((depthSpace.z / depthSpace.w) + _EnvironmentDepthZBufferParams.y)) * _EnvironmentDepthZBufferParams.x;
-  linearSceneDepth += bias * UNITY_NEAR_CLIP_VALUE;
+  linearSceneDepth -= bias * linearSceneDepth * UNITY_NEAR_CLIP_VALUE;
 
   #if defined(HARD_OCCLUSION)
    return CalculateEnvironmentDepthHardOcclusion_Internal(uvCoords, linearSceneDepth);
