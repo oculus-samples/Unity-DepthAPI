@@ -1213,12 +1213,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!4 &1600812351 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400002, guid: 126d619cf4daa52469682f85c1378b4a,
-    type: 3}
-  m_PrefabInstance: {fileID: 499622300}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1663790411
 GameObject:
   m_ObjectHideFlags: 0
@@ -1507,22 +1501,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1989774950295793430, guid: d31586f29fb48e343b89e3be30764f5e,
-        type: 3}
-      propertyPath: _centerEyeCamera
-      value: 
-      objectReference: {fileID: 1600812351}
-    - target: {fileID: 6566605701239145465, guid: d31586f29fb48e343b89e3be30764f5e,
-        type: 3}
-      propertyPath: m_text
-      value: 'Press <b><color=#3FDB3E>A</color> </b>to Toggle Occlusions.
-
-        Grab
-        and move objects using controllers.
-
-        Press <b><color=#3FDB3E>Start</color></b>
-        to change scenes.'
-      objectReference: {fileID: 0}
     - target: {fileID: 7115512417481702597, guid: d31586f29fb48e343b89e3be30764f5e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1587,11 +1565,11 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1323294955}
-  - {fileID: 1713341775049001517}
-  - {fileID: 604924507}
-  - {fileID: 499622300}
   - {fileID: 705507995}
+  - {fileID: 1323294955}
+  - {fileID: 499622300}
+  - {fileID: 604924507}
+  - {fileID: 1713341775049001517}
   - {fileID: 1663790414}
-  - {fileID: 8304244804023645105}
   - {fileID: 5209955812756543451}
+  - {fileID: 8304244804023645105}
