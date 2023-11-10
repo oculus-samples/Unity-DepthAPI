@@ -66,7 +66,7 @@ When the scene is built for device, users can press the A button on the right co
 #### PerObjectOcclusion
 In this scene, we show a particular setup where each object has different behaviour for occlusions.
 
-![Occlusion Mode Per Object](./Media/OcclusionPerObject.gif "Occlusion Mode Per Object")
+<img src="./Media/occlusionPerObject.gif" alt="Occlusion Mode Per Object" width="1000" height="1000" />
 
 # Using the `com.meta.xr.depthapi` package
 
