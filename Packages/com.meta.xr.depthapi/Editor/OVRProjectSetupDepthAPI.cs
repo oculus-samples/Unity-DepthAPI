@@ -30,7 +30,7 @@ using Meta.XR.Depth;
 [InitializeOnLoad]
 internal static class OVRProjectSetupDepthAPI
 {
-    private static readonly string minimumUnityVersion = "2022.2.16f";
+    private static readonly string minimumUnityVersion = "2022.3.0";
     private const OVRProjectSetup.TaskGroup GROUP = OVRProjectSetup.TaskGroup.Rendering;
 #if USING_XR_SDK_OCULUS
     private static OculusSettings OculusSettings
