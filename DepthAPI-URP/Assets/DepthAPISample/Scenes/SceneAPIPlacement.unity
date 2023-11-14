@@ -528,6 +528,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1114040583}
+    - targetCorrespondingSourceObject: {fileID: 113768, guid: 126d619cf4daa52469682f85c1378b4a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1431657661}
   m_SourcePrefab: {fileID: 100100000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
 --- !u!4 &499622301 stripped
 Transform:
@@ -1114,68 +1118,20 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!1 &1531187234
+--- !u!1 &1431657660 stripped
 GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1531187236}
-  - component: {fileID: 1531187235}
-  - component: {fileID: 1531187237}
-  m_Layer: 0
-  m_Name: PosterPlacer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1531187235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531187234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dd4ef772cecf364b975662917c3aea5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rayOrigin: {fileID: 1825862730}
-  posterPrefab: {fileID: 5160447717752104773, guid: 8d2fd6429ee19eb449eb9d1d5cab9006,
+  m_CorrespondingSourceObject: {fileID: 113768, guid: 126d619cf4daa52469682f85c1378b4a,
     type: 3}
-  _posterPlacingButton: 67108864
-  _postersCleanupButton: 2
-  _posterIncreaseBiasValueButton: 4096
-  _posterDecreaseBiasValueButton: 8192
-  _depthBiasChangeValue: 0.1
-  _lineRenderer: {fileID: 1531187237}
---- !u!4 &1531187236
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_PrefabInstance: {fileID: 499622300}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531187234}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.68568075, y: 1.306788, z: 2.8789563}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!120 &1531187237
+--- !u!120 &1431657661
 LineRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531187234}
+  m_GameObject: {fileID: 1431657660}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -1272,6 +1228,61 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &1531187234
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1531187236}
+  - component: {fileID: 1531187235}
+  m_Layer: 0
+  m_Name: PosterPlacer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1531187235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531187234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dd4ef772cecf364b975662917c3aea5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rayOrigin: {fileID: 1825862730}
+  _posterPrefab: {fileID: 5160447717752104773, guid: 8d2fd6429ee19eb449eb9d1d5cab9006,
+    type: 3}
+  _posterPreviewPrefab: {fileID: 8838248208307362951, guid: b1f2fa4536024b64ab3d5249d83e199f,
+    type: 3}
+  _posterPlacingButton: 67108864
+  _postersCleanupButton: 2
+  _posterIncreaseBiasValueButton: 4096
+  _posterDecreaseBiasValueButton: 8192
+  _depthBiasChangeValue: 0.01
+  _lineRenderer: {fileID: 1431657661}
+--- !u!4 &1531187236
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531187234}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.68568075, y: 1.306788, z: 2.8789563}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1538671527
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
+
 using com.meta.xr.depthapi.utils;
 using TMPro;
 using UnityEngine;
@@ -25,46 +25,17 @@ using UnityEngine;
 namespace DepthAPISample
 {
     [RequireComponent(typeof(OcclusionDepthBias))]
-    public class Poster : MonoBehaviour
+    public class PosterPreview : MonoBehaviour
     {
-        public Action<Poster> OnHighlight;
-        [SerializeField] private GameObject _highlight;
         [SerializeField] private TextMeshPro _biasText;
-        [SerializeField] private AudioClip _highlightAudio;
         private OcclusionDepthBias _depthBiasComponent;
-        private AudioSource _audioSource;
-        private bool _isHighlit;
-        private bool _isPreviewPoster;
-
-        private void Awake()
+        void Awake()
         {
             _depthBiasComponent = GetComponent<OcclusionDepthBias>();
-            _audioSource = GetComponent<AudioSource>();
-        }
-
-        public void Highlight()
-        {
-            _highlight.SetActive(true);
-            _biasText.gameObject.SetActive(true);
-            _isHighlit = true;
-            if (_audioSource != null)
-            {
-                _audioSource.clip = _highlightAudio;
-                _audioSource.Play();
-            }
-            OnHighlight?.Invoke(this);
-        }
-
-        public void Unhighlight()
-        {
-            _biasText.gameObject.SetActive(false);
-            _highlight.SetActive(false);
-            _isHighlit = false;
         }
 
         public void AdjustDepthBias(float val)
         {
-            if (!_isHighlit) return;
             _depthBiasComponent.AdjustDepthBias(val);
             _biasText.text = $"Depth bias set to:\n{_depthBiasComponent.DepthBiasValue}";
         }

@@ -19,6 +19,7 @@
  */
 
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace DepthAPISample
@@ -26,16 +27,18 @@ namespace DepthAPISample
     public class PosterPlacer : MonoBehaviour
     {
         [SerializeField] private Transform _rayOrigin;
-        [SerializeField] private Poster posterPrefab;
+        [SerializeField] private Poster _posterPrefab;
+        [SerializeField] private PosterPreview _posterPreviewPrefab;
         [SerializeField] private OVRInput.RawButton _posterPlacingButton = OVRInput.RawButton.RIndexTrigger;
         [SerializeField] private OVRInput.RawButton _postersCleanupButton = OVRInput.RawButton.B;
         [SerializeField] private OVRInput.RawButton _posterIncreaseBiasValueButton = OVRInput.RawButton.RThumbstickUp;
         [SerializeField] private OVRInput.RawButton _posterDecreaseBiasValueButton = OVRInput.RawButton.RThumbstickDown;
-        [SerializeField] private float _depthBiasChangeValue = .3f;
+        [SerializeField] private float _depthBiasChangeValue = .01f;
         [SerializeField] private LineRenderer _lineRenderer;
         private LayerMask _layerMaskWall;
         private LayerMask _layerMaskPoster;
-        private Poster _currentPosterGhost;
+        private PosterPreview _posterPreview;
+        private float _previewPosterDepthBiasValue = 0.06f; //Posters placed will have their initial depth bias set to this value
         private GameObject _currentHighlightedPosterObject;
         private List<Poster> _currentPosters;
         private bool _isPosterHit;
@@ -44,13 +47,10 @@ namespace DepthAPISample
         {
             _layerMaskWall = LayerMask.GetMask("Wall");
             _layerMaskPoster = LayerMask.GetMask("Poster");
-            _currentPosterGhost = Instantiate(posterPrefab);
-            var renderers = _currentPosterGhost.GetComponentsInChildren<MeshRenderer>(true);
-            foreach (var rend in renderers)
-            {
-                rend.material.color = new Color(rend.material.color.r, rend.material.color.g, rend.material.color.b, 0.5f);
-                rend.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-            }
+
+            _posterPreview = Instantiate(_posterPreviewPrefab);
+            _posterPreview.SetDepthBias(_previewPosterDepthBiasValue);
+
             _currentPosters = new List<Poster>();
         }
         private void Update()
@@ -60,17 +60,37 @@ namespace DepthAPISample
             if (OVRInput.Get(_posterIncreaseBiasValueButton))
             {
                 if (_currentHighlightedPosterObject != null)
+                {
                     _currentHighlightedPosterObject.GetComponent<Poster>().AdjustDepthBias(_depthBiasChangeValue * Time.deltaTime);
+                }
+                else
+                {
+                    if (_posterPreview != null)
+                    {
+                        _previewPosterDepthBiasValue += _depthBiasChangeValue * Time.deltaTime;
+                        _posterPreview.SetDepthBias(_previewPosterDepthBiasValue);
+                    }
+                }
             }
             if (OVRInput.Get(_posterDecreaseBiasValueButton))
             {
                 if (_currentHighlightedPosterObject != null)
+                {
                     _currentHighlightedPosterObject.GetComponent<Poster>().AdjustDepthBias(-_depthBiasChangeValue * Time.deltaTime);
+                }
+                else
+                {
+                    if (_posterPreview != null)
+                    {
+                        _previewPosterDepthBiasValue -= _depthBiasChangeValue * Time.deltaTime;
+                        _posterPreview.SetDepthBias(_previewPosterDepthBiasValue);
+                    }
+                }
             }
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, _layerMaskPoster))
             {
                 _isPosterHit = true;
-                HideGhostPoster();
+                HidePosterPreview();
 
                 _lineRenderer.startColor = Color.white;
                 _lineRenderer.endColor = Color.white;
@@ -106,14 +126,12 @@ namespace DepthAPISample
                 }
                 else
                 {
-                    _isPosterHit = false;
-                    HideGhostPoster();
+                    HidePosterPreview();
                     _lineRenderer.startColor = Color.red;
                     _lineRenderer.endColor = Color.red;
                     _lineRenderer.SetPositions(new Vector3[] { _rayOrigin.position, _rayOrigin.position + _rayOrigin.forward * 10f });
                 }
             }
-
             if (OVRInput.GetDown(_postersCleanupButton))
             {
                 ClearPosters();
@@ -134,7 +152,7 @@ namespace DepthAPISample
             _lineRenderer.endColor = Color.green;
             _lineRenderer.SetPositions(new Vector3[] { _rayOrigin.position, hit.point });
 
-            PlaceGhostPoster(hit);
+            PlacePreviewPoster(hit);
             if (OVRInput.GetDown(_posterPlacingButton))
             {
                 PlacePoster(hit);
@@ -142,12 +160,13 @@ namespace DepthAPISample
         }
         private void PlacePoster(RaycastHit hit)
         {
-            if (posterPrefab == null)
+            if (_posterPrefab == null)
             {
                 Debug.LogError("Poster prefab is not assigned.");
                 return;
             }
-            var poster = Instantiate(posterPrefab, hit.point, Quaternion.LookRotation(-hit.normal));
+            var poster = Instantiate(_posterPrefab, hit.point, Quaternion.LookRotation(-hit.normal));
+            poster.SetDepthBias(_previewPosterDepthBiasValue);
             poster.transform.SetParent(hit.transform);
             _currentPosters.Add(poster);
             poster.OnHighlight += (poster) =>
@@ -165,21 +184,21 @@ namespace DepthAPISample
             Debug.Log("Poster placed on the wall.");
         }
 
-        private void PlaceGhostPoster(RaycastHit hit)
+        private void PlacePreviewPoster(RaycastHit hit)
         {
-            if (_currentPosterGhost == null)
+            if (_posterPreview == null)
             {
-                Debug.LogError("Poster prefab is not assigned.");
+                Debug.LogError("Poster preview prefab is not assigned.");
                 return;
             }
-            _currentPosterGhost.gameObject.SetActive(true);
-            _currentPosterGhost.transform.rotation = Quaternion.LookRotation(-hit.normal);
-            _currentPosterGhost.transform.position = hit.point;
+            _posterPreview.gameObject.SetActive(true);
+            _posterPreview.transform.rotation = Quaternion.LookRotation(-hit.normal);
+            _posterPreview.transform.position = hit.point;
         }
 
-        private void HideGhostPoster()
+        private void HidePosterPreview()
         {
-            _currentPosterGhost.gameObject.SetActive(false);
+            _posterPreview.gameObject.SetActive(false);
         }
 
         private void ClearPosters()
