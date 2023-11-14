@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using com.meta.xr.depthapi.utils;
 using TMPro;
@@ -65,8 +66,12 @@ namespace DepthAPISample
         {
             if (!_isHighlit) return;
             _depthBiasComponent.AdjustDepthBias(val);
-            _biasText.text = "Depth bias set to: " + _depthBiasComponent.DepthBiasValue.ToString();
-            Debug.Log("Adjusting depth bias value to: " + _depthBiasComponent.DepthBiasValue);
+            _biasText.text = $"Depth bias set to:\n{_depthBiasComponent.DepthBiasValue}";
+        }
+        public void SetDepthBias(float val)
+        {
+            _depthBiasComponent.SetDepthBias(val);
+            _biasText.text = $"Depth bias set to:\n{_depthBiasComponent.DepthBiasValue}";
         }
     }
 }
