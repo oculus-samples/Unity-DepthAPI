@@ -34,7 +34,6 @@ namespace DepthAPISample
         private OcclusionDepthBias _depthBiasComponent;
         private AudioSource _audioSource;
         private bool _isHighlit;
-        private bool _isPreviewPoster;
 
         private void Awake()
         {
