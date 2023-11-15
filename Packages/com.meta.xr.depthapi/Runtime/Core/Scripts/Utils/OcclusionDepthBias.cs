@@ -25,8 +25,9 @@ namespace com.meta.xr.depthapi.utils
 {
     public class OcclusionDepthBias : MonoBehaviour
     {
-        public float DepthBiasValue { get; private set; }
+        [field: SerializeField] public float DepthBiasValue { get; private set; }
         public bool DoesAffectChildren;
+
         private List<Material> _materials;
 
         void Awake()
@@ -48,7 +49,6 @@ namespace com.meta.xr.depthapi.utils
                     foreach (var material in rend.materials)
                         _materials.Add(material);
             }
-
             SetDepthBias(DepthBiasValue);
         }
 

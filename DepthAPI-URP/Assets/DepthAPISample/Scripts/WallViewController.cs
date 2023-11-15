@@ -38,7 +38,6 @@ namespace DepthAPISample
             if (_material != null)
             {
                 AdjustTextureTiling();
-                GetComponent<OcclusionDepthBias>().AdjustDepthBias(0.06f);
             }
         }
 
