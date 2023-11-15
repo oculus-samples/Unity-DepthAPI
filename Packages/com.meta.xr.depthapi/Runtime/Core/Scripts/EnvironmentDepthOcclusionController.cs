@@ -40,6 +40,14 @@ namespace Meta.XR.Depth
             EnableOcclusionType(_occlusionType, true);
         }
 
+#if UNITY_EDITOR
+        private void OnApplicationQuit()
+        {
+            Shader.DisableKeyword(HardOcclusionKeyword);
+            Shader.DisableKeyword(SoftOcclusionKeyword);
+        }
+#endif
+
         public void EnableOcclusionType(OcclusionType newOcclusionType, bool updateDepthTextureProvider = true)
         {
             _occlusionType = newOcclusionType;
