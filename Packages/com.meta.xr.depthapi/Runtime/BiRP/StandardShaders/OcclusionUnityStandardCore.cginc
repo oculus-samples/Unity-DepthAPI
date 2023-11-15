@@ -455,7 +455,7 @@ half4 fragForwardBaseInternal (VertexOutputForwardBase i)
     UNITY_APPLY_FOG(_unity_fogCoord, c.rgb);
     half4 finalColor = OutputForward (c, s.alpha);
 
-    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY(i, finalColor, _EnvironmentDepthBias);
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(IN_WORLDPOS(i), finalColor, _EnvironmentDepthBias);
 
     return finalColor;
 }
@@ -480,10 +480,6 @@ struct VertexOutputForwardAdd
     // next ones would not fit into SM2.0 limits, but they are always for SM3.0+
 #if defined(_PARALLAXMAP)
     half3 viewDirForParallax            : TEXCOORD8;
-#endif
-
-#if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    float4 posNDC : TEXCOORD9;
 #endif
 
     UNITY_VERTEX_OUTPUT_STEREO
@@ -531,12 +527,6 @@ VertexOutputForwardAdd vertForwardAdd (VertexInput v)
         o.viewDirForParallax = mul (rotation, ObjSpaceViewDir(v.vertex));
     #endif
 
-    #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-      float4 ndc = o.pos * 0.5f;
-      o.posNDC.xy = float2(ndc.x, ndc.y * _ProjectionParams.x) + ndc.w;
-      o.posNDC.zw = o.pos.zw;
-    #endif
-
     UNITY_TRANSFER_FOG_COMBINED_WITH_EYE_VEC(o, o.pos);
     return o;
 }
@@ -560,7 +550,7 @@ half4 fragForwardAddInternal (VertexOutputForwardAdd i)
 
     half4 finalColor = OutputForward (c, s.alpha);
 
-    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY(i, finalColor, _EnvironmentDepthBias);
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(IN_WORLDPOS_FWDADD(i), finalColor, _EnvironmentDepthBias);
 
     return finalColor;
 }
