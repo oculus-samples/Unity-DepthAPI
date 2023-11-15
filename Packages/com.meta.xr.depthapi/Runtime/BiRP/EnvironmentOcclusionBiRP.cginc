@@ -5,7 +5,7 @@ uniform UNITY_DECLARE_TEX2DARRAY(_EnvironmentDepthTexture);
 
 #include "UnityCG.cginc"
 
-float SampleEnvironmentDepth(const float2 reprojectedUV) {
+float SampleEnvironmentDepth(float2 reprojectedUV) {
   return UNITY_SAMPLE_TEX2DARRAY(_EnvironmentDepthTexture,
            float3(reprojectedUV, (float)unity_StereoEyeIndex)).r;
 }

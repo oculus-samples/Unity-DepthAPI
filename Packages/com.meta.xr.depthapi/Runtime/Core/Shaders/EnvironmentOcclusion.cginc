@@ -10,7 +10,7 @@ uniform float4 _EnvironmentDepthZBufferParams;
 #define SOFT_OCCLUSIONS_SCREENSPACE_OFFSET SAMPLE_OFFSET_PIXELS / _ScreenParams.xy
 
 
-float SampleEnvironmentDepthLinear_Internal(const float2 uv)
+float SampleEnvironmentDepthLinear_Internal(float2 uv)
 {
   const float inputDepthEye = SampleEnvironmentDepth(uv);
 
@@ -20,12 +20,12 @@ float SampleEnvironmentDepthLinear_Internal(const float2 uv)
   return linearDepth;
 }
 
-float CalculateEnvironmentDepthHardOcclusion_Internal(const float2 depthUv, float sceneDepth)
+float CalculateEnvironmentDepthHardOcclusion_Internal(float2 depthUv, float sceneDepth)
 {
   return SampleEnvironmentDepthLinear_Internal(depthUv) > sceneDepth;
 }
 
-float CalculateSoftOcclusionPixelValue_Internal(const float2 depthUv, float sceneDepth)
+float CalculateSoftOcclusionPixelValue_Internal(float2 depthUv, float sceneDepth)
 {
   const float environmentDepth = SampleEnvironmentDepthLinear_Internal(depthUv);
   const float relativeError = sceneDepth / environmentDepth - 1;
@@ -79,12 +79,12 @@ float CalculateEnvironmentDepthSoftOcclusion_Internal(float2 uv, float sceneDept
   return result / POISSON_SAMPLES;
 }
 
-float2 ReprojectScreenspace3DOF(const float2 uv)
+float2 ReprojectScreenspace3DOF(float2 uv)
 {
   return mul(_EnvironmentDepth3DOFReprojectionMatrices[unity_StereoEyeIndex], float4(uv.x, uv.y, 0.0, 1.0)).xy;
 }
 
-float Sample3DOFReprojectedEnvironmentDepthLinear(const float2 uv)
+float Sample3DOFReprojectedEnvironmentDepthLinear(float2 uv)
 {
   return SampleEnvironmentDepthLinear_Internal(ReprojectScreenspace3DOF(uv));
 }
