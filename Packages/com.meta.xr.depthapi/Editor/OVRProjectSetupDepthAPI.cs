@@ -102,25 +102,6 @@ internal static class OVRProjectSetupDepthAPI
             },
             fixMessage: "Enable Scene Required in the project config"
         );
-        //Experimental requirement support
-        OVRProjectSetup.AddTask(
-            level: OVRProjectSetup.TaskLevel.Required,
-            group: OVRProjectSetup.TaskGroup.Compatibility,
-            isDone: buildTargetGroup =>
-            {
-                return
-                FindComponentInScene<OVRManager>() == null ||
-                OVRProjectConfig.GetProjectConfig().experimentalFeaturesEnabled == true;
-            },
-            message: "DepthAPI requires experimental features to be enabled",
-            fix: buildTargetGroup =>
-            {
-                var projectConfig = OVRProjectConfig.CachedProjectConfig;
-                projectConfig.experimentalFeaturesEnabled = true;
-                OVRProjectConfig.CommitProjectConfig(projectConfig);
-            },
-            fixMessage: "Enable experimental features"
-        );
         //=== Per Scene Setup Support
         //Passthrough requirement support
         OVRProjectSetup.AddTask(
