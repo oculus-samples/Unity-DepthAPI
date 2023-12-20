@@ -6,12 +6,6 @@ This technique is essential for rendering believable visual interactions between
 
 You can learn more about Depth API [here](https://developer.oculus.com/experimental/scene-depth-unity/).
 
-This is an [experimental feature](https://developer.oculus.com/experimental/experimental-overview).
-Make sure to run this command to enable Depth API on your Quest 3:
-```sh
-adb shell setprop debug.oculus.experimentalEnabled 1
-```
-
 ## Health & Safety Guidelines
 While building mixed reality experiences, we highly recommend evaluating your content to offer your users a comfortable and safe experience. Please refer to the [Mixed Reality H&S Guidelines](https://developer.oculus.com/resources/mr-health-safety-guideline/) before designing and developing your app using this sample project or any of our Presence Platform Features.
 
@@ -28,10 +22,10 @@ You can learn more about occlusion and general guidelines for when and how to us
 ## DepthAPI Requirements
 * **2022.3.1 and higher**
 * **2023.2 and higher**
-* **Unity Oculus Integration SDK** by using one of:
-  * [Unity Oculus Integration SDK 57.0 all-in-one or higher](https://developer.oculus.com/downloads/package/unity-integration)
-  * **com.meta.xr.sdk.utilities** (57.0.0-preview or higher). You may find it at [npm.developer.oculus.com](https://npm.developer.oculus.com/-/web/detail/com.meta.xr.sdk.utilities). Instructions on importing individual SDKs in Unity may be found [on the official oculus documentation](https://developer.oculus.com/documentation/unity/unity-package-manager/).
-* **Unity XR Oculus** package version - 4.2.0-exp-env-depth.1
+* **Meta XR Core SDK (v60.0.0 or above)** by using one of the following methods:
+  * You may get it from [the asset store](https://assetstore.unity.com/packages/tools/integration/meta-xr-core-sdk-269169#releases).
+  * Import the **com.meta.xr.sdk.core (v60.0.0 or above)** package from Unity's package manager. Follow the instructions on importing individual SDKs in Unity outlined [on the official oculus documentation](https://developer.oculus.com/documentation/unity/unity-package-manager/).
+* **Unity XR Oculus** package version - **4.2.0-exp-env-depth.2**
 * Oculus Quest 3
 
 # Getting started with samples
@@ -61,19 +55,25 @@ The scenes are located in the same path for both sample projects: `./Assets/Dept
 This scene showcases the general setup of the occlusion feature and how to switch between different modes.
 
 When the scene is built for device, users can press the A button on the right controller to toggle between three modes: NoOcclusion, HardOcclusion and SoftOcclusion.
-![Occlusion Toggle](./Media/OcclusionToggle.gif "Press A to Toggle Occlusions")
+
+<img src="./Media/OcclusionToggle.gif" alt="Occlusion Mode Per Object" width="600" height="600" />
 
 #### PerObjectOcclusion
 In this scene, we show a particular setup where each object has different behaviour for occlusions.
 
-<img src="./Media/occlusionPerObject.gif" alt="Occlusion Mode Per Object" width="1000" height="1000" />
+<img src="./Media/occlusionPerObject.gif" alt="Occlusion Mode Per Object" width="600" height="600" />
 
 #### SceneAPIPlacement
 This example covers the solution for z-fighting between virtual objects and environment depth when they are placed close to real surfaces. The scene utilizes Scene API to enable the precise placement of virtual posters on detected walls. This is a worst case scenario for z-fighting and the best example to show how it's mitigated.
 Supplied shaders contain a float _EnvironmentDepthBias property that can be changed from the code and the SceneAPIPlacement scene showcases how to use it.
 Depth API measurements have an inherent error that also scales with distance. The environment depth bias formula is implemented accordingly. This means that the value that is supplied to _EnvironmentDepthBias stands for virtual depth offset by 1 unit distance away from the camera. Offset is calculated towards the camera; a higher value means the virtual object will be brought closer to the camera. _EnvironmentDepthBias is scaling linearly with metric distance. We recommend using the value of 0.06 but the value might depend on the type of content that is placed.
 
-<img src="./Media/SceneAPIPlacement.gif" alt="SceneAPIPlacement" width="1000" height="1000" />
+<img src="./Media/SceneAPIPlacement.gif" alt="SceneAPIPlacement" width="600" height="600" />
+
+#### HandsRemoval
+This scene showcases the removal of hands from the depth map. In their stead we use hand tracking to render OVRHands and we use them as a mask.
+
+<img src="./Media/HandsRemoval.gif" alt="handsRemoval" width="600" height="600" />
 
 # Using the `com.meta.xr.depthapi` package
 
@@ -84,17 +84,6 @@ Depth API measurements have an inherent error that also scales with distance. Th
 Make sure you have the supported Unity setup listed above.
 
 Ensure Passthrough is working in your project by following [these instructions](https://developer.oculus.com/documentation/unity/unity-passthrough-gs/).
-
-Depth API requires an experimental Unity XR Oculus, it needs to be imported in Unity Package Manager via [Add package by name](https://docs.unity3d.com/Manual/upm-ui-quick.html).
-
-Name:
-```
-com.unity.xr.oculus
-```
-Version:
-```
-4.2.0-exp-env-depth.1
-```
 
 ### 2.Importing Depth API package
 
@@ -115,7 +104,6 @@ Depth API has several requirements that need to be met before it can work:
 * Stereo Rendering Mode needs to be set to Multiview.
 * The Passthrough feature needs to be enabled and integrated into every scene that will use Depth API.
 * Android Manifest needs the USE_SCENE permission to be enabled by setting scene support to **Required** in OVRManager.
-* Experimental features support has to be enabled.
 
 To aid with this, you can use the Project Setup Tool (PST). This will detect any problems and/or recommendations and provides an easy way to easily fix them. To access this tool you have two options:
 
@@ -184,8 +172,24 @@ Alternativelly, you may set the value of "_EnvironmentDepthBias" from any materi
 ```C#
 material.SetFloat("_EnvironmentDepthBias", DepthBiasValue);
 ```
+### 8. Using hands removal
 
-### 8. Implementing Occlusion in custom shaders
+The api supports removing hands from the depth map (i.e. your hands will not occlude virtual content from the wrists up). To use this functionality, simply call the `RemoveHands()` function from the depth texture provider.
+
+```C#
+        private EnvironmentDepthTextureProvider _depthTextureProvider;
+
+        private void Awake()
+        {
+            // remove hands from depth map
+            _depthTextureProvider.RemoveHands(true);
+
+            // restore hands in depth map
+            _depthTextureProvider.RemoveHands(false);
+        }
+```
+
+### 9. Implementing Occlusion in custom shaders
 
 If you have your own custom shaders you can convert them to occluded versions by applying some small changes to them.
 
@@ -251,7 +255,7 @@ If you already have a world position varyings being passed to your fragment shad
 ```Shaderlab
 META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(yourWorldPosition, fragmentShaderResult, 0.0);
 ```
-### 9. Shadergraph
+### 10. Shadergraph
 
 Depth API supports adding occlusions via shadergraph. A subgraph is provided in the API, called 'OcclusionSubGraph', that exposes occlusion value. This subgraph will output the value 0 if the object is occluded and 1 otherwise.
 
@@ -270,7 +274,7 @@ Once an object is occluded we can alternatively apply various effects to it rath
 ![alt_text](Media/StylizedOcclusion.gif "StylizedOcclusion")
 
 
-### 10.Testing
+### 11.Testing
 Build the app and install it on a Quest 3. Notice the objects with occluded shaders will have occlusions.
 
 ![alt_text](Media/DepthAPICube.gif)
