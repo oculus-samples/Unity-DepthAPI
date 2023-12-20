@@ -1,3 +1,19 @@
+# 60.0.0 (2023-12-??)
+
+### Features
+
+* Add hands removal feature
+* Add shadergraph support by adding an occlusion subgraph
+
+### Improvements
+
+* Refactor the depth texture provider code
+* Add an event for depth texture availability
+
+### Bug Fixes
+
+* Fix multiple issues when running over Meta Quest Link
+
 # 0.2.0 (2023-11-16)
 
 ### Features
