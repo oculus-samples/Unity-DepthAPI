@@ -54,6 +54,10 @@ Shader "Meta/Depth/URP/Occlusion Simple Lit"
 
     SubShader
     {
+        PackageRequirements
+        {
+            "com.unity.render-pipelines.universal": "14.0"
+        }
         Tags
         {
             "RenderType" = "Opaque"
@@ -420,6 +424,6 @@ Shader "Meta/Depth/URP/Occlusion Simple Lit"
         }
     }
 
-    Fallback  "Hidden/Universal Render Pipeline/FallbackError"
+    Fallback  "Universal Render Pipeline/Simple Lit"
     CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.SimpleLitShader"
 }

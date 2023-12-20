@@ -32,6 +32,10 @@ Shader "Meta/Depth/URP/Occlusion Unlit"
 
     SubShader
     {
+        PackageRequirements
+        {
+            "com.unity.render-pipelines.universal": "14.0"
+        }
         Tags
         {
             "RenderType" = "Opaque"
@@ -209,6 +213,6 @@ Shader "Meta/Depth/URP/Occlusion Unlit"
         }
     }
 
-    FallBack "Hidden/Universal Render Pipeline/FallbackError"
+    FallBack "Universal Render Pipeline/Particles/Unlit"
     CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.UnlitShader"
 }

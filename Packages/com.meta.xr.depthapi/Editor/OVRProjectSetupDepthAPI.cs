@@ -45,6 +45,7 @@ internal static class OVRProjectSetupDepthAPI
 #endif
     static OVRProjectSetupDepthAPI()
     {
+#if DEPTH_API_SUPPORTED
         //=== Per Project Setup Support
         //Vulkan support
         OVRProjectSetup.AddTask(
@@ -120,17 +121,6 @@ internal static class OVRProjectSetupDepthAPI
             },
             fixMessage: "Enable experimental features"
         );
-        //Unity 2022.2.16f requirement requirement support
-        OVRProjectSetup.AddTask(
-            level: OVRProjectSetup.TaskLevel.Required,
-            group: OVRProjectSetup.TaskGroup.Compatibility,
-            isDone: buildTargetGroup =>
-            {
-                return
-                !IsOlderVersion(Application.unityVersion);
-            },
-            message: "DepthAPI requires at least Unity 2022.2.16f"
-        );
         //=== Per Scene Setup Support
         //Passthrough requirement support
         OVRProjectSetup.AddTask(
@@ -165,6 +155,18 @@ internal static class OVRProjectSetupDepthAPI
             },
             fixMessage: "Enable Passthrough by adding OVRPassthroughLayer to the scene"
         );
+#else
+        //Unity 2022.3.0 requirement support
+        OVRProjectSetup.AddTask(
+            level: OVRProjectSetup.TaskLevel.Optional,
+            group: OVRProjectSetup.TaskGroup.Compatibility,
+            isDone: buildTargetGroup =>
+            {
+                return false;
+            },
+            message: "DepthAPI requires at least Unity " + minimumUnityVersion
+        );
+#endif
     }
     public static T FindComponentInScene<T>() where T : Component
     {
@@ -180,10 +182,5 @@ internal static class OVRProjectSetupDepthAPI
             return rootGameObject.GetComponent<T>();
         }
         return null;
-    }
-
-    private static bool IsOlderVersion(string version)
-    {
-        return string.Compare(version, minimumUnityVersion) < 0;
     }
 }

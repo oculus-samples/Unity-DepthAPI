@@ -25,6 +25,7 @@ namespace Meta.XR.Depth
     [RequireComponent(typeof(EnvironmentDepthTextureProvider))]
     public class EnvironmentDepthOcclusionController : MonoBehaviour
     {
+#if DEPTH_API_SUPPORTED
         public static readonly string HardOcclusionKeyword = "HARD_OCCLUSION";
         public static readonly string SoftOcclusionKeyword = "SOFT_OCCLUSION";
 
@@ -81,5 +82,6 @@ namespace Meta.XR.Depth
             }
 
         }
+#endif
     }
 }

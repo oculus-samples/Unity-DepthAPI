@@ -18,7 +18,6 @@
  * limitations under the License.
  */
 
-using System.Collections;
 using Unity.XR.Oculus;
 using UnityEngine;
 using UnityEngine.XR;
@@ -31,6 +30,7 @@ namespace Meta.XR.Depth
     /// </summary>
     public class EnvironmentDepthTextureProvider : MonoBehaviour
     {
+#if DEPTH_API_SUPPORTED
         public static readonly string DepthTexturePropertyName = "_EnvironmentDepthTexture";
         public static readonly string ReprojectionMatricesPropertyName = "_EnvironmentDepthReprojectionMatrices";
         public static readonly string Reprojection3DOFMatricesPropertyName = "_EnvironmentDepth3DOFReprojectionMatrices";
@@ -161,5 +161,6 @@ namespace Meta.XR.Depth
                 Shader.SetGlobalMatrixArray(Reprojection3DOFMatricesID, _reprojectionMatrices);
             }
         }
+#endif
     }
 }

@@ -32,6 +32,10 @@ Shader "Meta/Depth/URP/Occlusion Baked Lit"
 
     SubShader
     {
+        PackageRequirements
+        {
+            "com.unity.render-pipelines.universal": "14.0"
+        }
         Tags
         {
             "RenderType" = "Opaque"
@@ -307,6 +311,6 @@ Shader "Meta/Depth/URP/Occlusion Baked Lit"
         }
     }
 
-    FallBack "Universal Render Pipeline/Unlit"
+    FallBack "Universal Render Pipeline/Baked Lit"
     CustomEditor "UnityEditor.Rendering.Universal.ShaderGUI.BakedLitShader"
 }
