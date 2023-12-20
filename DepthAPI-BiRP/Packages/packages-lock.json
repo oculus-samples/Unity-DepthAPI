@@ -5,25 +5,35 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.xr.oculus": "4.2.0-exp-env-depth.1"
+        "com.unity.xr.oculus": "4.2.0-exp-env-depth.2"
       }
+    },
+    "com.meta.xr.sdk.core": {
+      "version": "60.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.meta.xr.sdk.interaction": {
+      "version": "60.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.textmeshpro": "3.0.6",
+        "com.unity.ugui": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.meta.xr.sdk.sharedassets": {
       "version": "56.0.0-preview",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.textmeshpro": "3.0.6"
+        "com.unity.textmeshpro": "3.0.6",
+        "com.unity.ugui": "1.0.0"
       },
-      "url": "https://npm.developer.oculus.com"
-    },
-    "com.meta.xr.sdk.utilities": {
-      "version": "57.0.0-preview",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://npm.developer.oculus.com"
+      "url": "https://packages.unity.com"
     },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
@@ -98,7 +108,7 @@
     },
     "com.unity.xr.management": {
       "version": "4.4.0",
-      "depth": 1,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.unity.modules.subsystems": "1.0.0",
@@ -109,8 +119,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.oculus": {
-      "version": "4.2.0-exp-env-depth.1",
-      "depth": 0,
+      "version": "4.2.0-exp-env-depth.2",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.xr.management": "4.4.0"
