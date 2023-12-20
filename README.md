@@ -251,8 +251,26 @@ If you already have a world position varyings being passed to your fragment shad
 ```Shaderlab
 META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(yourWorldPosition, fragmentShaderResult, 0.0);
 ```
+### 9. Shadergraph
 
-### 9.Testing
+Depth API supports adding occlusions via shadergraph. A subgraph is provided in the API, called 'OcclusionSubGraph', that exposes occlusion value. This subgraph will output the value 0 if the object is occluded and 1 otherwise.
+
+![alt_text](Media/OcclusionSubGraph.png "OcclusionSubgraph")
+
+To aid in its usage, the URP sample project provides some example uses cases:
+
+#### 1. LitOccluded
+This is a simple shadergraph that uses the aforementioned subgraph to implement occlusions. It works by multiplying the final color's alpha value with the occlusion value. The result will be either the original alpha color if not occluded or it will be 0 if the object is occluded. To occlude the object, we feed in this value in the final alpha value of the fragment shader, enable alpha culling and set the threshold to 0.
+
+![alt_text](Media/LitOccludedShaderGraph.png "LitOccludedShaderGraph")
+
+#### 2. Stylized shaders
+Once an object is occluded we can alternatively apply various effects to it rather than clip it from view. For instance, the stylized occlusion shadergraph example makes occluded items "wavy" when occluded.
+
+![alt_text](Media/StylizedOcclusion.gif "StylizedOcclusion")
+
+
+### 10.Testing
 Build the app and install it on a Quest 3. Notice the objects with occluded shaders will have occlusions.
 
 ![alt_text](Media/DepthAPICube.gif)
