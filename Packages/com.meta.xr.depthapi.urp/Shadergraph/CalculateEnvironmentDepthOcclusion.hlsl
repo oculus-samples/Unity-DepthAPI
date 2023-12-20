@@ -24,19 +24,19 @@
 #include "Packages/com.meta.xr.depthapi.urp/Shaders/EnvironmentOcclusionURP.hlsl"
 #endif
 
-void CalculateEnvironmentDepthOcclusion_float(float3 posWorld, out float occlusionValue)
+void CalculateEnvironmentDepthOcclusion_float(float3 posWorld, float environmentDepthBias, out float occlusionValue)
 {
 #ifndef SHADERGRAPH_PREVIEW
-    occlusionValue = META_DEPTH_GET_OCCLUSION_VALUE_WORLDPOS(posWorld, 0.0);
+    occlusionValue = META_DEPTH_GET_OCCLUSION_VALUE_WORLDPOS(posWorld, environmentDepthBias);
 #else
 		occlusionValue = 1.0;
 #endif
 }
 
-void CalculateEnvironmentDepthOcclusion_half(float3 posWorld, out half occlusionValue)
+void CalculateEnvironmentDepthOcclusion_half(float3 posWorld, float environmentDepthBias, out half occlusionValue)
 {
 #ifndef SHADERGRAPH_PREVIEW
-    occlusionValue = META_DEPTH_GET_OCCLUSION_VALUE_WORLDPOS(posWorld, 0.0);
+    occlusionValue = META_DEPTH_GET_OCCLUSION_VALUE_WORLDPOS(posWorld, environmentDepthBias);
 #else
 		occlusionValue = 1.0;
 #endif
