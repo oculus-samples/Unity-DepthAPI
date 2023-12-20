@@ -78,8 +78,6 @@ Shader "Meta/Depth/BiRP/ExampleUnlitShader"
             {
                 Varyings output;
 
-                output.positionCS = UnityObjectToClipPos(input.vertex);;
-
                 // 5. World position is required to calculate the occlusions.
                 //    This macro will calculate and set world position value in the output Varyings structure.
                 META_DEPTH_INITIALIZE_VERTEX_OUTPUT(output, input.vertex);
@@ -89,6 +87,8 @@ Shader "Meta/Depth/BiRP/ExampleUnlitShader"
 
                 // 6. Passes stereo information to frag shader
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+
+                output.positionCS = UnityObjectToClipPos(input.vertex);
 
                 return output;
             }
