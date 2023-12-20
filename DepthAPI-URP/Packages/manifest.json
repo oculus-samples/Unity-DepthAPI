@@ -2,15 +2,15 @@
   "dependencies": {
     "com.meta.xr.depthapi": "file:../../Packages/com.meta.xr.depthapi",
     "com.meta.xr.depthapi.urp": "file:../../Packages/com.meta.xr.depthapi.urp",
+    "com.meta.xr.sdk.core": "60.0.0",
+    "com.meta.xr.sdk.interaction": "60.0.0",
     "com.meta.xr.sdk.sharedassets": "56.0.0-preview",
-    "com.meta.xr.sdk.utilities": "57.0.0-preview",
     "com.unity.ide.rider": "3.0.24",
     "com.unity.ide.visualstudio": "2.0.18",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.render-pipelines.universal": "14.0.8",
     "com.unity.textmeshpro": "3.0.6",
-    "com.unity.xr.management": "4.4.0",
-    "com.unity.xr.oculus": "4.2.0-exp-env-depth.1",
+    "com.unity.xr.management": "4.4.0",    
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -42,14 +42,5 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  },
-  "scopedRegistries": [
-    {
-      "name": "Meta XR",
-      "url": "https://npm.developer.oculus.com",
-      "scopes": [
-        "com.meta.xr"
-      ]
-    }
-  ]
+  }
 }
