@@ -25,6 +25,7 @@ namespace Meta.XR.Depth
 {
     public static class EnvironmentDepthUtils
     {
+        public static bool IsDepthRenderingRequestEnabled;
         public static Vector4 ComputeNdcToLinearDepthParameters(float near, float far)
         {
             float invDepthFactor;
@@ -125,8 +126,12 @@ namespace Meta.XR.Depth
             return matrix;
         }
 
-        private static readonly Vector3 ScalingVector3 = new (1, 1, -1);
-        public static Matrix4x4 CalculateReprojection(Utils.EnvironmentDepthFrameDesc frameDesc, OVRPlugin.Fovf fov)
+        private static readonly Vector3 ScalingVector3 = new(1, 1, -1);
+#if  UNITY_EDITOR
+        public static Matrix4x4 CalculateReprojection(Utils.EnvironmentDepthFrameDesc frameDesc, Vector3 cameraPos)
+#else
+        public static Matrix4x4 CalculateReprojection(Utils.EnvironmentDepthFrameDesc frameDesc)
+#endif
         {
             float left = frameDesc.fovLeftAngle;
             float right = frameDesc.fovRightAngle;
@@ -168,8 +173,13 @@ namespace Meta.XR.Depth
                 createRotation.w
             );
 
+#if UNITY_EDITOR
+            var viewMatrix = Matrix4x4.TRS(cameraPos, depthOrientation,
+                ScalingVector3).inverse;
+#else
             var viewMatrix = Matrix4x4.TRS(frameDesc.createPoseLocation, depthOrientation,
                 ScalingVector3).inverse;
+#endif
 
             return m * viewMatrix;
         }

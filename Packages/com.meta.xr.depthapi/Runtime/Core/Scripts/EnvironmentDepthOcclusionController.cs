@@ -18,6 +18,7 @@
  * limitations under the License.
  */
 
+using Unity.XR.Oculus;
 using UnityEngine;
 
 namespace Meta.XR.Depth
@@ -33,39 +34,58 @@ namespace Meta.XR.Depth
 
         private EnvironmentDepthTextureProvider _depthTextureProvider;
 
+        private void Awake()
+        {
+            _depthTextureProvider = GetComponent<EnvironmentDepthTextureProvider>();
+        }
+
+        private void OnEnable()
+        {
+            _depthTextureProvider.OnDepthTextureAvailabilityChanged += HandleDepthTextureChanged;
+        }
+
+        private void OnDisable()
+        {
+            _depthTextureProvider.OnDepthTextureAvailabilityChanged -= HandleDepthTextureChanged;
+        }
 
         private void Start()
         {
-            _depthTextureProvider = GetComponent<EnvironmentDepthTextureProvider>();
-
-            EnableOcclusionType(_occlusionType, true);
+            if (_occlusionType != OcclusionType.NoOcclusion)
+            {
+                EnableOcclusionType(_occlusionType);
+            }
         }
 
 #if UNITY_EDITOR
         private void OnApplicationQuit()
         {
-            Shader.DisableKeyword(HardOcclusionKeyword);
-            Shader.DisableKeyword(SoftOcclusionKeyword);
+            SetOcclusionShaderKeywords(OcclusionType.NoOcclusion);
         }
 #endif
-
+        /// <summary>
+        /// Sets the global value of occlusions
+        /// </summary>
+        /// <param name="newOcclusionType"></param>
+        /// <param name="updateDepthTextureProvider"> If this is set to true, it disables the depthtextureprovider if newOcclusionType is set to NoOcclusions and enables it otherwise</param>
         public void EnableOcclusionType(OcclusionType newOcclusionType, bool updateDepthTextureProvider = true)
         {
-            _occlusionType = newOcclusionType;
-
-            if (updateDepthTextureProvider)
+            _occlusionType = Utils.GetEnvironmentDepthSupported() ? newOcclusionType : OcclusionType.NoOcclusion;
+            bool enableDepthTextureFlag = _occlusionType != OcclusionType.NoOcclusion;//true for no occlusion i.e. we want to enable it, false for occlusions
+            if ((updateDepthTextureProvider) &&
+                (_depthTextureProvider.GetEnvironmentDepthEnabled() != enableDepthTextureFlag)) //we only SetEnvironmentEnabled if needed i.e. the state that it is in right now is different than the state that we want it to be in
             {
-                if (_occlusionType == OcclusionType.NoOcclusion && _depthTextureProvider.GetEnvironmentDepthEnabled())
-                {
-                    _depthTextureProvider.DisableEnvironmentDepth();
-                }
-                else
-                {
-                    _depthTextureProvider.EnableEnvironmentDepth();
-                }
+                _depthTextureProvider.SetEnvironmentDepthEnabled(isEnabled: enableDepthTextureFlag);
             }
+            else
+            {
+                SetOcclusionShaderKeywords(_occlusionType);
+            }
+        }
 
-            switch (_occlusionType)
+        private void SetOcclusionShaderKeywords(OcclusionType newOcclusionType)
+        {
+            switch (newOcclusionType)
             {
                 case OcclusionType.HardOcclusion:
                     Shader.DisableKeyword(SoftOcclusionKeyword);
@@ -80,7 +100,18 @@ namespace Meta.XR.Depth
                     Shader.DisableKeyword(SoftOcclusionKeyword);
                     break;
             }
+        }
 
+        private void HandleDepthTextureChanged(bool isDepthTextureAvailable)
+        {
+            if (isDepthTextureAvailable)
+            {
+                SetOcclusionShaderKeywords(_occlusionType);
+            }
+            else
+            {
+                SetOcclusionShaderKeywords(OcclusionType.NoOcclusion);
+            }
         }
 #endif
     }

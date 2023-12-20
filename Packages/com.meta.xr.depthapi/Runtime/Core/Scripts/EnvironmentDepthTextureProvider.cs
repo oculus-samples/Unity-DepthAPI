@@ -18,6 +18,7 @@
  * limitations under the License.
  */
 
+using System;
 using Unity.XR.Oculus;
 using UnityEngine;
 using UnityEngine.XR;
@@ -41,83 +42,134 @@ namespace Meta.XR.Depth
         public static readonly int Reprojection3DOFMatricesID = Shader.PropertyToID(Reprojection3DOFMatricesPropertyName);
         public static readonly int ZBufferParamsID = Shader.PropertyToID(ZBufferParamsPropertyName);
 
+        public Action<bool> OnDepthTextureAvailabilityChanged;
+
         // Required for per object occlusion shaders
         public bool Enable6DoFCalculations = true;
 
         // Required for screenspace shaders
         public bool Enable3DoFCalculations = false;
 
-        public Transform CustomTrackingSpaceTransform = null;
+        private const int FRAMES_TO_WAIT_FOR_COLD_START = 1;
+        private int _framesToWaitForColdStart;
 
-        private bool _shouldEnableDepthRendering;
-        private bool _depthRenderingEnabled;
+        private bool _isDepthTextureAvailable;
+
+        private bool _areHandsRemoved;
 
         private XRDisplaySubsystem _xrDisplay;
+
+        [SerializeField]
+        private Transform _customTrackingSpaceTransform = null;
 
         private readonly Matrix4x4[] _reprojectionMatrices =
             new Matrix4x4[2] { Matrix4x4.identity, Matrix4x4.identity };
 
-        private bool _areHandsRemoved;
-
         private void Start()
         {
+            if (!Utils.GetEnvironmentDepthSupported())
+            {
+                _isDepthTextureAvailable = false;
+                enabled = false;
+                return;
+            }
+
             _xrDisplay = OVRManager.GetCurrentDisplaySubsystem();
 
-            if (CustomTrackingSpaceTransform == null)
+            if (_customTrackingSpaceTransform == null)
             {
-                CustomTrackingSpaceTransform = FindObjectOfType<OVRCameraRig>()?.trackingSpace;
+                _customTrackingSpaceTransform = FindObjectOfType<OVRCameraRig>()?.trackingSpace;
+            }
+        }
+
+        public void SetEnvironmentDepthEnabled(bool isEnabled)
+        {
+            if (isEnabled)
+            {
+                EnableEnvironmentDepth();
+            }
+            else
+            {
+                DisableEnvironmentDepth();
             }
         }
 
         public void EnableEnvironmentDepth()
         {
-            if (!_depthRenderingEnabled || !_shouldEnableDepthRendering)
+            if (!Utils.GetEnvironmentDepthSupported() || EnvironmentDepthUtils.IsDepthRenderingRequestEnabled)
             {
-                _shouldEnableDepthRendering = true;
-                Utils.SetupEnvironmentDepth(new Utils.EnvironmentDepthCreateParams() { removeHands = _areHandsRemoved });
+                return;
             }
+
+            Utils.SetupEnvironmentDepth(new Utils.EnvironmentDepthCreateParams() { removeHands = _areHandsRemoved });
+            Utils.SetEnvironmentDepthRendering(true);
+            EnvironmentDepthUtils.IsDepthRenderingRequestEnabled = true;
+            _framesToWaitForColdStart = FRAMES_TO_WAIT_FOR_COLD_START;
         }
 
         public void DisableEnvironmentDepth()
         {
+            if (!EnvironmentDepthUtils.IsDepthRenderingRequestEnabled)
+            {
+                return;
+            }
             Utils.ShutdownEnvironmentDepth();
-            _depthRenderingEnabled = false;
+            Utils.SetEnvironmentDepthRendering(false);
+            EnvironmentDepthUtils.IsDepthRenderingRequestEnabled = false;
+            _isDepthTextureAvailable = false;
+            OnDepthTextureAvailabilityChanged?.Invoke(false);
         }
 
         public bool GetEnvironmentDepthEnabled()
         {
-            return _depthRenderingEnabled;
+            return EnvironmentDepthUtils.IsDepthRenderingRequestEnabled;
         }
-
         public void RemoveHands(bool areHandsRemoved)
         {
-            if (!Utils.GetEnvironmentDepthHandRemovalSupported())
-            {
-                return;
-            }
             _areHandsRemoved = areHandsRemoved;
             Utils.SetEnvironmentDepthHandRemoval(areHandsRemoved);
         }
 
-        private void Update()
+        private void TryFetchDepthTexture()
         {
-            if (_shouldEnableDepthRendering)
+            if (!EnvironmentDepthUtils.IsDepthRenderingRequestEnabled)
             {
-                _shouldEnableDepthRendering = !_shouldEnableDepthRendering;
-                Utils.SetEnvironmentDepthRendering(true);
-                _depthRenderingEnabled = true;
                 return;
             }
-
-            uint id = 0;
-            if (Utils.GetEnvironmentDepthTextureId(ref id) && _xrDisplay != null && _xrDisplay.running)
+            if (_framesToWaitForColdStart > 0)
             {
-                var rt = _xrDisplay.GetRenderTexture(id);
+                _framesToWaitForColdStart--;
+                return;
+            }
+            uint textureId = 0;
+
+            if (Utils.GetEnvironmentDepthTextureId(ref textureId) && _xrDisplay != null && _xrDisplay.running)
+            {
+                var rt = _xrDisplay.GetRenderTexture(textureId);
                 Shader.SetGlobalTexture(DepthTextureID, rt);
+                if (_isDepthTextureAvailable != true)
+                {
+                    _isDepthTextureAvailable = true;
+                    OnDepthTextureAvailabilityChanged?.Invoke(_isDepthTextureAvailable);
+                }
             }
             else
             {
                 Debug.LogWarning("DepthAPI: no environment texture");
+                if (_isDepthTextureAvailable != false)
+                {
+                    _isDepthTextureAvailable = false;
+                    OnDepthTextureAvailabilityChanged?.Invoke(_isDepthTextureAvailable);
+                }
+            }
+        }
+
+        private void Update()
+        {
+            TryFetchDepthTexture();
+
+            if (!_isDepthTextureAvailable)
+            {
                 return;
             }
 
@@ -151,12 +203,19 @@ namespace Meta.XR.Depth
             if (Enable6DoFCalculations)
             {
                 // Calculate 6DOF reprojection matrices
-                _reprojectionMatrices[0] = EnvironmentDepthUtils.CalculateReprojection(leftEyeData, leftEyeFrustrum.Fov);
-                _reprojectionMatrices[1] = EnvironmentDepthUtils.CalculateReprojection(rightEyeData, rightEyeFrustrum.Fov);
 
-                if (CustomTrackingSpaceTransform != null && !CustomTrackingSpaceTransform.worldToLocalMatrix.isIdentity)
+#if UNITY_EDITOR
+                var cameraRig = FindObjectOfType<OVRCameraRig>();
+                _reprojectionMatrices[0] = EnvironmentDepthUtils.CalculateReprojection(leftEyeData, cameraRig.leftEyeAnchor.position);
+                _reprojectionMatrices[1] = EnvironmentDepthUtils.CalculateReprojection(rightEyeData, cameraRig.rightEyeAnchor.position);
+#else
+                _reprojectionMatrices[0] = EnvironmentDepthUtils.CalculateReprojection(leftEyeData);
+                _reprojectionMatrices[1] = EnvironmentDepthUtils.CalculateReprojection(rightEyeData);
+#endif
+
+                if (_customTrackingSpaceTransform != null && !_customTrackingSpaceTransform.worldToLocalMatrix.isIdentity)
                 {
-                    var worldToLocalMatrix = CustomTrackingSpaceTransform.worldToLocalMatrix;
+                    var worldToLocalMatrix = _customTrackingSpaceTransform.worldToLocalMatrix;
                     _reprojectionMatrices[0] *= worldToLocalMatrix;
                     _reprojectionMatrices[1] *= worldToLocalMatrix;
                 }
@@ -175,4 +234,5 @@ namespace Meta.XR.Depth
         }
 #endif
     }
+
 }
