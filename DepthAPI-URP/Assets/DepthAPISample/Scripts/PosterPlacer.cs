@@ -18,6 +18,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,6 +35,7 @@ namespace DepthAPISample
         [SerializeField] private OVRInput.RawButton _posterDecreaseBiasValueButton = OVRInput.RawButton.RThumbstickDown;
         [SerializeField] private float _depthBiasChangeValue = .01f;
         [SerializeField] private LineRenderer _lineRenderer;
+        [SerializeField] private ChangeInputListener _inputListener;
         private LayerMask _layerMaskWall;
         private LayerMask _layerMaskPoster;
         private PosterPreview _posterPreview;
@@ -41,6 +43,7 @@ namespace DepthAPISample
         private GameObject _currentHighlightedPosterObject;
         private List<Poster> _currentPosters;
         private bool _isPosterHit;
+        private bool _isUsingHands;
 
         private void Awake()
         {
@@ -51,9 +54,29 @@ namespace DepthAPISample
             _posterPreview.SetDepthBias(_previewPosterDepthBiasValue);
 
             _currentPosters = new List<Poster>();
+
+            _isUsingHands = _inputListener.IsUsingHands();
         }
+
+        private void OnEnable()
+        {
+            _inputListener.OnInputChanged += HandleInputChanged;
+        }
+
+        private void OnDisable()
+        {
+            _inputListener.OnInputChanged -= HandleInputChanged;
+        }        
+
         private void Update()
         {
+            _lineRenderer.enabled = !_isUsingHands;
+            _posterPreview.gameObject.SetActive(!_isUsingHands);
+            if (_isUsingHands)
+            {
+                return;
+            }
+
             Ray ray = new Ray(_rayOrigin.position, _rayOrigin.position + _rayOrigin.forward);
             RaycastHit hit;
             if (OVRInput.Get(_posterIncreaseBiasValueButton))
@@ -208,5 +231,7 @@ namespace DepthAPISample
             }
             _currentPosters.Clear();
         }
+
+        private void HandleInputChanged(bool isUsingHands) => _isUsingHands = isUsingHands;
     }
 }

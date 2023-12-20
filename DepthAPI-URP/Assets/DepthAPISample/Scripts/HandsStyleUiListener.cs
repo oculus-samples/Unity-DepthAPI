@@ -18,7 +18,6 @@
  * limitations under the License.
  */
 
-using Meta.XR.Depth;
 using TMPro;
 using UnityEngine;
 
