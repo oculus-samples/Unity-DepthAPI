@@ -166,7 +166,7 @@ namespace DepthAPISample
             }
             var poster = Instantiate(_posterPrefab, hit.point, Quaternion.LookRotation(-hit.normal));
             poster.SetDepthBias(_previewPosterDepthBiasValue);
-            poster.transform.SetParent(hit.transform);
+
             _currentPosters.Add(poster);
             poster.OnHighlight += (poster) =>
             {
