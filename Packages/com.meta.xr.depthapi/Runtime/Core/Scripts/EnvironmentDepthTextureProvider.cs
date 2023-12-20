@@ -57,6 +57,8 @@ namespace Meta.XR.Depth
         private readonly Matrix4x4[] _reprojectionMatrices =
             new Matrix4x4[2] { Matrix4x4.identity, Matrix4x4.identity };
 
+        private bool _areHandsRemoved;
+
         private void Start()
         {
             _xrDisplay = OVRManager.GetCurrentDisplaySubsystem();
@@ -72,7 +74,7 @@ namespace Meta.XR.Depth
             if (!_depthRenderingEnabled || !_shouldEnableDepthRendering)
             {
                 _shouldEnableDepthRendering = true;
-                Utils.SetupEnvironmentDepth(new Utils.EnvironmentDepthCreateParams() { removeHands = false });
+                Utils.SetupEnvironmentDepth(new Utils.EnvironmentDepthCreateParams() { removeHands = _areHandsRemoved });
             }
         }
 
@@ -85,6 +87,16 @@ namespace Meta.XR.Depth
         public bool GetEnvironmentDepthEnabled()
         {
             return _depthRenderingEnabled;
+        }
+
+        public void RemoveHands(bool areHandsRemoved)
+        {
+            if (!Utils.GetEnvironmentDepthHandRemovalSupported())
+            {
+                return;
+            }
+            _areHandsRemoved = areHandsRemoved;
+            Utils.SetEnvironmentDepthHandRemoval(areHandsRemoved);
         }
 
         private void Update()
