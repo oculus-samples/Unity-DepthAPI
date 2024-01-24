@@ -87,16 +87,20 @@ Ensure Passthrough is working in your project by following [these instructions](
 
 ### 2.Importing Depth API package
 
-There are 2 packages that need [importing from git url](https://docs.unity3d.com/Manual/upm-ui-giturl.html)
+To import the Depth API package in Unity, follow these steps:
+
+* For BiRP, the following package needs to be [imported from git url](https://docs.unity3d.com/Manual/upm-ui-giturl.html):
 
 ```
 https://github.com/oculus-samples/Unity-DepthAPI.git?path=/Packages/com.meta.xr.depthapi
 ```
 
-* If your project is using URP, Depth API has a separate set of shaders in a separate package. To access these shaders, add the following package url:
+* If your project uses URP, import an additional package for access to a separate set of shaders. The URL for this package is:
 ```
 https://github.com/oculus-samples/Unity-DepthAPI.git?path=/Packages/com.meta.xr.depthapi.urp
 ```
+> Note: **Please note, for URP, both packages are required.**
+
 ### 3.Project Setup Tool
 
 Depth API has several requirements that need to be met before it can work:
