@@ -18,7 +18,6 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,6 +32,8 @@ namespace DepthAPISample
         [SerializeField] private OVRInput.RawButton _postersCleanupButton = OVRInput.RawButton.B;
         [SerializeField] private OVRInput.RawButton _posterIncreaseBiasValueButton = OVRInput.RawButton.RThumbstickUp;
         [SerializeField] private OVRInput.RawButton _posterDecreaseBiasValueButton = OVRInput.RawButton.RThumbstickDown;
+        [SerializeField] private OVRInput.RawButton _posterRotateRightButton = OVRInput.RawButton.RThumbstickRight;
+        [SerializeField] private OVRInput.RawButton _posterRotateLeftButton = OVRInput.RawButton.RThumbstickLeft;
         [SerializeField] private float _depthBiasChangeValue = .01f;
         [SerializeField] private LineRenderer _lineRenderer;
         [SerializeField] private ChangeInputListener _inputListener;
@@ -44,6 +45,7 @@ namespace DepthAPISample
         private List<Poster> _currentPosters;
         private bool _isPosterHit;
         private bool _isUsingHands;
+        private float _rotationValue;
 
         private void Awake()
         {
@@ -66,7 +68,7 @@ namespace DepthAPISample
         private void OnDisable()
         {
             _inputListener.OnInputChanged -= HandleInputChanged;
-        }        
+        }
 
         private void Update()
         {
@@ -158,6 +160,16 @@ namespace DepthAPISample
             {
                 ClearPosters();
             }
+
+            if (OVRInput.Get(_posterRotateRightButton))
+            {
+                _rotationValue += Time.deltaTime * 50f;
+            }
+
+            if (OVRInput.Get(_posterRotateLeftButton))
+            {
+                _rotationValue -= Time.deltaTime * 50f;
+            }
         }
 
         private void UnhighlightAllPosters()
@@ -187,7 +199,7 @@ namespace DepthAPISample
                 Debug.LogError("Poster prefab is not assigned.");
                 return;
             }
-            var poster = Instantiate(_posterPrefab, hit.point, Quaternion.LookRotation(-hit.normal));
+            var poster = Instantiate(_posterPrefab, hit.point, _posterPreview.transform.rotation);
             poster.SetDepthBias(_previewPosterDepthBiasValue);
 
             _currentPosters.Add(poster);
@@ -214,13 +226,33 @@ namespace DepthAPISample
                 return;
             }
             _posterPreview.gameObject.SetActive(true);
-            _posterPreview.transform.rotation = Quaternion.LookRotation(-hit.normal);
+            //detect if on horizontal surface
+            float minAllowanceDegrees = 75;
+            float maxAllowanceDegrees = 105;
+            bool isOnHorizontalPlane;
+            float angle = Vector3.Angle(-hit.normal, Vector3.up);
+            isOnHorizontalPlane = (angle >= minAllowanceDegrees && angle <= maxAllowanceDegrees);
+
+            Vector3 upwardsRotation;
+
+            if (!isOnHorizontalPlane)
+            {
+                upwardsRotation = Quaternion.Euler(0, _rotationValue, 0) * Vector3.forward;
+            }
+            else
+            {
+                upwardsRotation = Quaternion.Euler(-_rotationValue, 0, 0) * Vector3.up;
+            }
+
+            _posterPreview.transform.rotation = Quaternion.LookRotation(-hit.normal, upwardsRotation);
+
             _posterPreview.transform.position = hit.point;
         }
 
         private void HidePosterPreview()
         {
             _posterPreview.gameObject.SetActive(false);
+            _rotationValue = 0;
         }
 
         private void ClearPosters()
