@@ -26,6 +26,7 @@ You can learn more about occlusion and general guidelines for when and how to us
   * You may get it from [the asset store](https://assetstore.unity.com/packages/tools/integration/meta-xr-core-sdk-269169#releases).
   * Import the **com.meta.xr.sdk.core (v60.0.0 or above)** package from Unity's package manager. Follow the instructions on importing individual SDKs in Unity outlined [on the official oculus documentation](https://developer.oculus.com/documentation/unity/unity-package-manager/).
 * **Unity XR Oculus** package version - **4.2.0-exp-env-depth.2**
+* The depth API packages listed further down in this document under [Using the `com.meta.xr.depthapi` package](#using-the-commetaxrdepthapi-package)
 * Oculus Quest 3
 
 # Getting started with samples
@@ -66,7 +67,7 @@ In this scene, we show a particular setup where each object has different behavi
 #### SceneAPIPlacement
 This example covers the solution for z-fighting between virtual objects and environment depth when they are placed close to real surfaces. The scene utilizes Scene API to enable the precise placement of virtual posters on detected walls. This is a worst case scenario for z-fighting and the best example to show how it's mitigated.
 Supplied shaders contain a float _EnvironmentDepthBias property that can be changed from the code and the SceneAPIPlacement scene showcases how to use it.
-Depth API measurements have an inherent error that also scales with distance. The environment depth bias formula is implemented accordingly. This means that the value that is supplied to _EnvironmentDepthBias stands for virtual depth offset by 1 unit distance away from the camera. Offset is calculated towards the camera; a higher value means the virtual object will be brought closer to the camera. _EnvironmentDepthBias is scaling linearly with metric distance. We recommend using the value of 0.06 but the value might depend on the type of content that is placed.
+Depth API measurements have an inherent error that also scales with distance. The environment depth bias formula is implemented accordingly. This means that the value that is supplied to _EnvironmentDepthBias stands for virtual depth offset by 1 unit distance away from the camera. Offset is calculated towards the camera; a higher value means the virtual object will be brought closer to the camera. _EnvironmentDepthBias is scaling linearly with metric distance. We recommend using a value of around 0.06 but the value might depend on the type of content that is placed.
 
 <img src="./Media/SceneAPIPlacement.gif" alt="SceneAPIPlacement" width="600" height="600" />
 
@@ -192,6 +193,7 @@ The api supports removing hands from the depth map (i.e. your hands will not occ
             _depthTextureProvider.RemoveHands(false);
         }
 ```
+> Note: **The sample in this repository provides a useful example on how to utilize this feature. In there, we remove hands from the depth map and we replace them with hand tracking hands that we then use as a mask to clip any object under them, yielding high resolution hand occlusion.**
 
 ### 9. Implementing Occlusion in custom shaders
 
@@ -210,7 +212,7 @@ For URP:
 // DepthAPI Environment Occlusion
 #pragma multi_compile _ HARD_OCCLUSION SOFT_OCCLUSION
 ```
-#### Step 2. If the struct already contains world coordinates - skip this step, otherwise, use a special macro to declare the field:
+#### Step 2. If the struct already contains world coordinates - skip this step, otherwise, use the special macro, META_DEPTH_VERTEX_OUTPUT, to declare the field:
 ```ShaderLab
 struct v2f
 {
@@ -227,7 +229,7 @@ struct v2f
    UNITY_VERTEX_OUTPUT_STEREO // required for stereo
 };
 ```
-#### Step 3. If the struct already contains world coordinates - skip this step. If not, use a special macro:
+#### Step 3. If the struct already contains world coordinates - skip this step. If not, use the special macro, META_DEPTH_INITIALIZE_VERTEX_OUTPUT, like so:
 ```Shaderlab
 v2f vert (appdata v) {
    v2f o;
@@ -241,7 +243,7 @@ v2f vert (appdata v) {
    return o;
 }
 ```
-#### Step 4. Calculate occlusions in fragment shader
+#### Step 4. Calculate occlusions in fragment shader, with the use of the META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY macro:
 ```Shaderlab
 half4 frag(v2f i) {
    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
