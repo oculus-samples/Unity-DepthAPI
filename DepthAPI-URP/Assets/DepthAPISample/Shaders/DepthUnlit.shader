@@ -108,7 +108,7 @@ Shader "Depth/Unlit"
                 //    Fully occluded pixels will be discarded
                 META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY(input, finalColor, 0);
 
-                return finalColor ;
+                return finalColor;
             }
             ENDHLSL
         }
