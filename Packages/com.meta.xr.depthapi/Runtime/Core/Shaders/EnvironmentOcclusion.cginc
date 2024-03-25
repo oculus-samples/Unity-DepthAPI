@@ -7,7 +7,7 @@ uniform float4 _EnvironmentDepthZBufferParams;
 
 #define SAMPLE_OFFSET_PIXELS 6.0f
 #define RELATIVE_ERROR_SCALE 0.015f
-#define SOFT_OCCLUSIONS_SCREENSPACE_OFFSET SAMPLE_OFFSET_PIXELS / _ScreenParams.xy
+#define SOFT_OCCLUSIONS_SCREENSPACE_OFFSET SAMPLE_OFFSET_PIXELS / _EnvironmentDepthTexture_TexelSize.zw
 
 
 float SampleEnvironmentDepthLinear_Internal(float2 uv)

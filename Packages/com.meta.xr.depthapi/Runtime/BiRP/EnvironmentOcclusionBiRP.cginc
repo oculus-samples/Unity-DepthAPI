@@ -2,6 +2,7 @@
 #define META_DEPTH_ENVIRONMENT_OCCLUSION_BIRP_INCLUDED
 
 uniform UNITY_DECLARE_TEX2DARRAY(_EnvironmentDepthTexture);
+float4 _EnvironmentDepthTexture_TexelSize;
 
 #include "UnityCG.cginc"
 
