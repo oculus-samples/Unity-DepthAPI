@@ -484,13 +484,9 @@ MonoBehaviour:
   overlayType: 1
   compositionDepth: 0
   hidden: 0
-  depthTestEnabled: 0
   overridePerLayerColorScaleAndOffset: 0
   colorScale: {x: 1, y: 1, z: 1, w: 1}
   colorOffset: {x: 0, y: 0, z: 0, w: 0}
-  overrideBlendFactors: 0
-  srcBlendFactor: 2
-  dstBlendFactor: 3
   colorMapEditorType_: 0
   colorMapEditorGradient:
     serializedVersion: 2
@@ -543,6 +539,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 121279618062894758, guid: 940ca5991157c5b418edaf5e5226df05,
+        type: 3}
+      propertyPath: _occlusionType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2375480091832437827, guid: 940ca5991157c5b418edaf5e5226df05,
         type: 3}
       propertyPath: Enable3DoFCalculations

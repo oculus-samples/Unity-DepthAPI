@@ -33,10 +33,15 @@ namespace DepthAPISample
         [SerializeField]
         private EnvironmentDepthOcclusionController _occlusionController;
 
-        private int _currentOcclusionTypeIndex = (int)OcclusionType.NoOcclusion;
+        private int _currentOcclusionTypeIndex = (int)OcclusionType.SoftOcclusion;
 
         [SerializeField]
         private TextMeshProUGUI _currentOcclusionsModeText;
+
+        void Start()
+        {
+            SetOcclusionType();
+        }
 
         void Update()
         {
@@ -49,14 +54,17 @@ namespace DepthAPISample
         private void SwitchToNextOcclusionType()
         {
             _currentOcclusionTypeIndex = (_currentOcclusionTypeIndex + 1) % Enum.GetValues(typeof(OcclusionType)).Length;
+            SetOcclusionType();
+        }
+
+        private void SetOcclusionType()
+        {
             var newType = (OcclusionType)_currentOcclusionTypeIndex;
 
             _occlusionController.EnableOcclusionType(newType);
 
             if (_currentOcclusionsModeText)
-            {
                 _currentOcclusionsModeText.text = $"Occlusion mode: \n{newType.ToString()}";
-            }
         }
     }
 }
