@@ -54,6 +54,7 @@ namespace Meta.XR.Depth
         private int _framesToWaitForColdStart;
 
         private bool _isDepthTextureAvailable;
+        private bool _isPermissionBeingQueried;
 
         private bool _areHandsRemoved;
 
@@ -101,10 +102,28 @@ namespace Meta.XR.Depth
                 return;
             }
 
-            Utils.SetupEnvironmentDepth(new Utils.EnvironmentDepthCreateParams() { removeHands = _areHandsRemoved });
-            Utils.SetEnvironmentDepthRendering(true);
             EnvironmentDepthUtils.IsDepthRenderingRequestEnabled = true;
-            _framesToWaitForColdStart = FRAMES_TO_WAIT_FOR_COLD_START;
+
+            if (!Utils.IsScenePermissionGranted())
+            {
+                Debug.LogWarning($"Environment Depth requires {OVRPermissionsRequester.ScenePermission} permission. Waiting for permission...");
+
+                if (_isPermissionBeingQueried)
+                    return;
+
+                _isPermissionBeingQueried = true;
+#if !UNITY_EDITOR && UNITY_ANDROID
+                var permissionCallbacks = new UnityEngine.Android.PermissionCallbacks();
+                permissionCallbacks.PermissionGranted += ScenePermissionGrantedCallback;
+                permissionCallbacks.PermissionDenied += ScenePermissionDenied;
+
+                UnityEngine.Android.Permission.RequestUserPermission(OVRPermissionsRequester.ScenePermission, permissionCallbacks);
+
+                return;
+#endif // !UNITY_EDITOR && UNITY_ANDROID
+            }
+
+            StartDepthRendering();
         }
 
         public void DisableEnvironmentDepth()
@@ -128,6 +147,13 @@ namespace Meta.XR.Depth
         {
             _areHandsRemoved = areHandsRemoved;
             Utils.SetEnvironmentDepthHandRemoval(areHandsRemoved);
+        }
+
+        private void StartDepthRendering()
+        {
+            Utils.SetupEnvironmentDepth(new Utils.EnvironmentDepthCreateParams() { removeHands = _areHandsRemoved });
+            Utils.SetEnvironmentDepthRendering(true);
+            _framesToWaitForColdStart = FRAMES_TO_WAIT_FOR_COLD_START;
         }
 
         private void TryFetchDepthTexture()
@@ -186,7 +212,7 @@ namespace Meta.XR.Depth
                 leftEyeFrustrum.Fov.RightTan = rightEyeFrustrum.Fov.RightTan;
                 rightEyeFrustrum.Fov.LeftTan = leftEyeFrustrum.Fov.LeftTan;
             }
-#endif
+#endif // !UNITY_EDITOR && UNITY_ANDROID
 
             var leftEyeData = Utils.GetEnvironmentDepthFrameDesc(0);
             var rightEyeData = Utils.GetEnvironmentDepthFrameDesc(1);
@@ -211,7 +237,7 @@ namespace Meta.XR.Depth
 #else
                 _reprojectionMatrices[0] = EnvironmentDepthUtils.CalculateReprojection(leftEyeData);
                 _reprojectionMatrices[1] = EnvironmentDepthUtils.CalculateReprojection(rightEyeData);
-#endif
+#endif // UNITY_EDITOR
 
                 if (_customTrackingSpaceTransform != null && !_customTrackingSpaceTransform.worldToLocalMatrix.isIdentity)
                 {
@@ -232,7 +258,23 @@ namespace Meta.XR.Depth
                 Shader.SetGlobalMatrixArray(Reprojection3DOFMatricesID, _reprojectionMatrices);
             }
         }
-#endif
-    }
+#if !UNITY_EDITOR && UNITY_ANDROID
+        private void ScenePermissionGrantedCallback(string permissionName)
+        {
+            if (permissionName != OVRPermissionsRequester.ScenePermission) return;
+            _isPermissionBeingQueried = false;
 
-}
+            if (!EnvironmentDepthUtils.IsDepthRenderingRequestEnabled) return;
+            StartDepthRendering();
+        }
+        private void ScenePermissionDenied(string permissionName)
+        {
+            if (permissionName != OVRPermissionsRequester.ScenePermission) return;
+            _isPermissionBeingQueried = false;
+        }
+#endif // !UNITY_EDITOR && UNITY_ANDROID
+
+#endif // DEPTH_API_SUPPORTED
+            }
+
+        }
