@@ -272,7 +272,7 @@ Depth API supports adding occlusions via Shader Graph. A subgraph is provided in
 To aid in its usage, the URP sample project provides some example uses cases:
 
 #### 1. LitOccluded
-This is a simple Shader Graph that uses the aforementioned subgraph to implement occlusions. It works by multiplying the final color's alpha value with the occlusion value. The result will be either the original alpha color if not occluded or it will be 0 if the object is occluded. To occlude the object, we feed in this value in the final alpha value of the fragment shader, enable alpha culling and set the threshold to 0.
+This is a simple Shader Graph that uses the aforementioned subgraph to implement occlusions. It works by multiplying the final color's alpha value with the occlusion value. The result will be either the original alpha color if not occluded or it will be 0 if the object is occluded. To occlude the object, we feed in this value in the final alpha value of the fragment shader, enable alpha culling and set the threshold to 0.01 (or a very small value that is greater than 0).
 
 ![alt_text](Media/LitOccludedShaderGraph.png "LitOccludedShaderGraph")
 
