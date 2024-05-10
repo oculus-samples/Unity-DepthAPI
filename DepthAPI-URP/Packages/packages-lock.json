@@ -13,7 +13,7 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.xr.oculus": "4.2.0-exp-env-depth.2"
+        "com.unity.xr.oculus": "4.2.0"
       }
     },
     "com.meta.xr.sdk.core": {

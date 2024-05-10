@@ -287,5 +287,16 @@ Build the app and install it on a Quest 3. Notice the objects with occluded shad
 
 ![alt_text](Media/DepthAPICube.gif)
 
+### 12. Troubleshooting
+
+* There is a known issue with the package manager in some recent Unity versions (i.e. 2022.3.16). If anyone is experiencing unexpected behavior with their Unity projects that use meta sdks, check the package manager and look for errors under these packages. It should look like this:
+![alt_text](Media/pkgmgrerr.png)
+
+   Some recent Unity versions have known problems with meta packages.
+
+   Solution: just close the editor, sign out of Unity and then sign back in.
+
+* Updating the com.unity.xr.oculus package from version 4.2.0-experimental to 4.2.0 will often yield in an editor crash. The solution here is to rebuild the Library folder. This only needs to be done once.
+
 ## Licenses
 The Meta License applies to the SDK and supporting material. The MIT License applies to only certain, clearly marked documents. If an individual file does not indicate which license it is subject to, then the Meta License applies.
