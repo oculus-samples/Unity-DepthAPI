@@ -54,7 +54,7 @@ namespace Meta.XR.Depth
         private int _framesToWaitForColdStart;
 
         private bool _isDepthTextureAvailable;
-        private bool _isPermissionBeingQueried;
+        private bool _hasPermission;
 
         private bool _areHandsRemoved;
 
@@ -106,23 +106,10 @@ namespace Meta.XR.Depth
 
             if (!Utils.IsScenePermissionGranted())
             {
-                Debug.LogWarning($"Environment Depth requires {OVRPermissionsRequester.ScenePermission} permission. Waiting for permission...");
-
-                if (_isPermissionBeingQueried)
-                    return;
-
-                _isPermissionBeingQueried = true;
-#if !UNITY_EDITOR && UNITY_ANDROID
-                var permissionCallbacks = new UnityEngine.Android.PermissionCallbacks();
-                permissionCallbacks.PermissionGranted += ScenePermissionGrantedCallback;
-                permissionCallbacks.PermissionDenied += ScenePermissionDenied;
-
-                UnityEngine.Android.Permission.RequestUserPermission(OVRPermissionsRequester.ScenePermission, permissionCallbacks);
-
+                Debug.LogError($"Environment Depth requires {OVRPermissionsRequester.ScenePermission} permission. Waiting for permission...");
                 return;
-#endif // !UNITY_EDITOR && UNITY_ANDROID
             }
-
+            _hasPermission = true;
             StartDepthRendering();
         }
 
@@ -192,6 +179,14 @@ namespace Meta.XR.Depth
 
         private void Update()
         {
+            if (!_hasPermission)
+            {
+                if (!Utils.IsScenePermissionGranted())
+                    return;
+                _hasPermission = true;
+                StartDepthRendering();
+            }
+
             TryFetchDepthTexture();
 
             if (!_isDepthTextureAvailable)
@@ -258,23 +253,7 @@ namespace Meta.XR.Depth
                 Shader.SetGlobalMatrixArray(Reprojection3DOFMatricesID, _reprojectionMatrices);
             }
         }
-#if !UNITY_EDITOR && UNITY_ANDROID
-        private void ScenePermissionGrantedCallback(string permissionName)
-        {
-            if (permissionName != OVRPermissionsRequester.ScenePermission) return;
-            _isPermissionBeingQueried = false;
-
-            if (!EnvironmentDepthUtils.IsDepthRenderingRequestEnabled) return;
-            StartDepthRendering();
-        }
-        private void ScenePermissionDenied(string permissionName)
-        {
-            if (permissionName != OVRPermissionsRequester.ScenePermission) return;
-            _isPermissionBeingQueried = false;
-        }
-#endif // !UNITY_EDITOR && UNITY_ANDROID
-
 #endif // DEPTH_API_SUPPORTED
-            }
+    }
 
-        }
+}
