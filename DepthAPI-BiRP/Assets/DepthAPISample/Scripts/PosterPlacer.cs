@@ -79,7 +79,7 @@ namespace DepthAPISample
                 return;
             }
 
-            Ray ray = new Ray(_rayOrigin.position, _rayOrigin.position + _rayOrigin.forward);
+            Ray ray = new Ray(_rayOrigin.position, _rayOrigin.forward);
             RaycastHit hit;
             if (OVRInput.Get(_posterIncreaseBiasValueButton))
             {
