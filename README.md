@@ -298,5 +298,7 @@ Build the app and install it on a Quest 3. Notice the objects with occluded shad
 
 * Updating the com.unity.xr.oculus package from version 4.2.0-experimental to 4.2.0 will often yield in an editor crash. The solution here is to rebuild the Library folder. This only needs to be done once.
 
+* If you don't see occlusions in your app, double check that spatial data permission is enabled for your app in Apps->Permissions. Be sure to ask for "USE_SCENE" permission somewhere in your app before using this feature.
+
 ## Licenses
 The Meta License applies to the SDK and supporting material. The MIT License applies to only certain, clearly marked documents. If an individual file does not indicate which license it is subject to, then the Meta License applies.

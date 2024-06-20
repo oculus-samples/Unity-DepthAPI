@@ -1,3 +1,19 @@
+# 61.0.1
+
+### Fixes
+
+* Change USE_SCENE permission check from permission granted event to a polling mechanism
+* The Depth Texture Provider no longer asks for the "USE_SCENE" permission, leaving this up to the developer to choose when to ask for it.
+
+# 61.0.0
+
+* Update xr.oculus package dependency to v 4.2.0
+
+### Fixes
+
+* Add a listener to USE_SCENE permission and only enable depth once it is granted
+* Fix shadergraph breaking on newer versions of Unity
+
 # 60.0.0 (2023-12-21)
 
 ### Features
