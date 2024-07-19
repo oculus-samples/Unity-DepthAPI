@@ -876,8 +876,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1254330461620082167}
-  - component: {fileID: 4836630960523492115}
-  - component: {fileID: 4528370949282353944}
+  - component: {fileID: 2280107283211851716}
+  - component: {fileID: 7870242932967934512}
   m_Layer: 0
   m_Name: UiInstructionsHandsRemoval
   m_TagString: Untagged
@@ -902,7 +902,7 @@ Transform:
   - {fileID: 8651272247881984541}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -28.873, z: 0}
---- !u!114 &4836630960523492115
+--- !u!114 &2280107283211851716
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -911,10 +911,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7116635915485168257}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13ec27b72d4891b4e81b76353c8abff4, type: 3}
+  m_Script: {fileID: 11500000, guid: c16691183e4887946b2a942a0afde041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4528370949282353944
+--- !u!114 &7870242932967934512
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -923,7 +923,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7116635915485168257}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddc5996bf08776d498b867c352ef2e83, type: 3}
+  m_Script: {fileID: 11500000, guid: 310f1412517dd0a4aaed3d451c6f43f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _handsStyleText: {fileID: 4662049014420712494}

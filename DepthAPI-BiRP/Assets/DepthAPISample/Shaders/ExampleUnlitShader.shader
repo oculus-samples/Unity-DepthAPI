@@ -45,7 +45,7 @@ Shader "Meta/Depth/BiRP/ExampleUnlitShader"
             #include "UnityCG.cginc"
 
             // 2. Include the file with utility functions
-            #include "Packages/com.meta.xr.depthapi/Runtime/BiRP/EnvironmentOcclusionBiRP.cginc"
+            #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
 
             struct Attributes
             {

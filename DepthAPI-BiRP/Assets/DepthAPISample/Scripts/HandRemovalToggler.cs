@@ -19,7 +19,7 @@
  */
 
 using System;
-using Meta.XR.Depth;
+using Meta.XR.EnvironmentDepth;
 using UnityEngine;
 
 namespace DepthAPISample
@@ -36,13 +36,13 @@ namespace DepthAPISample
         [SerializeField] private OVRInput.RawButton _handsRemovalStyleToggler = OVRInput.RawButton.X;
         [SerializeField] private Renderer _leftHandVisuals;
         [SerializeField] private Renderer _rightHandVisuals;
-        private EnvironmentDepthTextureProvider _depthTextureProvider;
+        private EnvironmentDepthManager _depthTextureManager;
         private HandsRemovalStyle _occlStyle = HandsRemovalStyle.VirtualHandMask;
         private int _occlustionType;
 
         private void Awake()
         {
-            _depthTextureProvider = GetComponent<EnvironmentDepthTextureProvider>();
+            _depthTextureManager = GetComponent<EnvironmentDepthManager>();
         }
 
         private void Start()
@@ -66,12 +66,12 @@ namespace DepthAPISample
             switch (style)
             {
                 case HandsRemovalStyle.None:
-                    _depthTextureProvider.RemoveHands(false);
+                    _depthTextureManager.RemoveHands = false;
                     _leftHandVisuals.gameObject.SetActive(false);
                     _rightHandVisuals.gameObject.SetActive(false);
                     break;
                 case HandsRemovalStyle.VirtualHandMask:
-                    _depthTextureProvider.RemoveHands(true);
+                    _depthTextureManager.RemoveHands = true;
                     _leftHandVisuals.gameObject.SetActive(true);
                     _rightHandVisuals.gameObject.SetActive(true);
                     break;

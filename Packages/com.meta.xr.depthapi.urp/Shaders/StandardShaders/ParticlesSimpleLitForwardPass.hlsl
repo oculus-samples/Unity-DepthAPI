@@ -4,7 +4,7 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Particles.hlsl"
 
-#include "../EnvironmentOcclusionURP.hlsl"
+#include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/URP/EnvironmentOcclusionURP.hlsl"
 float _EnvironmentDepthBias;
 
 void InitializeInputData(VaryingsParticle input, half3 normalTS, out InputData inputData)

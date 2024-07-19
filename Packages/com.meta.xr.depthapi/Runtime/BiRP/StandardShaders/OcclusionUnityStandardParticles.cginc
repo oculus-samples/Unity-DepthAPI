@@ -15,7 +15,7 @@
 #include "UnityPBSLighting.cginc"
 #include "UnityStandardParticleInstancing.cginc"
 
-#include "../EnvironmentOcclusionBiRP.cginc"
+#include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
 float _EnvironmentDepthBias;
 
 // Particles surface shader has a lot of variants in it, but some of those do not affect

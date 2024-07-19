@@ -296,6 +296,7 @@ MonoBehaviour:
   HandType: 1
   _pointerPoseRoot: {fileID: 0}
   m_showState: 3
+  RayHelper: {fileID: 0}
 --- !u!114 &158793729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -681,13 +682,9 @@ MonoBehaviour:
   overlayType: 1
   compositionDepth: 0
   hidden: 0
-  depthTestEnabled: 0
   overridePerLayerColorScaleAndOffset: 0
   colorScale: {x: 1, y: 1, z: 1, w: 1}
   colorOffset: {x: 0, y: 0, z: 0, w: 0}
-  overrideBlendFactors: 0
-  srcBlendFactor: 2
-  dstBlendFactor: 3
   colorMapEditorType_: 0
   colorMapEditorGradient:
     serializedVersion: 2
@@ -900,14 +897,14 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 940ca5991157c5b418edaf5e5226df05, type: 3}
 --- !u!114 &710365315 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 121279618062894758, guid: 940ca5991157c5b418edaf5e5226df05,
+  m_CorrespondingSourceObject: {fileID: -3339483757200392019, guid: 940ca5991157c5b418edaf5e5226df05,
     type: 3}
   m_PrefabInstance: {fileID: 710365314}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 710365316}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4b13589911d00d49bb8395c49568d3f, type: 3}
+  m_Script: {fileID: 11500000, guid: 71a155ece80369d4e99bdaf5e59169b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &710365316 stripped
@@ -1453,6 +1450,7 @@ MonoBehaviour:
   HandType: 0
   _pointerPoseRoot: {fileID: 0}
   m_showState: 3
+  RayHelper: {fileID: 0}
 --- !u!114 &1889354235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1536,80 +1534,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: UiInstructionsHandsRemoval
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4836630960523492115, guid: 94725cce8b49b0d448a26d54b4fbeb85, type: 3}
-    - {fileID: 4528370949282353944, guid: 94725cce8b49b0d448a26d54b4fbeb85, type: 3}
+    - target: {fileID: 7870242932967934512, guid: 94725cce8b49b0d448a26d54b4fbeb85,
+        type: 3}
+      propertyPath: _ovrHand
+      value: 
+      objectReference: {fileID: 158793728}
+    - target: {fileID: 7870242932967934512, guid: 94725cce8b49b0d448a26d54b4fbeb85,
+        type: 3}
+      propertyPath: _handsRemovalToggler
+      value: 
+      objectReference: {fileID: 710365317}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7116635915485168257, guid: 94725cce8b49b0d448a26d54b4fbeb85,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1940698559}
-    - targetCorrespondingSourceObject: {fileID: 7116635915485168257, guid: 94725cce8b49b0d448a26d54b4fbeb85,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1940698558}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94725cce8b49b0d448a26d54b4fbeb85, type: 3}
---- !u!1 &1940698554 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7116635915485168257, guid: 94725cce8b49b0d448a26d54b4fbeb85,
-    type: 3}
-  m_PrefabInstance: {fileID: 1940698553}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1940698555 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8405113322154310598, guid: 94725cce8b49b0d448a26d54b4fbeb85,
-    type: 3}
-  m_PrefabInstance: {fileID: 1940698553}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1940698556 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1878423439334052178, guid: 94725cce8b49b0d448a26d54b4fbeb85,
-    type: 3}
-  m_PrefabInstance: {fileID: 1940698553}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1940698557 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4662049014420712494, guid: 94725cce8b49b0d448a26d54b4fbeb85,
-    type: 3}
-  m_PrefabInstance: {fileID: 1940698553}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1940698558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940698554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 310f1412517dd0a4aaed3d451c6f43f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _handsStyleText: {fileID: 1940698557}
-  _handsRemovalToggler: {fileID: 710365317}
-  _ovrHand: {fileID: 158793728}
-  _useHandsPromptUi: {fileID: 1940698556}
-  _inputInstructionsUi: {fileID: 1940698555}
---- !u!114 &1940698559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940698554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c16691183e4887946b2a942a0afde041, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1963465551
 GameObject:
   m_ObjectHideFlags: 0

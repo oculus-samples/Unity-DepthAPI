@@ -5,7 +5,7 @@
 
 #include "UnityStandardCore.cginc"
 
-#include "../EnvironmentOcclusionBiRP.cginc"
+#include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
 float _EnvironmentDepthBias;
 #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
 #define UNITY_REQUIRE_FRAG_WORLDPOS 1
