@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CustomSurfaceOccluded
-  m_Shader: {fileID: 4800000, guid: e3ba48e6112d5044583846e18fed1286, type: 3}
+  m_Shader: {fileID: 4800000, guid: b6c71c9c13df7fb4ca02d7fcdc872360, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []

@@ -500,13 +500,9 @@ MonoBehaviour:
   overlayType: 1
   compositionDepth: 0
   hidden: 0
-  depthTestEnabled: 0
   overridePerLayerColorScaleAndOffset: 0
   colorScale: {x: 1, y: 1, z: 1, w: 1}
   colorOffset: {x: 0, y: 0, z: 0, w: 0}
-  overrideBlendFactors: 0
-  srcBlendFactor: 2
-  dstBlendFactor: 3
   colorMapEditorType_: 0
   colorMapEditorGradient:
     serializedVersion: 2
@@ -641,14 +637,14 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 940ca5991157c5b418edaf5e5226df05, type: 3}
 --- !u!114 &604924508 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 121279618062894758, guid: 940ca5991157c5b418edaf5e5226df05,
+  m_CorrespondingSourceObject: {fileID: -3339483757200392019, guid: 940ca5991157c5b418edaf5e5226df05,
     type: 3}
   m_PrefabInstance: {fileID: 604924507}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 541804737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4b13589911d00d49bb8395c49568d3f, type: 3}
+  m_Script: {fileID: 11500000, guid: 71a155ece80369d4e99bdaf5e59169b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &604924511
@@ -957,6 +953,7 @@ MonoBehaviour:
   HandType: 1
   _pointerPoseRoot: {fileID: 0}
   m_showState: 3
+  RayHelper: {fileID: 0}
 --- !u!114 &746089787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1491,6 +1488,7 @@ MonoBehaviour:
   HandType: 0
   _pointerPoseRoot: {fileID: 0}
   m_showState: 3
+  RayHelper: {fileID: 0}
 --- !u!114 &1439940888
 MonoBehaviour:
   m_ObjectHideFlags: 0

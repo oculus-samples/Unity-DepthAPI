@@ -19,7 +19,7 @@
  */
 
 using System;
-using Meta.XR.Depth;
+using Meta.XR.EnvironmentDepth;
 using TMPro;
 using UnityEngine;
 
@@ -31,9 +31,9 @@ namespace DepthAPISample
     public class OcclusionToggler : MonoBehaviour
     {
         [SerializeField]
-        private EnvironmentDepthOcclusionController _occlusionController;
+        private EnvironmentDepthManager _occlusionController;
 
-        private int _currentOcclusionTypeIndex = (int)OcclusionType.SoftOcclusion;
+        private int _currentOcclusionTypeIndex = (int)OcclusionShadersMode.SoftOcclusion;
 
         [SerializeField]
         private TextMeshProUGUI _currentOcclusionsModeText;
@@ -53,15 +53,15 @@ namespace DepthAPISample
 
         private void SwitchToNextOcclusionType()
         {
-            _currentOcclusionTypeIndex = (_currentOcclusionTypeIndex + 1) % Enum.GetValues(typeof(OcclusionType)).Length;
+            _currentOcclusionTypeIndex = (_currentOcclusionTypeIndex + 1) % Enum.GetValues(typeof(OcclusionShadersMode)).Length;
             SetOcclusionType();
         }
 
         private void SetOcclusionType()
         {
-            var newType = (OcclusionType)_currentOcclusionTypeIndex;
+            var newType = (OcclusionShadersMode)_currentOcclusionTypeIndex;
 
-            _occlusionController.EnableOcclusionType(newType);
+            _occlusionController.OcclusionShadersMode = newType;
 
             if (_currentOcclusionsModeText)
                 _currentOcclusionsModeText.text = $"Occlusion mode: \n{newType.ToString()}";

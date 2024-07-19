@@ -10,7 +10,7 @@
 #define REQUIRES_WORLD_SPACE_POS_INTERPOLATOR 1
 #endif
 
-#include "../EnvironmentOcclusionURP.hlsl"
+#include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/URP/EnvironmentOcclusionURP.hlsl"
 float _EnvironmentDepthBias;
 
 // GLES2 has limited amount of interpolators
