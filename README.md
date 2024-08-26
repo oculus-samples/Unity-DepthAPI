@@ -9,6 +9,34 @@ You can learn more about Depth API [here](https://developer.oculus.com/experimen
 ## Health & Safety Guidelines
 While building mixed reality experiences, we highly recommend evaluating your content to offer your users a comfortable and safe experience. Please refer to the [Mixed Reality H&S Guidelines](https://developer.oculus.com/resources/mr-health-safety-guideline/) before designing and developing your app using this sample project or any of our Presence Platform Features.
 
+## Table of Contents
+- [Dynamic Occlusion](#dynamic-occlusion)
+- [Getting started with samples](#getting-started-with-samples)
+- [Implementing Depth API](#implementing-depth-api)
+  * [Getting started](#getting-started)
+    + [1. Prerequisites](#1-prerequisites)
+    + [2. Adding occlusions to a scene](#2-adding-occlusions-to-a-scene)
+    + [3. Project Setup Tool](#3-project-setup-tool)
+    + [4. Adding occlusion shaders to our objects](#4-adding-occlusion-shaders-to-our-objects)
+      - [**For BiRP**](#--for-birp--)
+      - [**For URP**](#--for-urp--)
+    + [5. Enabling/configuring occlusions](#5-enabling-configuring-occlusions)
+      - [Occlusions on UI](#occlusions-on-ui)
+    + [6. Using Environment depth bias to solve z-fighting in occlusion shaders](#6-using-environment-depth-bias-to-solve-z-fighting-in-occlusion-shaders)
+    + [7. Using hands removal](#7-using-hands-removal)
+    + [8. Implementing occlusion in custom shaders](#8-implementing-occlusion-in-custom-shaders)
+    + [9. Using Shader Graph](#9-using-shader-graph)
+      - [1. LitOccluded](#1-litoccluded)
+      - [2. Stylized shaders](#2-stylized-shaders)
+    + [10. Testing](#10-testing)
+    + [11. Updating from pre v67 version of Depth API](#11-updating-from-pre-v67-version-of-depth-api)
+      - [Upgrade guide](#upgrade-guide)
+      - [Structure change](#structure-change)
+      - [Components/Scripts changes](#components-scripts-changes)
+      - [Shader changes](#shader-changes)
+    + [12. Troubleshooting](#12-troubleshooting)
+  * [Licenses](#licenses)
+
 # Dynamic Occlusion
 This repository contains two occlusion implementations: hard occlusion and soft occlusion.
 
@@ -212,6 +240,7 @@ To add occlusions to UI, an OcclusionCutout shader is provided in each support p
    ![OcclusionUI_2](Media/OcclusionUI_2.png)
 3) Assign the material created at 2) to the panel added at 1) . It's a good idea to remove `Raycast target` from said panel so it doesn't interfere with potential input on your UI.![OcclusionUI_3](Media/OcclusionUI_3.png)
 
+4) (Optional) You may assign an image in the "Source Image" field to have it act like a mask. Anywhere there's is 0 in the source image's alpha channel, occlusions will not occur.
 
 ### 6. Using Environment depth bias to solve z-fighting in occlusion shaders
 
