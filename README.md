@@ -199,6 +199,15 @@ private void Example()
     _environmentDepthManager.enabled = false;
 }
 ```
+#### Occlusions on UI
+
+![ui_occluded](Media/UiOccluded.gif "ui_occluded")
+
+To add occlusions to UI, an OcclusionCutout shader is provided in each support package. To use it, add a quad in front of your UI (offset by a tiny amount to avoid z-fighting between the quad and the UI panel) and assign a material to the quad that has this shader.
+
+For URP the shader is named 'OcclusionCutoutURP' while for BiRP it is named 'OcclusionCutoutBiRP'.
+
+![OcclusionCutout](Media/OcclusionCutout.png "OcclusionCutout")
 
 ### 6. Using Environment depth bias to solve z-fighting in occlusion shaders
 
