@@ -203,11 +203,15 @@ private void Example()
 
 ![ui_occluded](Media/UiOccluded.gif "ui_occluded")
 
-To add occlusions to UI, an OcclusionCutout shader is provided in each support package. To use it, add a quad in front of your UI (offset by a tiny amount to avoid z-fighting between the quad and the UI panel) and assign a material to the quad that has this shader.
+To add occlusions to UI, an OcclusionCutout shader is provided in each support package. Follow these steps to add occlusions to your UI:
 
-For URP the shader is named 'OcclusionCutoutURP' while for BiRP it is named 'OcclusionCutoutBiRP'.
+1) Add a panel or image to your UI hierarchy at the very bottom (so that it is rendered last). Make sure it covers the entire UI.![OcclusionUI_1](Media/OcclusionUI_1.png)
+2) Create a new material and assign it the OcclusionCutout shader.
+   > For URP the shader is named 'OcclusionCutoutURP' while for BiRP it is named 'OcclusionCutoutBiRP'.
 
-![OcclusionCutout](Media/OcclusionCutout.png "OcclusionCutout")
+   ![OcclusionUI_2](Media/OcclusionUI_2.png)
+3) Assign the material created at 2) to the panel added at 1) . It's a good idea to remove `Raycast target` from said panel so it doesn't interfere with potential input on your UI.![OcclusionUI_3](Media/OcclusionUI_3.png)
+
 
 ### 6. Using Environment depth bias to solve z-fighting in occlusion shaders
 
