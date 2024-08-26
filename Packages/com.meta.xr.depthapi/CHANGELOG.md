@@ -1,3 +1,8 @@
+# 68.0.0
+
+### Features
+* Add occlusion cutout shaders for both BiRP and URP to support occlusions for UI
+
 # 67.0.0
 
 ### Features
