@@ -9,26 +9,26 @@
       }
     },
     "com.meta.xr.mrutilitykit": {
-      "version": "67.0.0",
+      "version": "68.0.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.ai.navigation": "1.1.4",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.meta.xr.sdk.core": "67.0.0",
+        "com.meta.xr.sdk.core": "68.0.2",
         "com.unity.textmeshpro": "3.0.6"
       },
       "url": "https://npm.developer.oculus.com"
     },
     "com.meta.xr.sdk.core": {
-      "version": "67.0.0",
-      "depth": 0,
+      "version": "68.0.2",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://npm.developer.oculus.com"
     },
     "com.meta.xr.sdk.interaction": {
-      "version": "67.0.0",
+      "version": "68.0.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -48,7 +48,7 @@
       "url": "https://npm.developer.oculus.com"
     },
     "com.unity.ai.navigation": {
-      "version": "1.1.4",
+      "version": "1.1.5",
       "depth": 1,
       "source": "registry",
       "dependencies": {
