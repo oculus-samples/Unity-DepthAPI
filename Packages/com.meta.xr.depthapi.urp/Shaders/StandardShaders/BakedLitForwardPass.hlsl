@@ -150,7 +150,11 @@ void BakedLitForwardPassFragment(
     #endif
     InputData inputData;
     InitializeInputData(input, normalTS, inputData);
-    SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv0AndFogCoord.xy, _BaseMap);
+#if UNITY_VERSION >= 600000
+  SETUP_DEBUG_TEXTURE_DATA(inputData, UNDO_TRANSFORM_TEX(input.uv, _BaseMap));
+#else
+  SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
+#endif
 
     half4 texColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
     half3 color = texColor.rgb * _BaseColor.rgb;

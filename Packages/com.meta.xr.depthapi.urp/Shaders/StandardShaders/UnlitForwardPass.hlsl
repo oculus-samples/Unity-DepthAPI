@@ -130,7 +130,11 @@ void UnlitPassFragment(
 
     InputData inputData;
     InitializeInputData(input, inputData);
-    SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
+#if UNITY_VERSION >= 600000
+  SETUP_DEBUG_TEXTURE_DATA(inputData, UNDO_TRANSFORM_TEX(input.uv, _BaseMap));
+#else
+  SETUP_DEBUG_TEXTURE_DATA(inputData, input.uv, _BaseMap);
+#endif
 
 #ifdef _DBUFFER
     ApplyDecalToBaseColor(input.positionCS, color);

@@ -1,3 +1,8 @@
+# 69.0.0
+
+### Compatibility
+* Add support for Unity 6.
+
 # 68.0.0
 
 ### Features
