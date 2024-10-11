@@ -9,26 +9,26 @@
       }
     },
     "com.meta.xr.mrutilitykit": {
-      "version": "68.0.1",
+      "version": "69.0.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.ai.navigation": "1.1.4",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.meta.xr.sdk.core": "68.0.2",
+        "com.meta.xr.sdk.core": "69.0.0",
         "com.unity.textmeshpro": "3.0.6"
       },
       "url": "https://npm.developer.oculus.com"
     },
     "com.meta.xr.sdk.core": {
-      "version": "68.0.2",
-      "depth": 1,
+      "version": "69.0.0",
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://npm.developer.oculus.com"
     },
     "com.meta.xr.sdk.interaction": {
-      "version": "68.0.1",
+      "version": "69.0.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -139,9 +139,9 @@
       "depth": 2,
       "source": "registry",
       "dependencies": {
-        "com.unity.modules.subsystems": "1.0.0",
         "com.unity.modules.vr": "1.0.0",
         "com.unity.modules.xr": "1.0.0",
+        "com.unity.modules.subsystems": "1.0.0",
         "com.unity.xr.legacyinputhelpers": "2.1.7"
       },
       "url": "https://packages.unity.com"
