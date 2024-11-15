@@ -18,9 +18,9 @@ While building mixed reality experiences, we highly recommend evaluating your co
     + [2. Adding occlusions to a scene](#2-adding-occlusions-to-a-scene)
     + [3. Project Setup Tool](#3-project-setup-tool)
     + [4. Adding occlusion shaders to our objects](#4-adding-occlusion-shaders-to-our-objects)
-      - [**For BiRP**](#--for-birp--)
-      - [**For URP**](#--for-urp--)
-    + [5. Enabling/configuring occlusions](#5-enabling-configuring-occlusions)
+      - [**For BiRP**](#for-birp)
+      - [**For URP**](#for-urp)
+    + [5. Enabling/configuring occlusions](#5-enablingconfiguring-occlusions)
       - [Occlusions on UI](#occlusions-on-ui)
     + [6. Using Environment depth bias to solve z-fighting in occlusion shaders](#6-using-environment-depth-bias-to-solve-z-fighting-in-occlusion-shaders)
     + [7. Using hands removal](#7-using-hands-removal)
@@ -32,7 +32,7 @@ While building mixed reality experiences, we highly recommend evaluating your co
     + [11. Updating from pre v67 version of Depth API](#11-updating-from-pre-v67-version-of-depth-api)
       - [Upgrade guide](#upgrade-guide)
       - [Structure change](#structure-change)
-      - [Components/Scripts changes](#components-scripts-changes)
+      - [Components/Scripts changes](#componentsscripts-changes)
       - [Shader changes](#shader-changes)
     + [12. Troubleshooting](#12-troubleshooting)
   * [Licenses](#licenses)
@@ -48,10 +48,10 @@ This repository contains two occlusion implementations: hard occlusion and soft 
 ## Depth API Requirements
 * **2022.3.1 and higher** or **2023.2 and higher**
 * **Meta XR Core SDK (v67.0.0 or above)** by using one of the following methods:
-  * You may get it from the [Unity Asset Store](https://assetstore.unity.com/packages/tools/integration/meta-xr-core-sdk-269169#releases).
-  * Import the **com.meta.xr.sdk.core (v67.0.0 or above)** package from Unity's package manager. Follow the instructions on importing individual SDKs in Unity outlined [in the official Oculus documentation](https://developer.oculus.com/documentation/unity/unity-package-manager/).
+  * You may get it from the [Unity Asset Store](https://assetstore.unity.com/packages/tools/integration/meta-xr-core-sdk-269169).
+  * Import the **com.meta.xr.sdk.core (v67.0.0 or above)** package from Unity's package manager. Follow the instructions on importing individual SDKs in Unity outlined [in the official Meta XR Packages documentation](https://developer.oculus.com/documentation/unity/unity-package-manager/).
 * **Oculus XR Plugin** package version - **4.2.0**
-* The Depth API packages listed further down in this document under [Using the `com.meta.xr.depthapi` package](#using-the-commetaxrdepthapi-package)
+* The Depth API packages, listed further down in this document under [Adding occlusion shader to our objects](#4-adding-occlusion-shaders-to-our-objects)
 * Meta Quest 3
 
 # Getting started with samples
@@ -112,7 +112,7 @@ Ensure Passthrough is working in your project by following [these instructions](
 
 ### 2. Adding occlusions to a scene
 
-To add occlusions to your scene, add the `EnvironmentDepthManager.cs` component anywhere in your scene. This script is located in Meta Core SDK under `Scripts/EnvironmentDepth`.
+To add occlusions to your scene, add the `EnvironmentDepthManager.cs` component anywhere in your scene. This script is located in Meta XR Core SDK under `Scripts/EnvironmentDepth`.
 
 Once you have done this, hit Ctrl-S to save your scene. You now need to add the **Passthrough Feature** to your scene (if you don’t already have it). You can use PST to handle this process automatically. This feature is described in the next section. Passthrough is essential for Depth API to function. More info on passthrough can be found in [the official documentation](https://developer.oculus.com/documentation/unity/unity-passthrough-gs/).
 
@@ -138,7 +138,7 @@ To aid with this, you can use the Project Setup Tool (PST). This will detect any
 
 ![PST](Media/PST.png)
 
-* You can also access PST from Unity’s top menu "Oculus > Tools > Project Setup Tool"
+* You can also access PST from Unity’s top menu **Meta** > **Tools** > **Project Setup Tool**
 
 Once open, you will be presented with a menu that displays all issues and recommendations for solutions. All outstanding issues need to be fixed before the Depth API can work. **Recommended Items** should be applied as well.
 
@@ -278,7 +278,7 @@ If you have your own custom shaders you can convert them to occluded versions by
 
 For BiRP, use the following include statement:
 ```ShaderLab
-#include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.hlsl"
+#include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/BiRP/EnvironmentOcclusionBiRP.cginc"
 ```
 For URP:
 ```ShaderLab
@@ -347,10 +347,10 @@ Depth API supports adding occlusions via Shader Graph. A subgraph is provided in
 
 ![alt_text](Media/OcclusionSubGraph.png "OcclusionSubgraph")
 
-To aid in its usage, meta core sdk and the URP sample project provide some example uses cases:
+To aid in its usage, Meta XR Core SDK and the URP sample project provide some example use cases:
 
 #### 1. LitOccluded
-This is a simple Shader Graph that uses the aforementioned subgraph to implement occlusions. It works by multiplying the final color's alpha value with the occlusion value. The result will be either the original alpha color if not occluded or it will be 0 if the object is occluded. To occlude the object, we feed in this value in the final alpha value of the fragment shader, enable alpha culling and set the threshold to 0.01 (or a very small value that is greater than 0). This shadergraph is located in Meta Core SDK, under `Shaders/EnvironmentDepth/URP/Shadergraph`.
+This is a simple Shader Graph that uses the aforementioned subgraph to implement occlusions. It works by multiplying the final color's alpha value with the occlusion value. The result will be either the original alpha color if not occluded or it will be 0 if the object is occluded. To occlude the object, we feed in this value in the final alpha value of the fragment shader, enable alpha culling and set the threshold to 0.01 (or a very small value that is greater than 0). This shadergraph is located in Meta XR Core SDK, under `Shaders/EnvironmentDepth/URP/Shadergraph`.
 
 ![alt_text](Media/LitOccludedShaderGraph.png "LitOccludedShaderGraph")
 
@@ -367,7 +367,7 @@ Build the app and install it on a Quest 3. Notice the objects with occluded shad
 
 ### 11. Updating from pre v67 version of Depth API
 
-As a major update in v67, the majority of Depth API functionality has been added to the Meta Core SDK. The code base has also been significantly refactored. The v67 version of the Quest OS has also changed the way it supplies depth textures. The refactor to the Unity Depth API code reflects these changes. As a result, occlusions now look more accurate, and their performance has improved. This section will outline the differences in code structure, and a guide on updating existing projects to v67 version of core.
+As a major update in v67, the majority of Depth API functionality has been added to the Meta XR Core SDK. The code base has also been significantly refactored. The v67 version of the Quest OS has also changed the way it supplies depth textures. The refactor to the Unity Depth API code reflects these changes. As a result, occlusions now look more accurate, and their performance has improved. This section will outline the differences in code structure, and a guide on updating existing projects to v67 version of core.
 
 #### Upgrade guide
 * Update com.meta.xr.sdk.core to v67.0.0
@@ -403,7 +403,7 @@ URP package
 
 ![urpbefore](Media/urpbefore.png)
 
-Starting with v67.0.0, the base core functionality of Depth API has moved to the Meta Core SDK, away from these GitHub packages. However, support shaders have been left in those packages, so the flow of updating shaders in your materials will remain unchanged.
+Starting with v67.0.0, the base core functionality of Depth API has moved to the Meta XR Core SDK, away from these GitHub packages. However, support shaders have been left in those packages, so the flow of updating shaders in your materials will remain unchanged.
 
 ![newcorestruct](Media/newcorestruct.png)
 
@@ -491,15 +491,15 @@ New API:
 
 ### 12. Troubleshooting
 
-* There is a known issue with the package manager in some recent Unity versions (i.e. 2022.3.16). If anyone is experiencing unexpected behavior with their Unity projects that use meta sdks, check the package manager and look for errors under these packages. It should look like this:
+* There is a known issue with the package manager in some recent Unity versions (i.e. 2022.3.16). If anyone is experiencing unexpected behavior with their Unity projects that use Meta XR Core SDK, check the package manager and look for errors under these packages. It should look like this:
 ![alt_text](Media/pkgmgrerr.png)
 
-   Some recent Unity versions have known problems with meta packages.
+   Some recent Unity versions have known problems with Meta packages.
 
    Solution: just close the editor, sign out of Unity and then sign back in.
 
 * Updating the com.unity.xr.oculus package from version 4.2.0-experimental to 4.2.0 will often yield in an editor crash. The solution here is to rebuild the Library folder. This only needs to be done once.
-* Known issue: In Meta Quest Link, resetting the view can offset occlusions.
+* Known issue: In Link, resetting the view can offset occlusions.
 * Known issue: XRSim versions that are older than v69 do not work with Environment Depth.
 
 ## Licenses
