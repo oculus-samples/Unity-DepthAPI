@@ -28,13 +28,14 @@ While building mixed reality experiences, we highly recommend evaluating your co
     + [9. Using Shader Graph](#9-using-shader-graph)
       - [1. LitOccluded](#1-litoccluded)
       - [2. Stylized shaders](#2-stylized-shaders)
-    + [10. Testing](#10-testing)
-    + [11. Updating from pre v67 version of Depth API](#11-updating-from-pre-v67-version-of-depth-api)
+    + [10. Raycasting](#10-raycasting)
+    + [11. Testing](#11-testing)
+    + [12. Updating from pre v67 version of Depth API](#12-updating-from-pre-v67-version-of-depth-api)
       - [Upgrade guide](#upgrade-guide)
       - [Structure change](#structure-change)
       - [Components/Scripts changes](#componentsscripts-changes)
       - [Shader changes](#shader-changes)
-    + [12. Troubleshooting](#12-troubleshooting)
+    + [13. Troubleshooting](#13-troubleshooting)
   * [Licenses](#licenses)
 
 # Dynamic Occlusion
@@ -359,13 +360,18 @@ Once an object is occluded we can alternatively apply various effects to it rath
 
 ![alt_text](Media/StylizedOcclusion.gif "StylizedOcclusion")
 
+### 10. Raycasting
 
-### 10. Testing
+Starting with v71, we've released our official solution for depth raycasting and is part of [MRUK](https://developers.meta.com/horizon/documentation/unity/unity-mr-utility-kit-overview). You can find more information on it [here](https://developers.meta.com/horizon/documentation/unity/unity-mr-utility-kit-features#environment-raycasting-beta). There's also a sample within MRUK that showcases its usage [here](https://developers.meta.com/horizon/documentation/unity/unity-mr-utility-kit-features#environment-raycasting-beta).
+
+<img src="Media/PanelPlacement.png" alt="alt_text" title="PanelPlacement" width="800" height="800">
+
+### 11. Testing
 Build the app and install it on a Quest 3. Notice the objects with occluded shaders will have occlusions.
 
 ![alt_text](Media/DepthAPICube.gif)
 
-### 11. Updating from pre v67 version of Depth API
+### 12. Updating from pre v67 version of Depth API
 
 As a major update in v67, the majority of Depth API functionality has been added to the Meta XR Core SDK. The code base has also been significantly refactored. The v67 version of the Quest OS has also changed the way it supplies depth textures. The refactor to the Unity Depth API code reflects these changes. As a result, occlusions now look more accurate, and their performance has improved. This section will outline the differences in code structure, and a guide on updating existing projects to v67 version of core.
 
@@ -489,7 +495,7 @@ New API:
 "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/URP/EnvironmentOcclusionURP.hlsl"
 ```
 
-### 12. Troubleshooting
+### 13. Troubleshooting
 
 * There is a known issue with the package manager in some recent Unity versions (i.e. 2022.3.16). If anyone is experiencing unexpected behavior with their Unity projects that use Meta XR Core SDK, check the package manager and look for errors under these packages. It should look like this:
 ![alt_text](Media/pkgmgrerr.png)
