@@ -507,6 +507,7 @@ New API:
 * Updating the com.unity.xr.oculus package from version 4.2.0-experimental to 4.2.0 will often yield in an editor crash. The solution here is to rebuild the Library folder. This only needs to be done once.
 * Known issue: In Link, resetting the view can offset occlusions.
 * Known issue: XRSim versions that are older than v69 do not work with Environment Depth.
+* Known issue: The Depth Masking feature does not work in v71 without following [the instructions in this thread](https://github.com/oculus-samples/Unity-DepthAPI/issues/69).
 
 ## Licenses
 The Meta License applies to the SDK and supporting material. The MIT License applies to only certain, clearly marked documents. If an individual file does not indicate which license it is subject to, then the Meta License applies.
