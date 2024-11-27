@@ -362,7 +362,7 @@ Once an object is occluded we can alternatively apply various effects to it rath
 
 ### 10. Raycasting
 
-Starting with v71, we've released our official solution for depth raycasting and is part of [MRUK](https://developers.meta.com/horizon/documentation/unity/unity-mr-utility-kit-overview). You can find more information on it [here](https://developers.meta.com/horizon/documentation/unity/unity-mr-utility-kit-features#environment-raycasting-beta). There's also a sample within MRUK that showcases its usage [here](https://developers.meta.com/horizon/documentation/unity/unity-mr-utility-kit-features#environment-raycasting-beta).
+Starting with v71, we've released our official solution for depth raycasting and is part of [MRUK](https://developers.meta.com/horizon/documentation/unity/unity-mr-utility-kit-overview). You can find more information on it [here](https://developers.meta.com/horizon/documentation/unity/unity-mr-utility-kit-features#environment-raycasting-beta). There's also a sample within MRUK that showcases its usage [here](https://developers.meta.com/horizon/documentation/unity/unity-mr-utility-kit-samples#environment-panel-placement).
 
 <img src="Media/PanelPlacement.png" alt="alt_text" title="PanelPlacement" width="800" height="800">
 
