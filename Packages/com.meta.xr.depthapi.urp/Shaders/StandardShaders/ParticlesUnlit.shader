@@ -130,8 +130,8 @@ Shader "Meta/Depth/URP/Occlusion Particles Unlit"
 
             // -------------------------------------
             // Includes
-            #include "ParticlesUnlitInput.hlsl"
-            #include "ParticlesUnlitForwardPass.hlsl"
+            #include "ParticlesUnlitInput.hlsl" // Modified to include "_EnvironmentDepthBias' in the UnityPerMaterial CBUFFER
+            #include "ParticlesUnlitForwardPass.hlsl" // Modified fragment shader with occlusion support
 
             ENDHLSL
         }

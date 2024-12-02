@@ -170,8 +170,8 @@ Shader "Meta/Depth/URP/Occlusion Particles Simple Lit"
 
             // -------------------------------------
             // Includes
-            #include "ParticlesSimpleLitInput.hlsl"
-            #include "ParticlesSimpleLitForwardPass.hlsl"
+            #include "ParticlesSimpleLitInput.hlsl" // Modified to include "_EnvironmentDepthBias' in the UnityPerMaterial CBUFFER
+            #include "ParticlesSimpleLitForwardPass.hlsl" // Modified fragment shader with occlusion support
             ENDHLSL
         }
 
@@ -244,7 +244,7 @@ Shader "Meta/Depth/URP/Occlusion Particles Simple Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesSimpleLitInput.hlsl"
+            #include "ParticlesSimpleLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesSimpleLitGBufferPass.hlsl"
             ENDHLSL
         }
@@ -287,7 +287,7 @@ Shader "Meta/Depth/URP/Occlusion Particles Simple Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesSimpleLitInput.hlsl"
+            #include "ParticlesSimpleLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesDepthOnlyPass.hlsl"
             ENDHLSL
         }
@@ -328,7 +328,7 @@ Shader "Meta/Depth/URP/Occlusion Particles Simple Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesSimpleLitInput.hlsl"
+            #include "ParticlesSimpleLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesDepthNormalsPass.hlsl"
             ENDHLSL
         }
@@ -371,7 +371,7 @@ Shader "Meta/Depth/URP/Occlusion Particles Simple Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesSimpleLitInput.hlsl"
+            #include "ParticlesSimpleLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesEditorPass.hlsl"
 
             ENDHLSL
@@ -416,7 +416,7 @@ Shader "Meta/Depth/URP/Occlusion Particles Simple Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesSimpleLitInput.hlsl"
+            #include "ParticlesSimpleLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesEditorPass.hlsl"
 
             ENDHLSL
@@ -451,7 +451,7 @@ Shader "Meta/Depth/URP/Occlusion Particles Simple Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesSimpleLitInput.hlsl"
+            #include "ParticlesSimpleLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
             ENDHLSL
         }

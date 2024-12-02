@@ -103,8 +103,8 @@ Shader "Meta/Depth/URP/Occlusion Baked Lit"
             // -------------------------------------
             // Includes
             // Lighting include is needed because of GI
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/BakedLitInput.hlsl"
-            #include "BakedLitForwardPass.hlsl"
+            #include "BakedLitInput.hlsl" // Modified to include "_EnvironmentDepthBias' in the UnityPerMaterial CBUFFER
+            #include "BakedLitForwardPass.hlsl" // Modified fragment shader with occlusion support
             ENDHLSL
         }
 
@@ -143,7 +143,7 @@ Shader "Meta/Depth/URP/Occlusion Baked Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/BakedLitInput.hlsl"
+            #include "BakedLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
             ENDHLSL
         }
@@ -188,7 +188,7 @@ Shader "Meta/Depth/URP/Occlusion Baked Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/BakedLitInput.hlsl"
+            #include "BakedLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/BakedLitDepthNormalsPass.hlsl"
             ENDHLSL
         }
@@ -237,7 +237,7 @@ Shader "Meta/Depth/URP/Occlusion Baked Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/BakedLitInput.hlsl"
+            #include "BakedLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthNormalsPass.hlsl"
             ENDHLSL
         }
@@ -269,7 +269,7 @@ Shader "Meta/Depth/URP/Occlusion Baked Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/BakedLitInput.hlsl"
+            #include "BakedLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/BakedLitMetaPass.hlsl"
 
             ENDHLSL
@@ -304,7 +304,7 @@ Shader "Meta/Depth/URP/Occlusion Baked Lit"
 
             // -------------------------------------
             // Includes
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/BakedLitInput.hlsl"
+            #include "BakedLitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
 
             ENDHLSL

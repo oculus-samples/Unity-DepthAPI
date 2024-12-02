@@ -1,12 +1,13 @@
-# 69.0.0
+# 71.0.0
+* Add compatibility support for Unity 6
 
-### Compatibility
-* Add support for Unity 6.
+### Fixes
+* Fix URP shaders from breaking SRP batching. They can now be used with the resident drawer.
 
 # 68.0.0
 
 ### Features
-* Add occlusion cutout shaders for both BiRP and URP to support occlusions for UI
+* Add OcclusionCutout shader to help with occluding UI
 
 # 67.0.0
 

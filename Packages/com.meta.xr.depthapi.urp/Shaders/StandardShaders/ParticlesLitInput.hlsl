@@ -19,6 +19,7 @@ half _BumpScale;
 half _DistortionStrengthScaled;
 half _DistortionBlend;
 half _Surface;
+float _EnvironmentDepthBias;
 CBUFFER_END
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Particles.hlsl"

@@ -5,7 +5,6 @@
 #endif
 
 #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/URP/EnvironmentOcclusionURP.hlsl"
-float _EnvironmentDepthBias;
 
 struct Attributes
 {
