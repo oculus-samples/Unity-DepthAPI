@@ -1,3 +1,6 @@
+# 72.0.0
+* Remove Oculus XR package hard dependency.
+
 # 71.0.0
 * Add compatibility support for Unity 6
 

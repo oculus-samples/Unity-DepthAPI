@@ -29,13 +29,14 @@ While building mixed reality experiences, we highly recommend evaluating your co
       - [1. LitOccluded](#1-litoccluded)
       - [2. Stylized shaders](#2-stylized-shaders)
     + [10. Raycasting](#10-raycasting)
-    + [11. Testing](#11-testing)
-    + [12. Updating from pre v67 version of Depth API](#12-updating-from-pre-v67-version-of-depth-api)
+    + [11. DepthMasking](#11-depth-masking)
+    + [12. Testing](#12-testing)
+    + [13. Updating from pre v67 version of Depth API](#13-updating-from-pre-v67-version-of-depth-api)
       - [Upgrade guide](#upgrade-guide)
       - [Structure change](#structure-change)
       - [Components/Scripts changes](#componentsscripts-changes)
       - [Shader changes](#shader-changes)
-    + [13. Troubleshooting](#13-troubleshooting)
+    + [14. Troubleshooting](#14-troubleshooting)
   * [Licenses](#licenses)
 
 # Dynamic Occlusion
@@ -100,6 +101,10 @@ This scene showcases the removal of hands from the depth map. In their stead we 
 
 <img src="./Media/HandsRemoval.gif" alt="handsRemoval" width="600" height="600" />
 
+#### Depth Mask
+This scene showcases the Depth Masking feature.
+
+<img src="./Media/DepthMask.gif" alt="DepthMask" width="600" height="600" />
 
 # Implementing Depth API
 
@@ -135,7 +140,7 @@ Depth API has several requirements that need to be met before it can work:
 
 To aid with this, you can use the Project Setup Tool (PST). This will detect any problems and/or recommendations and provides an easy way to easily fix them. To access this tool you have two options:
 
-* In the bottom right corner of the editor, there is a small Meta icon. Clicking on it will bring up a menu that lets you access the PST. It also has a notification badge whenever any issues are detected to let you know that a fix is required.
+* In the top left corner of the editor, there is a Meta drop down menu button. Clicking on it will bring up the menu that lets you access the PST. It also has a notification badge whenever any issues are detected to let you know that a fix is required.
 
 ![PST](Media/PST.png)
 
@@ -144,6 +149,8 @@ To aid with this, you can use the Project Setup Tool (PST). This will detect any
 Once open, you will be presented with a menu that displays all issues and recommendations for solutions. All outstanding issues need to be fixed before the Depth API can work. **Recommended Items** should be applied as well.
 
 ![PST_Window.png](Media/PST_Window.png)
+
+> Note: **In older packages, the icon is located in the bottom right corner of the editor.**
 
 ### 4. Adding occlusion shaders to our objects
 
@@ -366,12 +373,39 @@ Starting with v71, we've released our official solution for depth raycasting and
 
 <img src="Media/PanelPlacement.png" alt="alt_text" title="PanelPlacement" width="800" height="800">
 
-### 11. Testing
+### 11. Depth Masking
+
+This feature allows developers to cut out meshes from the depth texture. To do this, you can supply a list of mesh filters to the API like so:
+
+```C#
+// Get a reference to the environment depth manager
+private EnvironmentDepthManager _environmentDepthManager;
+
+private void SetDepthMaskMeshFilters(List<MeshFilter> myMeshFilters)
+{
+   // When MashMeshFilters has any mesh filter in it, the feature will automatically enable itself
+   _environmentDepthManager.MaskMeshFilters = myMeshFilters;
+
+   // Apply an offset by adjusting the Depth Mask bias, if needed
+   _environmentDepthManager.MaskBias = _someOffsetFloatValue;
+}
+
+private void DisableDepthMasking()
+{
+   // To disable depth masking, set MaskMeshFilters to null
+   _environmentDepthManager.MaskMeshFilters = null;
+}
+```
+An example use case for this feature is to map the walls with a tool such as MRUK, and then pass those wall mesh filters to the Depth Mask feature. This way we can “remove the walls” from the depth texture, resulting in them no longer contributing to occlusions. The sample scene "DepthMask" exemplifies this feature.
+
+![alt_text](Media/DepthMask.gif)
+
+### 12. Testing
 Build the app and install it on a Quest 3. Notice the objects with occluded shaders will have occlusions.
 
 ![alt_text](Media/DepthAPICube.gif)
 
-### 12. Updating from pre v67 version of Depth API
+### 13. Updating from pre v67 version of Depth API
 
 As a major update in v67, the majority of Depth API functionality has been added to the Meta XR Core SDK. The code base has also been significantly refactored. The v67 version of the Quest OS has also changed the way it supplies depth textures. The refactor to the Unity Depth API code reflects these changes. As a result, occlusions now look more accurate, and their performance has improved. This section will outline the differences in code structure, and a guide on updating existing projects to v67 version of core.
 
@@ -495,7 +529,7 @@ New API:
 "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/URP/EnvironmentOcclusionURP.hlsl"
 ```
 
-### 13. Troubleshooting
+### 14. Troubleshooting
 
 * There is a known issue with the package manager in some recent Unity versions (i.e. 2022.3.16). If anyone is experiencing unexpected behavior with their Unity projects that use Meta XR Core SDK, check the package manager and look for errors under these packages. It should look like this:
 ![alt_text](Media/pkgmgrerr.png)
