@@ -2,10 +2,7 @@
   "name": "com.meta.xr.depthapi.urp",
   "displayName": "Depth API URP support",
   "description": "Package with URP specific details",
-  "version": "71.0.0",
+  "version": "72.0.0",
   "unity": "2022.3",
-  "unityRelease": "1f1",
-  "dependencies": {
-    "com.unity.xr.oculus": "4.2.0"
-  }
+  "unityRelease": "1f1"
 }

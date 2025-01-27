@@ -4,17 +4,13 @@
       "version": "file:../../Packages/com.meta.xr.depthapi",
       "depth": 0,
       "source": "local",
-      "dependencies": {
-        "com.unity.xr.oculus": "4.2.0"
-      }
+      "dependencies": {}
     },
     "com.meta.xr.depthapi.urp": {
       "version": "file:../../Packages/com.meta.xr.depthapi.urp",
       "depth": 0,
       "source": "local",
-      "dependencies": {
-        "com.unity.xr.oculus": "4.2.0"
-      }
+      "dependencies": {}
     },
     "com.meta.xr.mrutilitykit": {
       "version": "69.0.0",
@@ -215,15 +211,6 @@
         "com.unity.modules.xr": "1.0.0",
         "com.unity.modules.subsystems": "1.0.0",
         "com.unity.xr.legacyinputhelpers": "2.1.7"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.xr.oculus": {
-      "version": "4.2.0",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.xr.management": "4.4.0"
       },
       "url": "https://packages.unity.com"
     },
