@@ -1,4 +1,7 @@
 ![Depth API](./Media/DepthOppie.png)
+
+**Last Updated:** 2025-03-20
+
 # Depth API
 Depth API is a new feature that exposes to applications real-time, per-eye, per-frame, environment depth estimates from the headset’s point of view.
 This repository shows how Depth API can be used to implement dynamic occlusions.
@@ -52,7 +55,9 @@ This repository contains two occlusion implementations: hard occlusion and soft 
 * **Meta XR Core SDK (v67.0.0 or above)** by using one of the following methods:
   * You may get it from the [Unity Asset Store](https://assetstore.unity.com/packages/tools/integration/meta-xr-core-sdk-269169).
   * Import the **com.meta.xr.sdk.core (v67.0.0 or above)** package from Unity's package manager. Follow the instructions on importing individual SDKs in Unity outlined [in the official Meta XR Packages documentation](https://developer.oculus.com/documentation/unity/unity-package-manager/).
-* **Oculus XR Plugin** package version - **4.2.0**
+* An [XR provider plugin](/documentation/unity/unity-xr-plugin/)
+   * **OpenXR Meta** package version 2.1.0 (Recommended for **Unity 6** and **com.meta.xr.sdk.core v74.0.0** and above)
+   * **Oculus XR Plugin** package version - **4.2.0** (For unity versions older than **Unity 6**)
 * The Depth API packages, listed further down in this document under [Adding occlusion shader to our objects](#4-adding-occlusion-shaders-to-our-objects)
 * Meta Quest 3
 
@@ -542,6 +547,7 @@ New API:
 * Known issue: In Link, resetting the view can offset occlusions.
 * Known issue: XRSim versions that are older than v69 do not work with Environment Depth.
 * Known issue: The Depth Masking feature does not work in v71 without following [the instructions in this thread](https://github.com/oculus-samples/Unity-DepthAPI/issues/69).
+* Known issue: There was a bug introduced in v72 where Link crashes when starting a scene with the EnvironmentDepthManager in it.
 
 ## Licenses
 The Meta License applies to the SDK and supporting material. The MIT License applies to only certain, clearly marked documents. If an individual file does not indicate which license it is subject to, then the Meta License applies.
