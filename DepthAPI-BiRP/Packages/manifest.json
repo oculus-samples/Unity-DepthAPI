@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "com.meta.xr.depthapi": "file:../../Packages/com.meta.xr.depthapi",
-    "com.meta.xr.mrutilitykit": "72.0.0",
-    "com.meta.xr.sdk.core": "72.0.0",
+    "com.meta.xr.mrutilitykit": "74.0.0",
+    "com.meta.xr.sdk.core": "74.0.0",
     "com.meta.xr.sdk.interaction": "72.0.0",
     "com.meta.xr.sdk.sharedassets": "56.0.0-preview",
     "com.unity.ide.rider": "3.0.31",
@@ -10,7 +10,7 @@
     "com.unity.inputsystem": "1.13.1",
     "com.unity.multiplayer.center": "1.0.0",
     "com.unity.xr.management": "4.5.0",
-    "com.unity.xr.oculus": "4.5.0",
+    "com.unity.xr.meta-openxr": "2.1.0",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
