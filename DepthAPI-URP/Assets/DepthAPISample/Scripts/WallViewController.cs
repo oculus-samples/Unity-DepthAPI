@@ -47,11 +47,6 @@ namespace DepthAPISample
         }
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                _areWallsVisible = !_areWallsVisible;
-                SetWallsVisible(_areWallsVisible);
-            }
             if (OVRInput.GetDown(_wallsVisibilityToggleButton))
             {
                 _areWallsVisible = !_areWallsVisible;
