@@ -1,3 +1,6 @@
+# 77.0.0
+* Add support for Unity 6.1's URP 17.1
+
 # 72.0.0
 * Remove Oculus XR package hard dependency.
 
