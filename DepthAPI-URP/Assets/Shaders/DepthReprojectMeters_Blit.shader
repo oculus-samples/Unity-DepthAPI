@@ -1,5 +1,9 @@
 Shader "Hidden/DepthReprojectMeters_Blit"
 {
+    Properties
+    {
+        _Zoom ("Zoom", Range(0.1, 5)) = 1
+    }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -23,6 +27,7 @@ Shader "Hidden/DepthReprojectMeters_Blit"
             float    _UseStereo;   // set to 0 for this offscreen pass, unless you really want instanced stereo
             float    _EyeIndex;    // choose 0 or 1 manually
             float    _Alpha;
+            float _Zoom;
 
             // Plane description (world-space):
             float3 _PlaneCenterWS;
@@ -47,7 +52,9 @@ Shader "Hidden/DepthReprojectMeters_Blit"
                 int eye = (_UseStereo > 0.5) ? unity_StereoEyeIndex : (int)_EyeIndex;
 
                 // Flip vertically
-                float2 uv = i.uv;
+                //float2 uv = i.uv;
+                float2 zoomedUV = (i.uv - 0.5) / _Zoom + 0.5;
+                float2 uv = zoomedUV;
                 uv.y =  1.0-uv.y;  // <-- Flip V
 
                 // Map uv (0..1) -> (-1..1)
@@ -76,18 +83,18 @@ Shader "Hidden/DepthReprojectMeters_Blit"
                 float meters = 1.0 / (z_ndc + _EnvironmentDepthZBufferParams.y) * _EnvironmentDepthZBufferParams.x;
                 
                 // Screen -> NDC
-                float2 ndcXY = uv * 2.0 - 1.0;
+                // float2 ndcXY = uv * 2.0 - 1.0;
 
                 // Unproject to CAMERA (view) space: multiply by inverse projection, then divide by w
-                float4 hCam = mul(_EnvironmentDepthInvProjectionMatrices[eye], float4(ndcXY, z_ndc, 1.0));
-                float3 camPos = hCam.xyz / hCam.w;
+                // float4 hCam = mul(_EnvironmentDepthInvProjectionMatrices[eye], float4(ndcXY, z_ndc, 1.0));
+                // float3 camPos = hCam.xyz / hCam.w;
 
                 // NOTE: With Unity’s view-convention, forward is -Z. If you prefer +Z forward, uncomment:
                 // camPos.z = -camPos.z;
 
                 // Finally: pack meters in R, and camera-space XYZ in GBA
-                return float4(meters, camPos);
-                //return float4(meters, 0, 0, _Alpha);
+                //return float4(meters, camPos);
+                return float4(meters, 0, 0, _Alpha);
                 //return float4(uv, 0, 1);
             }
             ENDCG

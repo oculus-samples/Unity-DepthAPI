@@ -39,7 +39,7 @@ namespace PassthroughCameraSamples.CameraToWorld
         public void ResumeStreamingFromCamera()
         {
             m_image.texture = m_webCamTextureManager.WebCamTexture;
-            // ApplyWebcamOrientation();
+            ApplyWebcamOrientation();
         }
 
         private IEnumerator Start()
