@@ -83,18 +83,18 @@ Shader "Hidden/DepthReprojectMeters_Blit"
                 float meters = 1.0 / (z_ndc + _EnvironmentDepthZBufferParams.y) * _EnvironmentDepthZBufferParams.x;
                 
                 // Screen -> NDC
-                // float2 ndcXY = uv * 2.0 - 1.0;
+                float2 ndcXY = (i.uv * 2.0 - 1.0) / _Zoom;
 
                 // Unproject to CAMERA (view) space: multiply by inverse projection, then divide by w
-                // float4 hCam = mul(_EnvironmentDepthInvProjectionMatrices[eye], float4(ndcXY, z_ndc, 1.0));
-                // float3 camPos = hCam.xyz / hCam.w;
+                float4 hCam = mul(_EnvironmentDepthInvProjectionMatrices[eye], float4(ndcXY, z_ndc, 1.0));
+                float3 camPos = hCam.xyz / hCam.w;
 
                 // NOTE: With Unity’s view-convention, forward is -Z. If you prefer +Z forward, uncomment:
-                // camPos.z = -camPos.z;
+                camPos.z = -camPos.z;
 
                 // Finally: pack meters in R, and camera-space XYZ in GBA
-                //return float4(meters, camPos);
-                return float4(meters, 0, 0, _Alpha);
+                return float4(meters, camPos/2.0);
+                //return float4(meters, 0, 0, _Alpha);
                 //return float4(uv, 0, 1);
             }
             ENDCG
