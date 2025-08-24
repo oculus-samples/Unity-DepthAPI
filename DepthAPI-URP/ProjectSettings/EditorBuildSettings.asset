@@ -5,18 +5,36 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/DepthAPISample/Scenes/OcclusionToggler.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/DepthAPISample/Scenes/SceneAPIPlacement.unity
     guid: b35206816de80c64f89d3f882957a0a8
-  - enabled: 1
+  - enabled: 0
     path: Assets/DepthAPISample/Scenes/HandsRemoval.unity
     guid: 3a8ceeffa66b06843b17fb9be54071b1
-  - enabled: 1
+  - enabled: 0
     path: Assets/DepthAPISample/Scenes/DepthMask.unity
     guid: b216c81fe86684d43a0a20f7d14d36fe
+  - enabled: 0
+    path: Assets/scenes/scene.unity
+    guid: b092b6526de512b4cbb744090d5514b9
+  - enabled: 0
+    path: Assets/scenes/DepthCameraToWorldCamera.unity
+    guid: 2df444d494ccb684295d2094516e7957
+  - enabled: 0
+    path: Assets/PassthroughCameraApiSamples/CameraToWorld/CameraToWorld.unity
+    guid: 756785b371a4f49438b7e2148816e892
+  - enabled: 0
+    path: Assets/scenes/PassthroughCameraToWorldCamera.unity
+    guid: b713f9322e324ee47a6902f8c7ae15b8
+  - enabled: 0
+    path: Assets/scenes/DepthAndPassthroughToWorldCamera.unity
+    guid: f541f52a9a1cad9488805d1ba9c674e4
+  - enabled: 1
+    path: Assets/scenes/DepthAndPassthroughCameraToWorldCamera.unity
+    guid: a9b1187ad56acc549a645ae3d870758d
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 7dc924bb27a54ae49b2b998c2868fcdc,
       type: 2}

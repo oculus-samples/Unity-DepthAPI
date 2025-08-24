@@ -3,6 +3,7 @@ using Meta.XR.EnvironmentDepth;
 using Meta.XR.MRUtilityKit;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DepthAPISample
 {
@@ -12,11 +13,14 @@ namespace DepthAPISample
         [SerializeField] private OVRInput.RawButton _maskToggleButton = OVRInput.RawButton.B;
         [SerializeField] private OVRInput.RawButton _maskBiasAdjustDecreaseButton = OVRInput.RawButton.RThumbstickLeft;
         [SerializeField] private OVRInput.RawButton _maskBiasAdjustIncreaseButton = OVRInput.RawButton.RThumbstickRight;
+
         private EnvironmentDepthManager _environmentDepthManager;
         private float _maskBiasAdjustValue = 0.2f;
         private List<MeshFilter> _wallMeshFilters = new();
 
         private bool _isMaskOn;
+        public DepthCaptureRaw DepthCaptureRaw;
+
 
         private void Awake()
         {
@@ -54,6 +58,7 @@ namespace DepthAPISample
                 }
                 _isMaskOn = !_isMaskOn;
             }
+
 
             if (OVRInput.Get(_maskBiasAdjustDecreaseButton))
             {

@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ShaderSampleWaterMat
+  m_Shader: {fileID: 4800000, guid: 26d6efc6402bf47acbadbb5e39fa5443, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DetailMap:
+        m_Texture: {fileID: 2800000, guid: 74ff359841d77444cb0c68bcafaba5fb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: bcdfc476a5db84843bfa1c92dd6c3edf, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ReflectionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Exposure: 1
+    - _NormalOffsetX: 4
+    - _NormalOffsetY: 4
+    - _NormalStrength: 3
+    - _ReflectIntensity: 3
+    - _ReflectionDistortion: 1
+    - _ReflectionScale: 1
+    - _RippleAmplitude: 0.2
+    - _RippleSpeed: 10
+    - _Rotation: 0
+    - _SpecularPower: 1
+    - _Time: 0
+    - _Timer: 0
+    - _WaveAmplitude: 8
+    - _WaveFrequency: 0
+    - _WaveSpeed: 1
+    m_Colors:
+    - _Color: {r: 0.6581524, g: 0.9554302, b: 0.9622641, a: 1}
+    - _Tint: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
+    - _WaterColor: {r: 0.39604834, g: 0.6922603, b: 0.9433962, a: 1}
+  m_BuildTextureStacks: []
