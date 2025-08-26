@@ -3,6 +3,8 @@ Shader "Hidden/DepthReprojectMeters_Blit"
     Properties
     {
         _Zoom ("Zoom", Range(0.1, 5)) = 1
+        _MinDepthMeters ("Keep >= (m)", Float) = 0.0
+        _MaxDepthMeters ("Keep <= (m)", Float) = 10.0
     }
     SubShader
     {
@@ -33,6 +35,10 @@ Shader "Hidden/DepthReprojectMeters_Blit"
             float3 _PlaneCenterWS;
             float3 _PlaneRightHalfWS;
             float3 _PlaneUpHalfWS;
+
+            // treshold
+            float _MinDepthMeters;
+            float _MaxDepthMeters;
 
             struct v2f { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; };
 
@@ -82,6 +88,10 @@ Shader "Hidden/DepthReprojectMeters_Blit"
                 float z_ndc  = d * 2.0 - 1.0;
                 float meters = 1.0 / (z_ndc + _EnvironmentDepthZBufferParams.y) * _EnvironmentDepthZBufferParams.x;
                 
+                // --- KEEP ONLY WITHIN [Min, Max] ---
+                bool inRange = (meters >= _MinDepthMeters) && (meters <= _MaxDepthMeters);
+                if (!inRange) return fixed4(0.0, 0.0, 0.0, 0.0);
+
                 // Screen -> NDC
                 // float2 ndcXY = (i.uv * 2.0 - 1.0) / _Zoom;
                 float2 ndcXY = duv * 2.0 - 1.0;

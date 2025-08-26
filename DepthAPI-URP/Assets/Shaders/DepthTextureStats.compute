@@ -1,0 +1,60 @@
+#pragma kernel DepthStats
+
+// --- shared bindings (declare ONCE) ---
+Texture2D<float4> _DepthTex; // RGBAFloat RT, meters in .r
+RWStructuredBuffer<float2> _GroupOut; // per-group (sum, count)
+int2 _TexSize; // (width, height)
+float _Threshold; // <= treated as black
+
+// --- thread config ---
+#define TX 16
+#define TY 16
+#define TLANES (TX*TY)
+
+// groupshared arrays must be global
+groupshared float gsSum[TLANES];
+groupshared float gsCnt[TLANES];
+
+[numthreads(TX, TY, 1)]
+void DepthStats(uint3 id : SV_DispatchThreadID,
+                uint3 gid : SV_GroupID,
+                uint3 tid : SV_GroupThreadID)
+{
+    const uint flat = tid.y * TX + tid.x;
+
+    float sum = 0.0;
+    float cnt = 0.0;
+
+    if (id.x < (uint) _TexSize.x && id.y < (uint) _TexSize.y)
+    {
+        float v = _DepthTex.Load(int3(id.xy, 0)).r; // meters in .r
+        if (v > _Threshold)
+        {
+            sum = v;
+            cnt = 1.0;
+        }
+    }
+
+    gsSum[flat] = sum;
+    gsCnt[flat] = cnt;
+    GroupMemoryBarrierWithGroupSync();
+
+    // reduce 256 -> 1
+    for (uint stride = (TLANES >> 1); stride > 0; stride >>= 1)
+    {
+        if (flat < stride)
+        {
+            gsSum[flat] += gsSum[flat + stride];
+            gsCnt[flat] += gsCnt[flat + stride];
+        }
+        GroupMemoryBarrierWithGroupSync();
+    }
+
+    if (flat == 0)
+    {
+        uint groupsX = ((uint) _TexSize.x + (TX - 1)) / TX;
+        uint idx = gid.y * groupsX + gid.x;
+        _GroupOut[idx] = float2(gsSum[0], gsCnt[0]); // (sum, count)
+    }
+}
+

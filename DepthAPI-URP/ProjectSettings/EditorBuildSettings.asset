@@ -32,9 +32,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/scenes/DepthAndPassthroughToWorldCamera.unity
     guid: f541f52a9a1cad9488805d1ba9c674e4
-  - enabled: 1
+  - enabled: 0
     path: Assets/scenes/DepthAndPassthroughCameraToWorldCamera.unity
     guid: a9b1187ad56acc549a645ae3d870758d
+  - enabled: 1
+    path: Assets/scenes/CaptureHands.unity
+    guid: 02402155de0081049ace99585f078a56
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 7dc924bb27a54ae49b2b998c2868fcdc,
       type: 2}
