@@ -24,25 +24,26 @@ public class DepthStatsRunnerUI : MonoBehaviour
     public Text debugText;
     public Text userFeedbackText;
 
-    ComputeBuffer partials;              // float4 per group: (sum, count, sumSq, _)
-    int kernel;
-    float timer;
+    private ComputeBuffer m_partials;              // float4 per group: (sum, count, sumSq, _)
+    private int m_kernel;
+    private float m_timer;
 
-    void Awake() { kernel = depthStatsCS.FindKernel("DepthStats"); }
-    void OnDestroy() { partials?.Dispose(); }
+    private void Awake() { m_kernel = depthStatsCS.FindKernel("DepthStats"); }
 
-    void Update()
+    private void OnDestroy() { m_partials?.Dispose(); }
+
+    private void Update()
     {
-        timer += Time.deltaTime;
-        if (timer < updateInterval) return;
-        timer = 0f;
+        m_timer += Time.deltaTime;
+        if (m_timer < updateInterval) return;
+        m_timer = 0f;
 
         if (!depthRT || !debugText || !depthStatsCS) return;
 
         var (count, mean, stdPop, stdSample) = RunOnce();
-        bool meanInRange = mean >= meanThresholdMin && mean <= meanThresholdMax;
-        bool stdInRange = stdPop >= stdThresholdMin && stdPop <= stdThresholdMax;
-        bool inRangeNow = count > 0 && meanInRange && stdInRange;
+        var meanInRange = mean >= meanThresholdMin && mean <= meanThresholdMax;
+        var stdInRange = stdPop >= stdThresholdMin && stdPop <= stdThresholdMax;
+        var inRangeNow = count > 0 && meanInRange && stdInRange;
 
         if (inRangeNow && !_wasInRangeLastFrame)
             ThresholdMet?.Invoke();
@@ -55,7 +56,7 @@ public class DepthStatsRunnerUI : MonoBehaviour
                 $"Mean (m): {mean:0.###}\n" +
                 $"σ (pop): {stdPop:0.###}\n" +
                 $"σ (n-1): {stdSample:0.###}\n" +
-                $"in range: {inRangeNow.ToString()}";
+                $"in range: {inRangeNow}";
 
         BuildUserFeedbackText(count, mean, stdPop);
 
@@ -71,19 +72,19 @@ public class DepthStatsRunnerUI : MonoBehaviour
             // If we didn’t measure anything:
             if (count == 0)
             {
-                sb.AppendLine("Move hand into the square");
+                _ = sb.AppendLine("Move hand into the square");
                 userFeedbackText.text = sb.ToString();
                 return;
             }
 
             // Distance guidance
-            if (mean > meanThresholdMax) sb.AppendLine("Move hand closer");
-            else if (mean < meanThresholdMin && mean >= bandMin) sb.AppendLine("Move hand further");
+            if (mean > meanThresholdMax) _ = sb.AppendLine("Move hand closer");
+            else if (mean < meanThresholdMin && mean >= bandMin) _ = sb.AppendLine("Move hand further");
 
             // Flatness guidance
-            if (stdPop >= stdThresholdMax) sb.AppendLine("Try to make your hand flatter");
+            if (stdPop >= stdThresholdMax) _ = sb.AppendLine("Try to make your hand flatter");
 
-            if (sb.Length == 0) sb.AppendLine("✅ Looks good!");
+            if (sb.Length == 0) _ = sb.AppendLine("✅ Looks good!");
 
             userFeedbackText.text = sb.ToString();
         }
@@ -91,27 +92,27 @@ public class DepthStatsRunnerUI : MonoBehaviour
         return;
     }
 
-    (long count, float mean, float stdPop, float stdSample) RunOnce()
+    private (long count, float mean, float stdPop, float stdSample) RunOnce()
     {
         int w = depthRT.width, h = depthRT.height;
         int gx = (w + 15) / 16, gy = (h + 15) / 16;
-        int groups = gx * gy;
+        var groups = gx * gy;
 
-        if (partials == null || partials.count != groups)
+        if (m_partials == null || m_partials.count != groups)
         {
-            partials?.Dispose();
-            partials = new ComputeBuffer(groups, sizeof(float) * 4);
+            m_partials?.Dispose();
+            m_partials = new ComputeBuffer(groups, sizeof(float) * 4);
         }
 
         depthStatsCS.SetInts("_TexSize", w, h);
         depthStatsCS.SetFloat("_BandMin", bandMin);
         depthStatsCS.SetFloat("_BandMax", bandMax);
-        depthStatsCS.SetTexture(kernel, "_DepthTex", depthRT);
-        depthStatsCS.SetBuffer(kernel, "_GroupOut", partials);
-        depthStatsCS.Dispatch(kernel, gx, gy, 1);
+        depthStatsCS.SetTexture(m_kernel, "_DepthTex", depthRT);
+        depthStatsCS.SetBuffer(m_kernel, "_GroupOut", m_partials);
+        depthStatsCS.Dispatch(m_kernel, gx, gy, 1);
 
         var data = new float[groups * 4];
-        partials.GetData(data);
+        m_partials.GetData(data);
 
         double sum = 0.0, sumSq = 0.0, cnt = 0.0;
         for (int i = 0; i < groups; i++)

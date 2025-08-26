@@ -27,7 +27,7 @@ Material:
     m_Floats:
     - _MaxDepthMeters: 0.3
     - _MinDepthMeters: 0.15
-    - _Zoom: 1.0546875
+    - _Zoom: 1
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

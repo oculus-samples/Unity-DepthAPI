@@ -10695,10 +10695,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  meanThresholdMin: 0.19
-  meanThresholdMax: 0.21
+  meanThresholdMin: 0.23
+  meanThresholdMax: 0.26
   stdThresholdMin: 0
-  stdThresholdMax: 0.02
+  stdThresholdMax: 0.025
   debugText: {fileID: 1605571407}
   userFeedbackText: {fileID: 850831470}
 --- !u!1 &1848740387
