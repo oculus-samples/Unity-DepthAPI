@@ -1,19 +1,20 @@
 #pragma kernel DepthStats
 
-// --- shared bindings (declare ONCE) ---
-Texture2D<float4> _DepthTex; // RGBAFloat RT, meters in .r
-RWStructuredBuffer<float2> _GroupOut; // per-group (sum, count)
-int2 _TexSize; // (width, height)
-float _Threshold; // <= treated as black
+// Shared bindings (declare once)
+Texture2D<float4> _DepthTex; // RGBAFloat, meters in .r
+RWStructuredBuffer<float4> _GroupOut; // per-group: (sum, count, sumSq, unused)
+int2 _TexSize;
+float _BandMin; // e.g., 0.13
+float _BandMax; // e.g., 0.27
 
-// --- thread config ---
 #define TX 16
 #define TY 16
 #define TLANES (TX*TY)
 
-// groupshared arrays must be global
+// groupshared at global scope
 groupshared float gsSum[TLANES];
 groupshared float gsCnt[TLANES];
+groupshared float gsSumSq[TLANES];
 
 [numthreads(TX, TY, 1)]
 void DepthStats(uint3 id : SV_DispatchThreadID,
@@ -24,19 +25,22 @@ void DepthStats(uint3 id : SV_DispatchThreadID,
 
     float sum = 0.0;
     float cnt = 0.0;
+    float ssq = 0.0;
 
     if (id.x < (uint) _TexSize.x && id.y < (uint) _TexSize.y)
     {
-        float v = _DepthTex.Load(int3(id.xy, 0)).r; // meters in .r
-        if (v > _Threshold)
+        float v = _DepthTex.Load(int3(id.xy, 0)).r;
+        if (v >= _BandMin && v <= _BandMax)
         {
             sum = v;
             cnt = 1.0;
+            ssq = v * v;
         }
     }
 
     gsSum[flat] = sum;
     gsCnt[flat] = cnt;
+    gsSumSq[flat] = ssq;
     GroupMemoryBarrierWithGroupSync();
 
     // reduce 256 -> 1
@@ -46,6 +50,7 @@ void DepthStats(uint3 id : SV_DispatchThreadID,
         {
             gsSum[flat] += gsSum[flat + stride];
             gsCnt[flat] += gsCnt[flat + stride];
+            gsSumSq[flat] += gsSumSq[flat + stride];
         }
         GroupMemoryBarrierWithGroupSync();
     }
@@ -54,7 +59,6 @@ void DepthStats(uint3 id : SV_DispatchThreadID,
     {
         uint groupsX = ((uint) _TexSize.x + (TX - 1)) / TX;
         uint idx = gid.y * groupsX + gid.x;
-        _GroupOut[idx] = float2(gsSum[0], gsCnt[0]); // (sum, count)
+        _GroupOut[idx] = float4(gsSum[0], gsCnt[0], gsSumSq[0], 0.0);
     }
 }
-
