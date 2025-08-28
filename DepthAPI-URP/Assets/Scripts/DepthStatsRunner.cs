@@ -1,9 +1,8 @@
-﻿using System.Text;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
+ 
 
-public class DepthStatsRunnerUI : MonoBehaviour
+public class DepthStatsRunner : MonoBehaviour
 {
     [Header("Inputs")]
     public ComputeShader depthStatsCS;   // kernel: "DepthStats"
@@ -12,17 +11,11 @@ public class DepthStatsRunnerUI : MonoBehaviour
     public float bandMax = 0.27f;
     public float updateInterval = 0.25f;
 
-    [Header("Event")]
-    public UnityEvent ThresholdMet;  // <-- Hook functions here in Inspector
-    public float meanThresholdMin;
-    public float meanThresholdMax;
-    public float stdThresholdMin;
-    public float stdThresholdMax;
-    bool _wasInRangeLastFrame = false;
+    [Header("Events")]
+    public StatsEvent OnStats;
 
     [Header("UI")]
     public Text debugText;
-    public Text userFeedbackText;
 
     private ComputeBuffer m_partials;              // float4 per group: (sum, count, sumSq, _)
     private int m_kernel;
@@ -38,58 +31,29 @@ public class DepthStatsRunnerUI : MonoBehaviour
         if (m_timer < updateInterval) return;
         m_timer = 0f;
 
-        if (!depthRT || !debugText || !depthStatsCS) return;
+        if (!depthRT || !depthStatsCS) return;
 
         var (count, mean, stdPop, stdSample) = RunOnce();
-        var meanInRange = mean >= meanThresholdMin && mean <= meanThresholdMax;
-        var stdInRange = stdPop >= stdThresholdMin && stdPop <= stdThresholdMax;
-        var inRangeNow = count > 0 && meanInRange && stdInRange;
-
-        if (inRangeNow && !_wasInRangeLastFrame)
-            ThresholdMet?.Invoke();
-
-        _wasInRangeLastFrame = inRangeNow;
 
         if (debugText)
             debugText.text =
                 $"Count: {count:n0}\n" +
                 $"Mean (m): {mean:0.###}\n" +
-                $"σ (pop): {stdPop:0.###}\n" +
-                $"σ (n-1): {stdSample:0.###}\n" +
-                $"in range: {inRangeNow}";
+                $"s (pop): {stdPop:0.###}\n" +
+                $"s (n-1): {stdSample:0.###}";
 
-        BuildUserFeedbackText(count, mean, stdPop);
-
-    }
-
-    public void BuildUserFeedbackText(long count, float mean, float stdPop)
-    {
-
-        if (userFeedbackText)
+        if (OnStats != null)
         {
-            var sb = new StringBuilder();
-
-            // If we didn’t measure anything:
-            if (count == 0)
+            var stats = new DepthStats
             {
-                _ = sb.AppendLine("Move hand into the square");
-                userFeedbackText.text = sb.ToString();
-                return;
-            }
-
-            // Distance guidance
-            if (mean > meanThresholdMax) _ = sb.AppendLine("Move hand closer");
-            else if (mean < meanThresholdMin && mean >= bandMin) _ = sb.AppendLine("Move hand further");
-
-            // Flatness guidance
-            if (stdPop >= stdThresholdMax) _ = sb.AppendLine("Try to make your hand flatter");
-
-            if (sb.Length == 0) _ = sb.AppendLine("✅ Looks good!");
-
-            userFeedbackText.text = sb.ToString();
+                count = count,
+                mean = mean,
+                stdPop = stdPop,
+                stdSample = stdSample
+            };
+            OnStats.Invoke(stats);
         }
 
-        return;
     }
 
     private (long count, float mean, float stdPop, float stdSample) RunOnce()

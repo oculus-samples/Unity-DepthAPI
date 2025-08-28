@@ -1,6 +1,5 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
 
-using System;
 using System.Collections;
 using Meta.XR.Samples;
 using PassthroughCameraSamples;
@@ -119,7 +118,7 @@ public class CameraToWorldManagerSimple : MonoBehaviour
     //    var wct = m_webCamTextureManager.WebCamTexture;
     //    if (!rt || wct == null) return;
 
-    //    // 1) actual stream size (swap W/H if Android reports 90/270°)
+    //    // 1) actual stream size (swap W/H if Android reports 90/270ï¿½)
     //    var streamRes = (wct.videoRotationAngle % 180 != 0)
     //        ? new Vector2Int(wct.height, wct.width)
     //        : new Vector2Int(wct.width, wct.height);

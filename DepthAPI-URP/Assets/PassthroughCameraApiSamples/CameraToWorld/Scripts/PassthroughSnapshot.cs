@@ -1,16 +1,14 @@
 /*
  *  PassthroughSnapshot.cs
  *  Attach this to any active GameObject in the scene that also contains
- *  – or has a reference to – a WebCamTextureManager component.
+ *  ï¿½ or has a reference to ï¿½ a WebCamTextureManager component.
  *
  *  Requires:
- *  • Quest 3 / 3 S running Horizon OS 74+
- *  • android.permission.CAMERA  +  horizonos.permission.HEADSET_CAMERA
- *    (already handled by the sample’s manifest) :contentReference[oaicite:0]{index=0}
+ *  ï¿½ Quest 3 / 3 S running Horizon OS 74+
+ *  ï¿½ android.permission.CAMERA  +  horizonos.permission.HEADSET_CAMERA
+ *    (already handled by the sampleï¿½s manifest) :contentReference[oaicite:0]{index=0}
  */
 
-using System;
-using System.Collections;
 using System.IO;
 using PassthroughCameraSamples;
 using UnityEngine;

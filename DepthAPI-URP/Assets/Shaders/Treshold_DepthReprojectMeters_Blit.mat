@@ -25,9 +25,9 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _MaxDepthMeters: 0.3
+    - _MaxDepthMeters: 0.35
     - _MinDepthMeters: 0.15
-    - _Zoom: 1
+    - _Zoom: 1.04
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

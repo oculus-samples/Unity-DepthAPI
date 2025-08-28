@@ -1104,6 +1104,108 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00616638, y: -0.029108923, z: -0.018820617}
     m_Extent: {x: 0.033926036, y: 0.042694185, z: 0.05639166}
   m_DirtyAABB: 0
+--- !u!1 &226138081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 226138083}
+  - component: {fileID: 226138082}
+  - component: {fileID: 226138084}
+  m_Layer: 0
+  m_Name: CaptureManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &226138082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226138081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100832ac9ed89de4c85514737384e9c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  depthStatsSource: {fileID: 226138084}
+  meanThresholdMin: 0.245
+  meanThresholdMax: 0.255
+  stdThresholdMin: 0
+  stdThresholdMax: 0.02
+  targetSamples: 3
+  minTriggerIntervalSeconds: 1
+  userFeedbackText: {fileID: 850831470}
+  bandMin: 0.13
+  Triggered:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 59405332}
+        m_TargetAssemblyTypeName: PassthroughSnapshot, Assembly-CSharp
+        m_MethodName: SaveCurrentFrame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1051852848}
+        m_TargetAssemblyTypeName: DepthReprojectBaker, Assembly-CSharp
+        m_MethodName: SaveEXR
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!4 &226138083
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226138081}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.23489074, y: 0.19544235, z: 0.14787288}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &226138084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226138081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c5688f148255774682657c3b3ebb5a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  depthStatsCS: {fileID: 7200000, guid: 5d7a3db1785a1fe45974ff5e05b1ea8e, type: 3}
+  depthRT: {fileID: 8400000, guid: e571fb1df9eb7124bb7e2d138f02938d, type: 2}
+  bandMin: 0.13
+  bandMax: 0.27
+  updateInterval: 0.25
+  OnStats:
+    m_PersistentCalls:
+      m_Calls: []
+  debugText: {fileID: 1605571407}
 --- !u!1 &255939760
 GameObject:
   m_ObjectHideFlags: 0
@@ -4629,7 +4731,7 @@ GameObject:
   - component: {fileID: 850831471}
   - component: {fileID: 850831470}
   m_Layer: 5
-  m_Name: DebugText
+  m_Name: InstructionsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6395,7 +6497,7 @@ GameObject:
   - component: {fileID: 1164091906}
   - component: {fileID: 1164091905}
   m_Layer: 5
-  m_Name: DepthDebug (1)
+  m_Name: 'Instructions '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10553,7 +10655,6 @@ GameObject:
   - component: {fileID: 1848026480}
   - component: {fileID: 1848026479}
   - component: {fileID: 1848026478}
-  - component: {fileID: 1848026481}
   m_Layer: 0
   m_Name: 'CopyDepthMapQuad '
   m_TagString: Untagged
@@ -10651,56 +10752,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1848026476}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1848026481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1848026476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c5688f148255774682657c3b3ebb5a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  depthStatsCS: {fileID: 7200000, guid: 5d7a3db1785a1fe45974ff5e05b1ea8e, type: 3}
-  depthRT: {fileID: 8400000, guid: e571fb1df9eb7124bb7e2d138f02938d, type: 2}
-  bandMin: 0.15
-  bandMax: 0.3
-  updateInterval: 0.5
-  ThresholdMet:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1051852848}
-        m_TargetAssemblyTypeName: DepthReprojectBaker, Assembly-CSharp
-        m_MethodName: SaveEXR
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 59405332}
-        m_TargetAssemblyTypeName: PassthroughSnapshot, Assembly-CSharp
-        m_MethodName: SaveCurrentFrame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  meanThresholdMin: 0.23
-  meanThresholdMax: 0.26
-  stdThresholdMin: 0
-  stdThresholdMax: 0.025
-  debugText: {fileID: 1605571407}
-  userFeedbackText: {fileID: 850831470}
 --- !u!1 &1848740387
 GameObject:
   m_ObjectHideFlags: 0
@@ -12718,3 +12769,4 @@ SceneRoots:
   - {fileID: 1432657585}
   - {fileID: 326749908}
   - {fileID: 1051852844}
+  - {fileID: 226138083}
