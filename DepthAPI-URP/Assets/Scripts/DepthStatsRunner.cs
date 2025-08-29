@@ -7,8 +7,6 @@ public class DepthStatsRunner : MonoBehaviour
     [Header("Inputs")]
     public ComputeShader depthStatsCS;   // kernel: "DepthStats"
     public RenderTexture depthRT;        // meters in .r
-    public float bandMin = 0.13f;
-    public float bandMax = 0.27f;
     public float updateInterval = 0.25f;
 
     [Header("Events")]
@@ -69,8 +67,8 @@ public class DepthStatsRunner : MonoBehaviour
         }
 
         depthStatsCS.SetInts("_TexSize", w, h);
-        depthStatsCS.SetFloat("_BandMin", bandMin);
-        depthStatsCS.SetFloat("_BandMax", bandMax);
+        depthStatsCS.SetFloat("_DepthMinMeters", HandCaptureGlobals.MinMeters);
+        depthStatsCS.SetFloat("_DepthMaxMeters", HandCaptureGlobals.MaxMeters);
         depthStatsCS.SetTexture(m_kernel, "_DepthTex", depthRT);
         depthStatsCS.SetBuffer(m_kernel, "_GroupOut", m_partials);
         depthStatsCS.Dispatch(m_kernel, gx, gy, 1);

@@ -8,11 +8,7 @@ public class CaptureManager : MonoBehaviour
     [Header("Depth Stats Source")]
     public DepthStatsRunner depthStatsSource;   // Assign in Inspector
 
-    [Header("Thresholds")]
-    public float meanThresholdMin;
-    public float meanThresholdMax;
-    public float stdThresholdMin;
-    public float stdThresholdMax;
+    // Thresholds are sourced from HandCaptureGlobals
 
     [Header("Capture Settings")]
     public int targetSamples = 10;
@@ -20,7 +16,6 @@ public class CaptureManager : MonoBehaviour
 
     [Header("UI")]
     public Text userFeedbackText;
-    public float bandMin = 0.13f; // for distance guidance text
 
     [Header("Event")]
     public UnityEvent Triggered;  // External hooks when threshold condition met
@@ -43,8 +38,8 @@ public class CaptureManager : MonoBehaviour
 
     private void OnStats(DepthStats stats)
     {
-        var meanInRange = stats.mean >= meanThresholdMin && stats.mean <= meanThresholdMax;
-        var stdInRange = stats.stdPop >= stdThresholdMin && stats.stdPop <= stdThresholdMax;
+        var meanInRange = stats.mean >= HandCaptureGlobals.MeanThresholdMin && stats.mean <= HandCaptureGlobals.MeanThresholdMax;
+        var stdInRange = stats.stdPop >= HandCaptureGlobals.StdThresholdMin && stats.stdPop <= HandCaptureGlobals.StdThresholdMax;
         var inRangeNow = stats.count > 0 && meanInRange && stdInRange;
 
         // Throttled triggering: allow even if still in range, but not more than 1 per interval
@@ -78,11 +73,11 @@ public class CaptureManager : MonoBehaviour
         }
 
         // Distance guidance
-        if (mean > meanThresholdMax) _ = sb.AppendLine("Move hand closer");
-        else if (mean < meanThresholdMin && mean >= bandMin) _ = sb.AppendLine("Move hand further");
+        if (mean > HandCaptureGlobals.MeanThresholdMax) _ = sb.AppendLine("Move hand closer");
+        else if (mean < HandCaptureGlobals.MeanThresholdMin && mean >= HandCaptureGlobals.MinMeters) _ = sb.AppendLine("Move hand further");
 
         // Flatness guidance
-        if (stdPop >= stdThresholdMax) _ = sb.AppendLine("Try to make your hand flatter");
+        if (stdPop >= HandCaptureGlobals.StdThresholdMax) _ = sb.AppendLine("Try to make your hand flatter");
 
         if (sb.Length == 0)
         {

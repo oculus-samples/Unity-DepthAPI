@@ -1113,6 +1113,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 226138083}
+  - component: {fileID: 226138085}
   - component: {fileID: 226138082}
   - component: {fileID: 226138084}
   m_Layer: 0
@@ -1135,14 +1136,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   depthStatsSource: {fileID: 226138084}
-  meanThresholdMin: 0.245
-  meanThresholdMax: 0.255
-  stdThresholdMin: 0
-  stdThresholdMax: 0.02
   targetSamples: 3
   minTriggerIntervalSeconds: 1
   userFeedbackText: {fileID: 850831470}
-  bandMin: 0.13
   Triggered:
     m_PersistentCalls:
       m_Calls:
@@ -1199,13 +1195,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   depthStatsCS: {fileID: 7200000, guid: 5d7a3db1785a1fe45974ff5e05b1ea8e, type: 3}
   depthRT: {fileID: 8400000, guid: e571fb1df9eb7124bb7e2d138f02938d, type: 2}
-  bandMin: 0.13
-  bandMax: 0.27
   updateInterval: 0.25
   OnStats:
     m_PersistentCalls:
       m_Calls: []
   debugText: {fileID: 1605571407}
+--- !u!114 &226138085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226138081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 932d6ed208a80a247aedf2bed1934e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings: {fileID: 11400000, guid: 64dc0853a2b71fe4b9f01715869b48c9, type: 2}
 --- !u!1 &255939760
 GameObject:
   m_ObjectHideFlags: 0

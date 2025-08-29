@@ -4,8 +4,8 @@
 Texture2D<float4> _DepthTex; // RGBAFloat, meters in .r
 RWStructuredBuffer<float4> _GroupOut; // per-group: (sum, count, sumSq, unused)
 int2 _TexSize;
-float _BandMin; // e.g., 0.13
-float _BandMax; // e.g., 0.27
+
+#include "Assets/Shaders/Includes/DepthRangeGlobals.hlsl"
 
 #define TX 16
 #define TY 16
@@ -30,7 +30,7 @@ void DepthStats(uint3 id : SV_DispatchThreadID,
     if (id.x < (uint) _TexSize.x && id.y < (uint) _TexSize.y)
     {
         float v = _DepthTex.Load(int3(id.xy, 0)).r;
-        if (v >= _BandMin && v <= _BandMax)
+        if (v >= _DepthMinMeters && v <= _DepthMaxMeters)
         {
             sum = v;
             cnt = 1.0;

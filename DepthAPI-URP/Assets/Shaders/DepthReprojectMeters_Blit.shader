@@ -3,8 +3,6 @@ Shader "Hidden/DepthReprojectMeters_Blit"
     Properties
     {
         _Zoom ("Zoom", Range(0.1, 5)) = 1
-        _MinDepthMeters ("Keep >= (m)", Float) = 0.0
-        _MaxDepthMeters ("Keep <= (m)", Float) = 10.0
     }
     SubShader
     {
@@ -18,6 +16,7 @@ Shader "Hidden/DepthReprojectMeters_Blit"
             #pragma vertex vert
             #pragma fragment frag
             #include "UnityCG.cginc"
+            #include "Assets/Shaders/Includes/DepthRangeGlobals.hlsl"
 
             // Your existing globals (set by your manager):
             UNITY_DECLARE_TEX2DARRAY(_EnvironmentDepthTexture);
@@ -35,10 +34,6 @@ Shader "Hidden/DepthReprojectMeters_Blit"
             float3 _PlaneCenterWS;
             float3 _PlaneRightHalfWS;
             float3 _PlaneUpHalfWS;
-
-            // treshold
-            float _MinDepthMeters;
-            float _MaxDepthMeters;
 
             struct v2f { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; };
 
@@ -89,7 +84,7 @@ Shader "Hidden/DepthReprojectMeters_Blit"
                 float meters = 1.0 / (z_ndc + _EnvironmentDepthZBufferParams.y) * _EnvironmentDepthZBufferParams.x;
                 
                 // --- KEEP ONLY WITHIN [Min, Max] ---
-                bool inRange = (meters >= _MinDepthMeters) && (meters <= _MaxDepthMeters);
+                bool inRange = (meters >= _DepthMinMeters) && (meters <= _DepthMaxMeters);
                 if (!inRange) return fixed4(0.0, 0.0, 0.0, 0.0);
 
                 // Screen -> NDC
@@ -101,7 +96,7 @@ Shader "Hidden/DepthReprojectMeters_Blit"
                 float4 hCam = mul(_EnvironmentDepthInvProjectionMatrices[eye], float4(ndcXY, z_ndc, 1.0));
                 float3 camPos = hCam.xyz / hCam.w;
 
-                // NOTE: With Unity’s view-convention, forward is -Z. If you prefer +Z forward, uncomment:
+                // NOTE: With Unity's view-convention, forward is -Z. If you prefer +Z forward, uncomment:
                 //camPos.z = -camPos.z;
 
                 // Finally: pack meters in R, and camera-space XYZ in GBA
@@ -114,3 +109,4 @@ Shader "Hidden/DepthReprojectMeters_Blit"
     }
     Fallback Off
 }
+
