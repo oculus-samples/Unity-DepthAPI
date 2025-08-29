@@ -1,8 +1,8 @@
-using System.Collections;
+
 using System.IO;
 using PassthroughCameraSamples;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering; // for GraphicsFormat
+
 
 public class DepthReprojectBaker : MonoBehaviour
 {
@@ -13,11 +13,6 @@ public class DepthReprojectBaker : MonoBehaviour
 
     [Header("Passthrough source")]
     public WebCamTextureManager webcamMgr;     // Assign in Inspector
-    public int resolutionW = 512;            // output texture size (square)
-    public int resolutionH = 512;            // output texture size (square)
-
-    [Header("Eye Selection")]
-    [Range(0, 1)] public int eyeIndex = 0;   // choose 0 or 1
     public bool usePreprocessed = true;
 
     [Header("Output")]
@@ -46,7 +41,7 @@ public class DepthReprojectBaker : MonoBehaviour
         Debug.Log($"Quad {quad.name} visibility is now: {r.enabled}");
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         if (!quad || !quadMeshFilter || !blitMat) return;
 
@@ -54,11 +49,11 @@ public class DepthReprojectBaker : MonoBehaviour
         var bounds = mesh.bounds; // local AABB, for Unity Quad usually size (1,1,0)
 
         // World center of the plane
-        Vector3 centerWS = quad.TransformPoint(bounds.center);
+        var centerWS = quad.TransformPoint(bounds.center);
 
         // World-space HALF-extents along the plane axes (includes rotation & scale)
-        Vector3 rightHalfWS = quad.TransformVector(Vector3.right * bounds.extents.x);
-        Vector3 upHalfWS = quad.TransformVector(Vector3.up * bounds.extents.y);
+        var rightHalfWS = quad.TransformVector(Vector3.right * bounds.extents.x);
+        var upHalfWS = quad.TransformVector(Vector3.up * bounds.extents.y);
 
         // Push to material
         blitMat.SetVector("_PlaneCenterWS", centerWS);
@@ -67,7 +62,7 @@ public class DepthReprojectBaker : MonoBehaviour
 
         // Stereo control for this offscreen blit
         blitMat.SetFloat("_UseStereo", 0f);
-        blitMat.SetFloat("_EyeIndex", eyeIndex);
+        blitMat.SetFloat("_EyeIndex", HandCaptureGlobals.EyeIndex);
         blitMat.SetFloat("_UsePreprocessed", usePreprocessed ? 1f : 0f);
 
         // Run the pass directly into the RT
@@ -78,17 +73,17 @@ public class DepthReprojectBaker : MonoBehaviour
         if (outQuad)
         {
             // World width/height of the source quad
-            float worldWidth = (rightHalfWS * 2f).magnitude;
-            float worldHeight = (upHalfWS * 2f).magnitude;
+            var worldWidth = (rightHalfWS * 2f).magnitude;
+            var worldHeight = (upHalfWS * 2f).magnitude;
 
             // Apply uniform scale factor
-            float targetW = worldWidth * outQuadScale;
-            float targetH = worldHeight * outQuadScale;
+            var targetW = worldWidth * outQuadScale;
+            var targetH = worldHeight * outQuadScale;
 
             // Convert to localScale for outQuad, compensating for any parent lossy scale
-            Vector3 parentLossy = outQuad.parent ? outQuad.parent.lossyScale : Vector3.one;
-            float sx = parentLossy.x != 0 ? targetW / parentLossy.x : targetW;
-            float sy = parentLossy.y != 0 ? targetH / parentLossy.y : targetH;
+            var parentLossy = outQuad.parent ? outQuad.parent.lossyScale : Vector3.one;
+            var sx = parentLossy.x != 0 ? targetW / parentLossy.x : targetW;
+            var sy = parentLossy.y != 0 ? targetH / parentLossy.y : targetH;
 
             // For a primitive Quad, Z scale isn't meaningful; keep it at 1
             outQuad.localScale = new Vector3(sx, sy, 1f);
@@ -108,17 +103,17 @@ public class DepthReprojectBaker : MonoBehaviour
         tex.ReadPixels(new Rect(0, 0, metersRT.width, metersRT.height), 0, 0);
         tex.Apply();
 
-        string exrPath = Path.Combine(Application.persistentDataPath, $"depth_lin_slice_{eyeIndex}_{Time.frameCount}_blit.exr");
+        var exrPath = Path.Combine(Application.persistentDataPath, $"depth_lin_slice_{HandCaptureGlobals.EyeIndex}_{Time.frameCount}_blit.exr");
 
         var bytes = tex.EncodeToEXR(Texture2D.EXRFlags.OutputAsFloat); // preserves float meters
-        System.IO.File.WriteAllBytes(exrPath, bytes);
+        File.WriteAllBytes(exrPath, bytes);
 
         RenderTexture.active = prev;
         Destroy(tex); // cleanup if you like
         Debug.Log($"Saved EXR to: {exrPath}");
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         if (metersRT)
         {

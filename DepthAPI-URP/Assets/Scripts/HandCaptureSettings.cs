@@ -1,4 +1,5 @@
 using UnityEngine;
+using PassthroughCameraSamples;
 
 [CreateAssetMenu(fileName = "HandCaptureSettings", menuName = "Settings/Hand Capture Settings")]
 public class HandCaptureSettings : ScriptableObject
@@ -12,12 +13,17 @@ public class HandCaptureSettings : ScriptableObject
     public float stdThresholdMin = 0f;
     public float stdThresholdMax = 0f;
 
+    [Header("Passthrough Camera")]
+    public PassthroughCameraEye eye = PassthroughCameraEye.Left;
+
     public void Apply()
     {
         // Let HandCaptureGlobals handle clamping and shader global updates
         HandCaptureGlobals.Apply(minMeters, maxMeters);
         // Also apply capture thresholds to globals
         HandCaptureGlobals.ApplyThresholds(meanThresholdMin, meanThresholdMax, stdThresholdMin, stdThresholdMax);
+        // Apply eye selection as index to globals
+        HandCaptureGlobals.ApplyEyeIndex(eye == PassthroughCameraEye.Left ? 0 : 1);
     }
 
 }
