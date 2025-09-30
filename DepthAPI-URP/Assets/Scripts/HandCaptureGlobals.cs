@@ -31,8 +31,8 @@ public static class HandCaptureGlobals
     {
         MeanThresholdMin = meanMin;
         MeanThresholdMax = meanMax;
-        StdThresholdMin  = stdMin;
-        StdThresholdMax  = stdMax;
+        StdThresholdMin = stdMin;
+        StdThresholdMax = stdMax;
     }
 
     public static void ApplyEyeIndex(int eyeIndex)

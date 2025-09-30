@@ -1,8 +1,6 @@
 
 using System.IO;
-using PassthroughCameraSamples;
 using UnityEngine;
-
 
 public class DepthReprojectBaker : MonoBehaviour
 {
@@ -10,9 +8,6 @@ public class DepthReprojectBaker : MonoBehaviour
     public Transform quad;                  // the plane you want to sample over
     public MeshFilter quadMeshFilter;       // its mesh (to get size)
     public Material blitMat;                // material using Hidden/DepthReprojectMeters_Blit
-
-    [Header("Passthrough source")]
-    public WebCamTextureManager webcamMgr;     // Assign in Inspector
     public bool usePreprocessed = true;
 
     [Header("Output")]

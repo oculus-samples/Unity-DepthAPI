@@ -1116,6 +1116,8 @@ GameObject:
   - component: {fileID: 226138085}
   - component: {fileID: 226138082}
   - component: {fileID: 226138084}
+  - component: {fileID: 226138087}
+  - component: {fileID: 226138086}
   m_Layer: 0
   m_Name: CaptureManager
   m_TagString: Untagged
@@ -1154,7 +1156,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1051852848}
+      - m_Target: {fileID: 226138086}
         m_TargetAssemblyTypeName: DepthReprojectBaker, Assembly-CSharp
         m_MethodName: SaveEXR
         m_Mode: 1
@@ -1214,6 +1216,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 64dc0853a2b71fe4b9f01715869b48c9, type: 2}
   camMgr: {fileID: 59405327}
+--- !u!114 &226138086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226138081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c2e967f4d39439448f676d3453880eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quad: {fileID: 1051852844}
+  quadMeshFilter: {fileID: 1051852847}
+  blitMat: {fileID: 2100000, guid: b369ef5827b54d1409cf22d833a3bc8f, type: 2}
+  usePreprocessed: 0
+  metersRT: {fileID: 8400000, guid: e571fb1df9eb7124bb7e2d138f02938d, type: 2}
+  outQuad: {fileID: 1848026477}
+  outQuadScale: 0.1
+  _saveSnapshotButton: 1
+  _hidUnhide: 2
+--- !u!114 &226138087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226138081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c10201487576dee4b80d7503bf5d006b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_webCamTextureManager: {fileID: 59405327}
+  m_cameraCanvas: {fileID: 7985735941236483369}
+  m_canvasDistance: 1
+  depthQuad: {fileID: 1051852844}
 --- !u!1 &255939760
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,54 +1776,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 465275108}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &336067254
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 336067256}
-  - component: {fileID: 336067257}
-  m_Layer: 0
-  m_Name: CameraToWorldManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &336067256
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 336067254}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &336067257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 336067254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c10201487576dee4b80d7503bf5d006b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_webCamTextureManager: {fileID: 59405327}
-  m_cameraCanvas: {fileID: 7985735941236483369}
-  m_canvasDistance: 1
-  debugDepthQuad: {fileID: 1051852844}
 --- !u!1 &340539805
 GameObject:
   m_ObjectHideFlags: 0
@@ -4727,6 +4718,60 @@ Transform:
   - {fileID: 1888351159}
   m_Father: {fileID: 424747999}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &849611883
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 849611885}
+  - component: {fileID: 849611884}
+  m_Layer: 0
+  m_Name: FoV Display
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &849611884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849611883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad19da16922b4f345aa30a2a7f6b0390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineWidth: 0.0003
+  lineMaterial: {fileID: 2100000, guid: 945935f578e57654385046850a4e94bd, type: 2}
+  nearColor: {r: 0.1, g: 1, b: 0.1, a: 1}
+  farColor: {r: 1, g: 0.2, b: 0.2, a: 1}
+  edgeColor: {r: 1, g: 0.9, b: 0.2, a: 1}
+  centerColor: {r: 0.2, g: 0.7, b: 1, a: 1}
+  showNear: 1
+  showFar: 1
+  showEdges: 1
+  showCenter: 0
+--- !u!4 &849611885
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849611883}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.098267764, y: 0.07330669, z: 0.4070633}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &850831468
 GameObject:
   m_ObjectHideFlags: 0
@@ -5847,7 +5892,6 @@ GameObject:
   - component: {fileID: 1051852847}
   - component: {fileID: 1051852846}
   - component: {fileID: 1051852845}
-  - component: {fileID: 1051852848}
   m_Layer: 0
   m_Name: DepthMapQuad
   m_TagString: Untagged
@@ -5945,30 +5989,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1051852843}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1051852848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1051852843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c2e967f4d39439448f676d3453880eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  quad: {fileID: 1051852844}
-  quadMeshFilter: {fileID: 1051852847}
-  blitMat: {fileID: 2100000, guid: b369ef5827b54d1409cf22d833a3bc8f, type: 2}
-  webcamMgr: {fileID: 59405327}
-  resolutionW: 1280
-  resolutionH: 960
-  usePreprocessed: 0
-  metersRT: {fileID: 8400000, guid: e571fb1df9eb7124bb7e2d138f02938d, type: 2}
-  outQuad: {fileID: 1848026477}
-  outQuadScale: 0.1
-  _saveSnapshotButton: 1
-  _hidUnhide: 2
 --- !u!1 &1059477976
 GameObject:
   m_ObjectHideFlags: 0
@@ -12771,9 +12791,9 @@ SceneRoots:
   - {fileID: 1568067563}
   - {fileID: 8569894051434947678}
   - {fileID: 59405326}
-  - {fileID: 336067256}
   - {fileID: 470313521}
   - {fileID: 1432657585}
   - {fileID: 326749908}
   - {fileID: 1051852844}
   - {fileID: 226138083}
+  - {fileID: 849611885}
