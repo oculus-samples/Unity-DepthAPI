@@ -8,8 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Custom_DepthRedChannelColorize
-  m_Shader: {fileID: 4800000, guid: e00f77177d355124eafafab8c679bf2f, type: 3}
-  m_Parent: {fileID: 0}
+  m_Shader: {fileID: 4800000, guid: 66564df1587f77a479cb70ed46691788, type: 3}
+  m_Parent: {fileID: 2100000, guid: 9a9923ee885904842907d154438a060b, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -23,27 +23,12 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _DepthTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats:
-    - _Alpha: 0.514
-    - _EyeIndex: 0
-    - _FlipU: 0
-    - _FlipV: 0
-    - _Slice: 0
-    - _SwapEyes: 0
-    - _UsePreprocessed: 0
-    - _UseStereo: 1
-    m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EndColor: {r: 0, g: 1, b: 0, a: 1}
-    - _StartColor: {r: 0, g: 0, b: 1, a: 1}
+    m_Floats: []
+    m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

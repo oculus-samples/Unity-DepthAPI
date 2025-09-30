@@ -18,6 +18,7 @@ public class CameraToWorldManagerSimple : MonoBehaviour
     [Header("Debug Visualization")]
     [Tooltip("Assign your debug quad here to align it with the passthrough canvas.")]
     [SerializeField] private Transform depthQuad;
+    [SerializeField] private Transform depthQuadCopy;
 
     private PassthroughCameraEye CameraEye => m_webCamTextureManager.Eye;
     private Vector2Int CameraResolution => m_webCamTextureManager.RequestedResolution;
@@ -66,19 +67,20 @@ public class CameraToWorldManagerSimple : MonoBehaviour
         m_cameraCanvas.transform.rotation = cameraPose.rotation;
 
         // NEW: Also update the depth quad to match the passthrough canvas
-        UpdateDepthQuadTransform();
+        UpdateDepthQuadTransform(depthQuad);
+        UpdateDepthQuadTransform(depthQuadCopy);
     }
 
     /// <summary>
     /// This function ensures the depth quad's transform is identical to the passthrough canvas.
     /// </summary>
-    private void UpdateDepthQuadTransform()
+    private void UpdateDepthQuadTransform(Transform quad)
     {
-        if (!depthQuad || !m_cameraCanvas) return;
+        if (!quad || !m_cameraCanvas) return;
 
         // match pose + tiny forward/back offset to avoid z-fighting
         const float zOffset = 0.001f;
-        depthQuad.SetPositionAndRotation(
+        quad.SetPositionAndRotation(
             m_cameraCanvas.transform.position + m_cameraCanvas.transform.forward * -zOffset,
             m_cameraCanvas.transform.rotation
         );
@@ -94,7 +96,7 @@ public class CameraToWorldManagerSimple : MonoBehaviour
         float worldHeight = Vector3.Distance(corners[1], corners[0]); // BL -> TL
 
         // primitive Quad, no parent: scale directly to desired world size
-        depthQuad.localScale = new Vector3(worldWidth, worldHeight, 1f);
+        quad.localScale = new Vector3(worldWidth, worldHeight, 1f);
     }
 
     /// <summary>

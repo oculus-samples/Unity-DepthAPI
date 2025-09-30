@@ -1379,11 +1379,12 @@ MonoBehaviour:
   quad: {fileID: 1051852844}
   quadMeshFilter: {fileID: 1051852847}
   blitMat: {fileID: 2100000, guid: 402ca10b333d1d647920be1e1d61949a, type: 2}
-  resolution: 512
-  eyeIndex: 0
   usePreprocessed: 0
   metersRT: {fileID: 8400000, guid: e571fb1df9eb7124bb7e2d138f02938d, type: 2}
+  outQuad: {fileID: 1848026477}
+  outQuadScale: 1
   _saveSnapshotButton: 1
+  _hidUnhide: 2
 --- !u!1 &1074901417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1940,7 +1941,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 25c48c0b26311ab40b34fdd58dc26ccf, type: 2}
+  - {fileID: 2100000, guid: 9a9923ee885904842907d154438a060b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
