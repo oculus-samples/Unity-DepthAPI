@@ -35,6 +35,7 @@ namespace DepthAPISample
         [SerializeField] private OVRInput.RawButton _posterRotateRightButton = OVRInput.RawButton.RThumbstickRight;
         [SerializeField] private OVRInput.RawButton _posterRotateLeftButton = OVRInput.RawButton.RThumbstickLeft;
         [SerializeField] private float _depthBiasChangeValue = .01f;
+        [SerializeField] private float _depthBiasAdjustDecay = 10f;
         [SerializeField] private LineRenderer _lineRenderer;
         [SerializeField] private ChangeInputListener _inputListener;
         private LayerMask _layerMaskWall;
@@ -46,6 +47,9 @@ namespace DepthAPISample
         private bool _isPosterHit;
         private bool _isUsingHands;
         private float _rotationValue;
+
+        private float _depthBiasAdjust = 0;
+        private bool _placePosterTrigger = false;
 
         private void Awake()
         {
@@ -72,45 +76,41 @@ namespace DepthAPISample
 
         private void Update()
         {
-            _lineRenderer.enabled = !_isUsingHands;
-            _posterPreview.gameObject.SetActive(!_isUsingHands);
-            if (_isUsingHands)
-            {
-                return;
-            }
-
             Ray ray = new Ray(_rayOrigin.position, _rayOrigin.forward);
             RaycastHit hit;
             if (OVRInput.Get(_posterIncreaseBiasValueButton))
             {
-                if (_currentHighlightedPosterObject != null)
-                {
-                    _currentHighlightedPosterObject.GetComponent<Poster>().AdjustDepthBias(_depthBiasChangeValue * Time.deltaTime);
-                }
-                else
-                {
-                    if (_posterPreview != null)
-                    {
-                        _previewPosterDepthBiasValue += _depthBiasChangeValue * Time.deltaTime;
-                        _posterPreview.SetDepthBias(_previewPosterDepthBiasValue);
-                    }
-                }
+                _depthBiasAdjust = 1;
             }
             if (OVRInput.Get(_posterDecreaseBiasValueButton))
             {
+                _depthBiasAdjust = -1;
+            }
+            if (Mathf.Abs(_depthBiasAdjust) > 0.01)
+            {
                 if (_currentHighlightedPosterObject != null)
                 {
-                    _currentHighlightedPosterObject.GetComponent<Poster>().AdjustDepthBias(-_depthBiasChangeValue * Time.deltaTime);
+                    _currentHighlightedPosterObject.GetComponent<Poster>().AdjustDepthBias(_depthBiasChangeValue * _depthBiasAdjust * Time.deltaTime);
                 }
                 else
                 {
                     if (_posterPreview != null)
                     {
-                        _previewPosterDepthBiasValue -= _depthBiasChangeValue * Time.deltaTime;
+                        _previewPosterDepthBiasValue += _depthBiasChangeValue * _depthBiasAdjust * Time.deltaTime;
                         _posterPreview.SetDepthBias(_previewPosterDepthBiasValue);
                     }
                 }
+                if (!_isUsingHands)
+                {
+                    _depthBiasAdjust = 0;
+                }
+                else
+                {
+                    _depthBiasAdjust -= Time.deltaTime * _depthBiasAdjustDecay * Mathf.Sign(_depthBiasAdjust);
+                }
             }
+
+
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, _layerMaskPoster))
             {
                 _isPosterHit = true;
@@ -187,10 +187,11 @@ namespace DepthAPISample
             _lineRenderer.SetPositions(new Vector3[] { _rayOrigin.position, hit.point });
 
             PlacePreviewPoster(hit);
-            if (OVRInput.GetDown(_posterPlacingButton))
+            if ((OVRInput.GetDown(_posterPlacingButton)) || (_placePosterTrigger))
             {
                 PlacePoster(hit);
             }
+            _placePosterTrigger = false;
         }
         private void PlacePoster(RaycastHit hit)
         {
@@ -264,6 +265,31 @@ namespace DepthAPISample
             _currentPosters.Clear();
         }
 
-        private void HandleInputChanged(bool isUsingHands) => _isUsingHands = isUsingHands;
+        private void HandleInputChanged(bool isUsingHands)
+        {
+            _isUsingHands = isUsingHands;
+        }
+
+        public void OnMicroGesture(OVRHand.MicrogestureType gesture)
+        {
+            switch (gesture)
+            {
+                case OVRHand.MicrogestureType.SwipeForward:
+                {
+                    _depthBiasAdjust += 1;
+                }
+                break;
+                case OVRHand.MicrogestureType.SwipeBackward:
+                {
+                    _depthBiasAdjust += -1;
+                }
+                break;
+                case OVRHand.MicrogestureType.ThumbTap:
+                {
+                    _placePosterTrigger = true;
+                }
+                break;
+            }
+        }
     }
 }

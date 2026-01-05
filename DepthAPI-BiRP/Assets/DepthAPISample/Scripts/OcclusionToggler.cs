@@ -66,5 +66,13 @@ namespace DepthAPISample
             if (_currentOcclusionsModeText)
                 _currentOcclusionsModeText.text = $"Occlusion mode: \n{newType.ToString()}";
         }
+
+        public void OnMicroGestureRightHand(OVRHand.MicrogestureType gesture)
+        {
+            if (gesture == OVRHand.MicrogestureType.ThumbTap)
+            {
+                SwitchToNextOcclusionType();
+            }
+        }
     }
 }

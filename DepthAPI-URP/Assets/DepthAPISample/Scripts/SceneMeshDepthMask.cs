@@ -8,25 +8,23 @@ namespace DepthAPISample
 {
     public class SceneMeshDepthMask : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI MaskDepthBiasText;
-        [SerializeField] private OVRInput.RawButton _maskToggleButton = OVRInput.RawButton.B;
-        [SerializeField] private OVRInput.RawButton _maskBiasAdjustDecreaseButton = OVRInput.RawButton.RThumbstickLeft;
-        [SerializeField] private OVRInput.RawButton _maskBiasAdjustIncreaseButton = OVRInput.RawButton.RThumbstickRight;
+        private const float depthBiasAdjustDecay = 10;
+
+        [SerializeField] TextMeshProUGUI MaskDepthBiasText;
         private EnvironmentDepthManager _environmentDepthManager;
         private float _maskBiasAdjustValue = 0.2f;
-        private List<MeshFilter> _wallMeshFilters = new();
+        private List<MeshFilter> _wallMeshFilters;
 
         private bool _isMaskOn;
+        private float _depthBiasAdjust = 0;
 
         private void Awake()
         {
             _environmentDepthManager = FindAnyObjectByType<EnvironmentDepthManager>();
+            _wallMeshFilters = new List<MeshFilter>();
         }
-
-        private void LoadRoomMesh()
+        public void LoadRoomMesh()
         {
-            if (_environmentDepthManager == null)
-                return;
             if ((MRUK.Instance.GetCurrentRoom() == null) || (_environmentDepthManager == null))
             {
                 return;
@@ -34,6 +32,7 @@ namespace DepthAPISample
             _wallMeshFilters.Clear();
             for (var i = 0; i < MRUK.Instance.GetCurrentRoom().WallAnchors.Count; i++)
             {
+                Debug.Log("Found wall");
                 _wallMeshFilters.Add(MRUK.Instance.GetCurrentRoom().WallAnchors[i].gameObject.GetComponentInChildren<MeshFilter>());
             }
 
@@ -42,7 +41,7 @@ namespace DepthAPISample
 
         private void Update()
         {
-            if (OVRInput.GetDown(_maskToggleButton))
+            if (OVRInput.GetDown(OVRInput.RawButton.B))
             {
                 if (!_isMaskOn)
                 {
@@ -55,17 +54,58 @@ namespace DepthAPISample
                 _isMaskOn = !_isMaskOn;
             }
 
-            if (OVRInput.Get(_maskBiasAdjustDecreaseButton))
+            if (OVRInput.Get(OVRInput.RawButton.RThumbstickLeft))
             {
                 _environmentDepthManager.MaskBias -= _maskBiasAdjustValue * Time.deltaTime;
             }
 
-            if (OVRInput.Get(_maskBiasAdjustIncreaseButton))
+            if (OVRInput.Get(OVRInput.RawButton.RThumbstickRight))
             {
                 _environmentDepthManager.MaskBias += _maskBiasAdjustValue * Time.deltaTime;
             }
-            if (MaskDepthBiasText != null)
-                MaskDepthBiasText.text = "Mask bias " + _environmentDepthManager.MaskBias.ToString("#.000");
+
+            if (Mathf.Abs(_depthBiasAdjust) > 0.01f)
+            {
+                _environmentDepthManager.MaskBias += _maskBiasAdjustValue * _depthBiasAdjust * Time.deltaTime;
+                _depthBiasAdjust -= Time.deltaTime * depthBiasAdjustDecay * Mathf.Sign(_depthBiasAdjust);
+            }
+            else
+            {
+                _depthBiasAdjust = 0;
+            }
+
+
+            MaskDepthBiasText.text = "Mask bias " + _environmentDepthManager.MaskBias.ToString("#.000");
+        }
+
+        public void OnMicroGesture(OVRHand.MicrogestureType gesture)
+        {
+            switch (gesture)
+            {
+                case OVRHand.MicrogestureType.SwipeForward:
+                {
+                    _depthBiasAdjust += 1;
+                }
+                break;
+                case OVRHand.MicrogestureType.SwipeBackward:
+                {
+                    _depthBiasAdjust += -1;
+                }
+                break;
+                case OVRHand.MicrogestureType.ThumbTap:
+                {
+                    if (!_isMaskOn)
+                    {
+                        LoadRoomMesh();
+                    }
+                    else
+                    {
+                        _wallMeshFilters.Clear();
+                    }
+                    _isMaskOn = !_isMaskOn;
+                }
+                break;
+            }
         }
     }
 }

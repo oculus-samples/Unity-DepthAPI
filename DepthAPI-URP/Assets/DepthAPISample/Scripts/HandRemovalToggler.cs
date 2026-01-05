@@ -79,5 +79,15 @@ namespace DepthAPISample
 
             OnHandsRemovalStyleChanged?.Invoke(style);
         }
+
+        public void OnMicroGestureLeftHand(OVRHand.MicrogestureType gesture)
+        {
+            if (gesture == OVRHand.MicrogestureType.ThumbTap)
+            {
+                _occlustionType = ((_occlustionType + 1) % Enum.GetValues(typeof(HandsRemovalStyle)).Length);
+                _occlStyle = (HandsRemovalStyle)_occlustionType;
+                SetHandsOcclusionStyle(_occlStyle);
+            }
+        }
     }
 }
