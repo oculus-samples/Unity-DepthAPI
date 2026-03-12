@@ -7,7 +7,9 @@
 #endif
 
 #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-#define REQUIRES_WORLD_SPACE_POS_INTERPOLATOR 1
+  #ifndef REQUIRES_WORLD_SPACE_POS_INTERPOLATOR
+    #define REQUIRES_WORLD_SPACE_POS_INTERPOLATOR 1
+  #endif
 #endif
 
 #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/URP/EnvironmentOcclusionURP.hlsl"

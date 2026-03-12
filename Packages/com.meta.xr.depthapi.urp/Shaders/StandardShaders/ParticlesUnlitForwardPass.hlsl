@@ -152,7 +152,7 @@ half4 fragParticleUnlit(VaryingsParticle input) : SV_Target
     finalColor.rgb = MixFog(finalColor.rgb, inputData.fogCoord);
     finalColor.a = OutputAlpha(finalColor.a, IsSurfaceTypeTransparent(_Surface));
 
-    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS_NAME(input, positionWS, finalColor, _EnvironmentDepthBias);
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(input.positionWS, finalColor, _EnvironmentDepthBias);
 
     return finalColor;
 }

@@ -1,3 +1,6 @@
+# 85.0.0
+* Fix shader compilation warnings in Unity 6000.x
+
 # 77.0.0
 * Add support for Unity 6.1's URP 17.1
 

@@ -162,7 +162,7 @@ void UnlitPassFragment(
     finalColor.a = OutputAlpha(finalColor.a, IsSurfaceTypeTransparent(_Surface));
 
  #if defined(HARD_OCCLUSION) || defined(SOFT_OCCLUSION)
-    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS_NAME(input, positionWS, finalColor, _EnvironmentDepthBias);
+    META_DEPTH_OCCLUDE_OUTPUT_PREMULTIPLY_WORLDPOS(input.positionWS, finalColor, _EnvironmentDepthBias);
 #endif
 
 

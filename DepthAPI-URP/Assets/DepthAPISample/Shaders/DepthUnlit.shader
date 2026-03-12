@@ -84,7 +84,7 @@ Shader "Depth/Unlit"
 
                 // 5. World position is required to calculate the occlusions.
                 //    This macro will calculate and set world position value in the output Varyings structure.
-                META_DEPTH_INITIALIZE_VERTEX_OUTPUT(output, input.vertex);
+                META_DEPTH_INITIALIZE_VERTEX_OUTPUT(output, input.vertex.xyz);
 
                 // 6. Passes stereo information to frag shader
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);

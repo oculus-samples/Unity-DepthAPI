@@ -71,14 +71,14 @@ Shader "Meta/EnvironmentDepth/URP/OcclusionCutoutURP"
             float _EnvironmentDepthBias;
 
             v2f vert (appdata v) {
-                v2f o;
+                v2f o = (v2f)0;
 
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.vertex = TransformObjectToHClip(v.vertex.xyz);
 
-                META_DEPTH_INITIALIZE_VERTEX_OUTPUT(o, v.vertex);
+                META_DEPTH_INITIALIZE_VERTEX_OUTPUT(o, v.vertex.xyz);
 
                 return o;
             }
