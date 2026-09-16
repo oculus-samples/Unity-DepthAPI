@@ -1,3 +1,6 @@
+# 205.0.0
+* Fix URP occlusion particle shaders failing to compile in Unity 6.6 (URP 17.6)
+
 # 85.0.0
 * Fix shader compilation warnings in Unity 6000.x
 

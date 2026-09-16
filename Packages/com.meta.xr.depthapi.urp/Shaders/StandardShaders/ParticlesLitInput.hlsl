@@ -24,6 +24,20 @@ CBUFFER_END
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Particles.hlsl"
 
+// URP 17.6 (Unity 6000.6) changed particle texture helpers to take UnityTexture2D; guard both paths.
+#ifndef META_DEPTH_PARTICLE_TEX_COMPAT
+#define META_DEPTH_PARTICLE_TEX_COMPAT
+#if UNITY_VERSION >= 600060
+    #define META_DEPTH_TEX2D_PARAM(textureName, samplerName) UnityTexture2D textureName
+    #define META_DEPTH_TEX2D_ARGS(textureName, samplerName) textureName
+    #define META_DEPTH_TEX2D_BUILD(textureName, samplerName) UnityBuildTexture2DStructNoScaleNoTexelSize(textureName)
+#else
+    #define META_DEPTH_TEX2D_PARAM(textureName, samplerName) TEXTURE2D_PARAM(textureName, samplerName)
+    #define META_DEPTH_TEX2D_ARGS(textureName, samplerName) TEXTURE2D_ARGS(textureName, samplerName)
+    #define META_DEPTH_TEX2D_BUILD(textureName, samplerName) TEXTURE2D_ARGS(textureName, samplerName)
+#endif
+#endif // META_DEPTH_PARTICLE_TEX_COMPAT
+
 TEXTURE2D(_MetallicGlossMap);   SAMPLER(sampler_MetallicGlossMap);
 
 #define SOFT_PARTICLE_NEAR_FADE _SoftParticleFadeParams.x
@@ -39,9 +53,9 @@ TEXTURE2D(_MetallicGlossMap);   SAMPLER(sampler_MetallicGlossMap);
 #define ALBEDO_MUL albedo.a
 #endif
 
-half4 SampleAlbedo(float2 uv, float3 blendUv, half4 color, float4 particleColor, float4 projectedPosition, TEXTURE2D_PARAM(albedoMap, sampler_albedoMap))
+half4 SampleAlbedo(float2 uv, float3 blendUv, half4 color, float4 particleColor, float4 projectedPosition, META_DEPTH_TEX2D_PARAM(albedoMap, sampler_albedoMap))
 {
-    half4 albedo = BlendTexture(TEXTURE2D_ARGS(albedoMap, sampler_albedoMap), uv, blendUv) * color;
+    half4 albedo = BlendTexture(META_DEPTH_TEX2D_ARGS(albedoMap, sampler_albedoMap), uv, blendUv) * color;
 
     half4 colorAddSubDiff = half4(0, 0, 0, 0);
 #if defined (_COLORADDSUBDIFF_ON)
@@ -63,9 +77,9 @@ half4 SampleAlbedo(float2 uv, float3 blendUv, half4 color, float4 particleColor,
     return albedo;
 }
 
-half4 SampleAlbedo(TEXTURE2D_PARAM(albedoMap, sampler_albedoMap), ParticleParams params)
+half4 SampleAlbedo(META_DEPTH_TEX2D_PARAM(albedoMap, sampler_albedoMap), ParticleParams params)
 {
-    half4 albedo = BlendTexture(TEXTURE2D_ARGS(albedoMap, sampler_albedoMap), params.uv, params.blendUv) * params.baseColor;
+    half4 albedo = BlendTexture(META_DEPTH_TEX2D_ARGS(albedoMap, sampler_albedoMap), params.uv, params.blendUv) * params.baseColor;
 
     half4 colorAddSubDiff = half4(0, 0, 0, 0);
 #if defined (_COLORADDSUBDIFF_ON)
@@ -89,18 +103,18 @@ half4 SampleAlbedo(TEXTURE2D_PARAM(albedoMap, sampler_albedoMap), ParticleParams
 
 inline void InitializeParticleLitSurfaceData(float2 uv, float3 blendUv, float4 particleColor, float4 projectedPosition, out SurfaceData outSurfaceData)
 {
-    half4 albedo = SampleAlbedo(uv, blendUv, _BaseColor, particleColor, projectedPosition, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));
+    half4 albedo = SampleAlbedo(uv, blendUv, _BaseColor, particleColor, projectedPosition, META_DEPTH_TEX2D_BUILD(_BaseMap, sampler_BaseMap));
 
 #if defined(_METALLICSPECGLOSSMAP)
-    half2 metallicGloss = BlendTexture(TEXTURE2D_ARGS(_MetallicGlossMap, sampler_MetallicGlossMap), uv, blendUv).ra * half2(1.0, _Smoothness);
+    half2 metallicGloss = BlendTexture(META_DEPTH_TEX2D_BUILD(_MetallicGlossMap, sampler_MetallicGlossMap), uv, blendUv).ra * half2(1.0, _Smoothness);
 #else
     half2 metallicGloss = half2(_Metallic, _Smoothness);
 #endif
 
-    half3 normalTS = SampleNormalTS(uv, blendUv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap), _BumpScale);
+    half3 normalTS = SampleNormalTS(uv, blendUv, META_DEPTH_TEX2D_BUILD(_BumpMap, sampler_BumpMap), _BumpScale);
 
 #if defined(_EMISSION)
-    half3 emission = BlendTexture(TEXTURE2D_ARGS(_EmissionMap, sampler_EmissionMap), uv, blendUv).rgb * _EmissionColor.rgb;
+    half3 emission = BlendTexture(META_DEPTH_TEX2D_BUILD(_EmissionMap, sampler_EmissionMap), uv, blendUv).rgb * _EmissionColor.rgb;
 #else
     half3 emission = half3(0, 0, 0);
 #endif
@@ -127,18 +141,18 @@ inline void InitializeParticleLitSurfaceData(float2 uv, float3 blendUv, float4 p
 
 inline void InitializeParticleLitSurfaceData(ParticleParams params, out SurfaceData outSurfaceData)
 {
-    half4 albedo = SampleAlbedo(TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap), params);
+    half4 albedo = SampleAlbedo(META_DEPTH_TEX2D_BUILD(_BaseMap, sampler_BaseMap), params);
 
     #if defined(_METALLICSPECGLOSSMAP)
-        half2 metallicGloss = BlendTexture(TEXTURE2D_ARGS(_MetallicGlossMap, sampler_MetallicGlossMap), params.uv, params.blendUv).ra * half2(1.0, _Smoothness);
+        half2 metallicGloss = BlendTexture(META_DEPTH_TEX2D_BUILD(_MetallicGlossMap, sampler_MetallicGlossMap), params.uv, params.blendUv).ra * half2(1.0, _Smoothness);
     #else
         half2 metallicGloss = half2(_Metallic, _Smoothness);
     #endif
 
-    half3 normalTS = SampleNormalTS(params.uv, params.blendUv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap), _BumpScale);
+    half3 normalTS = SampleNormalTS(params.uv, params.blendUv, META_DEPTH_TEX2D_BUILD(_BumpMap, sampler_BumpMap), _BumpScale);
 
     #if defined(_EMISSION)
-        half3 emission = BlendTexture(TEXTURE2D_ARGS(_EmissionMap, sampler_EmissionMap), params.uv, params.blendUv).rgb * _EmissionColor.rgb;
+        half3 emission = BlendTexture(META_DEPTH_TEX2D_BUILD(_EmissionMap, sampler_EmissionMap), params.uv, params.blendUv).rgb * _EmissionColor.rgb;
     #else
         half3 emission = half3(0, 0, 0);
     #endif

@@ -28,10 +28,6 @@ Shader "Meta/EnvironmentDepth/URP/OcclusionCutoutURP"
 
     SubShader
     {
-        PackageRequirements
-        {
-            "com.unity.render-pipelines.universal": "14.0"
-        }
         Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
         LOD 100
 

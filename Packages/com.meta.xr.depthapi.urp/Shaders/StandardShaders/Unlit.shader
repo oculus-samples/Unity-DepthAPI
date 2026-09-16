@@ -32,10 +32,6 @@ Shader "Meta/Depth/URP/Occlusion Unlit"
 
     SubShader
     {
-        PackageRequirements
-        {
-            "com.unity.render-pipelines.universal": "14.0"
-        }
         Tags
         {
             "RenderType" = "Opaque"

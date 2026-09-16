@@ -6,6 +6,20 @@
 
 #include "Packages/com.meta.xr.sdk.core/Shaders/EnvironmentDepth/URP/EnvironmentOcclusionURP.hlsl"
 
+// URP 17.6 (Unity 6000.6) changed particle texture helpers to take UnityTexture2D; guard both paths.
+#ifndef META_DEPTH_PARTICLE_TEX_COMPAT
+#define META_DEPTH_PARTICLE_TEX_COMPAT
+#if UNITY_VERSION >= 600060
+    #define META_DEPTH_TEX2D_PARAM(textureName, samplerName) UnityTexture2D textureName
+    #define META_DEPTH_TEX2D_ARGS(textureName, samplerName) textureName
+    #define META_DEPTH_TEX2D_BUILD(textureName, samplerName) UnityBuildTexture2DStructNoScaleNoTexelSize(textureName)
+#else
+    #define META_DEPTH_TEX2D_PARAM(textureName, samplerName) TEXTURE2D_PARAM(textureName, samplerName)
+    #define META_DEPTH_TEX2D_ARGS(textureName, samplerName) TEXTURE2D_ARGS(textureName, samplerName)
+    #define META_DEPTH_TEX2D_BUILD(textureName, samplerName) TEXTURE2D_ARGS(textureName, samplerName)
+#endif
+#endif // META_DEPTH_PARTICLE_TEX_COMPAT
+
 void InitializeInputData(VaryingsParticle input, SurfaceData surfaceData, out InputData inputData)
 {
     inputData = (InputData)0;
@@ -42,15 +56,15 @@ void InitializeInputData(VaryingsParticle input, SurfaceData surfaceData, out In
 void InitializeSurfaceData(ParticleParams particleParams, out SurfaceData surfaceData)
 {
     surfaceData = (SurfaceData)0;
-    half4 albedo = SampleAlbedo(TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap), particleParams);
-    half3 normalTS = SampleNormalTS(particleParams.uv, particleParams.blendUv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap));
+    half4 albedo = SampleAlbedo(META_DEPTH_TEX2D_BUILD(_BaseMap, sampler_BaseMap), particleParams);
+    half3 normalTS = SampleNormalTS(particleParams.uv, particleParams.blendUv, META_DEPTH_TEX2D_BUILD(_BumpMap, sampler_BumpMap));
 
     #if defined (_DISTORTION_ON)
     albedo.rgb = Distortion(albedo, normalTS, _DistortionStrengthScaled, _DistortionBlend, particleParams.projectedPosition);
     #endif
 
     #if defined(_EMISSION)
-    half3 emission = BlendTexture(TEXTURE2D_ARGS(_EmissionMap, sampler_EmissionMap), particleParams.uv, particleParams.blendUv).rgb * _EmissionColor.rgb;
+    half3 emission = BlendTexture(META_DEPTH_TEX2D_BUILD(_EmissionMap, sampler_EmissionMap), particleParams.uv, particleParams.blendUv).rgb * _EmissionColor.rgb;
     #else
     const half3 emission = 0;
     #endif
