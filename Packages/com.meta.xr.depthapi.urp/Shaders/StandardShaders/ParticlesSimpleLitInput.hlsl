@@ -26,7 +26,7 @@ CBUFFER_END
 // URP 17.6 (Unity 6000.6) changed particle texture helpers to take UnityTexture2D; guard both paths.
 #ifndef META_DEPTH_PARTICLE_TEX_COMPAT
 #define META_DEPTH_PARTICLE_TEX_COMPAT
-#if UNITY_VERSION >= 600060
+#if UNITY_VERSION >= 60060000
     #define META_DEPTH_TEX2D_PARAM(textureName, samplerName) UnityTexture2D textureName
     #define META_DEPTH_TEX2D_ARGS(textureName, samplerName) textureName
     #define META_DEPTH_TEX2D_BUILD(textureName, samplerName) UnityBuildTexture2DStructNoScaleNoTexelSize(textureName)

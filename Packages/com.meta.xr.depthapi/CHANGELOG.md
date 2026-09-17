@@ -1,3 +1,6 @@
+# 205.1.0
+* Fix Unity 6.6 shader version guards incorrectly matching earlier Unity 6 patch releases.
+
 # 205.0.0
 * Fix URP occlusion particle shaders failing to compile in Unity 6.6 (URP 17.6)
 
